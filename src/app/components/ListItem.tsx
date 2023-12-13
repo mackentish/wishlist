@@ -13,7 +13,7 @@ interface ListItemProps {
 export function ListItem({ item, isOwner }: ListItemProps) {
   const handleClick = () => {
     const confirmed = confirm(
-      `Are you sure you want to mark ${item.name} as ${
+      `Are you sure you want to mark "${item.name}" as ${
         item.isBought ? "not bought" : "bought"
       }?`
     );
