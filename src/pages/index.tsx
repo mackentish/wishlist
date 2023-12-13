@@ -1,5 +1,5 @@
-import { List } from "./components";
-import { ListItem as ListItemType } from "./types";
+import { List, Menu } from "../components";
+import { ListItem as ListItemType } from "../types";
 
 export default function Home() {
   const mockItems: ListItemType[] = [
@@ -25,9 +25,9 @@ export default function Home() {
   ];
 
   return (
-    <main className="flex items-center justify-center min-h-screen min-w-screen">
-      <div className="flex flex-col gap-8 items-center justify-center w-full max-w-3xl">
-        <code className="font-mono font-bold">wishlist</code>
+    <main className="flex flex-row min-h-screen min-w-screen">
+      <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
+        <code className="font-mono font-bold text-3xl">wishlist</code>
         <List isOwner={true} items={mockItems} />
         <List isOwner={false} items={mockItems} />
       </div>
