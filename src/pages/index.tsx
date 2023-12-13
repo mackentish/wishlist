@@ -1,7 +1,7 @@
 import { List, Menu } from "../components";
 import { ListItem as ListItemType } from "../types";
 
-export default function Home() {
+export default function Page() {
   const mockItems: ListItemType[] = [
     {
       id: 1,
