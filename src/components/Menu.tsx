@@ -9,19 +9,19 @@ export function Menu() {
   return (
     <ul className="flex flex-col gap-4 p-4 h-screen min-w-fit bg-gray-600">
       <li>
-        <Link href="/MyLists" className={btnClass}>
+        <Link href="/my-lists" className={btnClass}>
           My Lists <Sparkle />
         </Link>
       </li>
 
       <li>
-        <Link href="CreateLists" className={btnClass}>
+        <Link href="create-lists" className={btnClass}>
           Create List <Plus />
         </Link>
       </li>
 
       <li>
-        <Link href="SharedLists" className={btnClass}>
+        <Link href="shared-lists" className={btnClass}>
           Shared Lists <People />
         </Link>
       </li>
