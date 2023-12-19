@@ -1,5 +1,5 @@
 import React from "react";
-import { ListItem } from "./ListItem";
+import { ListItem, Button } from ".";
 import { ListItem as ListItemType } from "../types";
 
 interface ListProps {
@@ -13,6 +13,14 @@ export function List({ items, isOwner }: ListProps) {
       {items.map((item) => (
         <ListItem key={item.id} item={item} isOwner={isOwner} />
       ))}
+      {isOwner && (
+        <div className="flex flex-row gap-8 w-full">
+          <Button onClick={() => alert("TODO: add item")}>Add Item</Button>
+          <Button btnType="secondary" onClick={() => alert("TODO: edit lists")}>
+            Edit List
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
