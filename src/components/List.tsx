@@ -1,5 +1,5 @@
-import React from "react";
-import { ListItem, Button } from ".";
+import React, { useState } from "react";
+import { ListItem, Button, Input } from ".";
 import { ListItem as ListItemType } from "../types";
 
 interface ListProps {
@@ -8,18 +8,47 @@ interface ListProps {
 }
 
 export function List({ items, isOwner }: ListProps) {
+  const [isEditing, setIsEditing] = useState(false);
+
   return (
     <div className="flex flex-col gap-2 w-full">
       {items.map((item) => (
         <ListItem key={item.id} item={item} isOwner={isOwner} />
       ))}
       {isOwner && (
-        <div className="flex flex-row gap-8 w-full">
-          <Button onClick={() => alert("TODO: add item")}>Add Item</Button>
-          <Button btnType="secondary" onClick={() => alert("TODO: edit lists")}>
-            Edit List
-          </Button>
-        </div>
+        <>
+          {isEditing ? (
+            <>
+              <div className="flex flex-row gap-4">
+                <Input placeholder="Name" />
+                <Input placeholder="Note" />
+              </div>
+              <div className="flex flex-row gap-4 w-full">
+                <Button
+                  onClick={() => {
+                    alert("TODO: add item");
+                    setIsEditing(false);
+                  }}
+                >
+                  Done
+                </Button>
+                <Button onClick={() => setIsEditing(false)} btnType="secondary">
+                  Cancel
+                </Button>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-row gap-4 w-full">
+              <Button onClick={() => setIsEditing(true)}>Add Item</Button>
+              <Button
+                onClick={() => alert("TODO: edit lists")}
+                btnType="secondary"
+              >
+                Edit List
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

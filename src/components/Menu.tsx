@@ -4,7 +4,7 @@ import { Sparkle, Plus, People, primaryBtnClass } from ".";
 
 export function Menu() {
   return (
-    <ul className="flex flex-col gap-4 p-4 h-screen min-w-fit bg-gray-600">
+    <ul className="flex flex-col gap-4 p-4 h-screen min-w-fit bg-blue-100">
       <li>
         <Link href="/my-lists" className={primaryBtnClass}>
           My Lists <Sparkle />

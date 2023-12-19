@@ -26,7 +26,7 @@ export function ListItem({ item, isOwner }: ListItemProps) {
     <a
       href={item.url}
       target="_blank"
-      className="flex flex-row items-center justify-between p-2 border-2 border-gray-100 rounded-md"
+      className="flex flex-row items-center justify-between p-2 border border-gray-950 rounded"
     >
       <div className="flex flex-row items-center gap-2">
         {!isOwner && <Checkbox checked={item.isBought} onClick={handleClick} />}

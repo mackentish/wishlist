@@ -4,17 +4,21 @@ interface ButtonProps {
   children: React.ReactNode;
   onClick: () => void;
   btnType?: "primary" | "secondary";
+  disabled?: boolean;
+  styles?: string;
 }
 
-const defaultClass =
-  "flex flex-row gap-2 justify-center text-white font-bold py-2 px-4 rounded w-full";
-export const primaryBtnClass = `bg-blue-500 hover:bg-blue-600 ${defaultClass}`;
-export const secondaryBtnClass = `text-blue-500 border border-blue-500 hover:border-blue-600 hover:text-blue-600 ${defaultClass}`;
+const sharedStyles =
+  "flex flex-row gap-2 justify-center font-bold py-2 px-4 rounded w-full";
+export const primaryBtnClass = `text-white bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 ${sharedStyles}`;
+export const secondaryBtnClass = `text-blue-500 border border-blue-500 hover:border-blue-600 hover:text-blue-600 disabled:text-gray-600 disabled:border-gray-600 ${sharedStyles}`;
 
 export function Button({
   children,
   onClick,
   btnType = "primary",
+  disabled = false,
+  styles = "",
 }: ButtonProps) {
   let selectedClassName = "";
   switch (btnType) {
@@ -30,7 +34,11 @@ export function Button({
   }
 
   return (
-    <button onClick={onClick} className={selectedClassName}>
+    <button
+      disabled={disabled}
+      onClick={onClick}
+      className={`${selectedClassName} ${styles}`}
+    >
       {children}
     </button>
   );
