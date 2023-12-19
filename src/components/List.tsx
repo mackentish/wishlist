@@ -26,7 +26,7 @@ export function List({ items, isOwner }: ListProps) {
               <div className="flex flex-row gap-4 w-full">
                 <Button
                   onClick={() => {
-                    alert("TODO: add item");
+                    alert("TODO: add validation and add item to DB");
                     setIsEditing(false);
                   }}
                 >
