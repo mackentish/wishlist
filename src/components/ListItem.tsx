@@ -31,8 +31,10 @@ export function ListItem({ item, isOwner }: ListItemProps) {
       <div className="flex flex-row items-center gap-2">
         {!isOwner && <Checkbox checked={item.isBought} onClick={handleClick} />}
         <div className="flex flex-col">
-          <p>{item.name}</p>
-          {item.note && <p className="text-sm text-gray-500">{item.note}</p>}
+          <p className="font-mono">{item.name}</p>
+          {item.note && (
+            <p className="text-sm text-gray-500 font-mono">{item.note}</p>
+          )}
         </div>
       </div>
       <OpenTab />

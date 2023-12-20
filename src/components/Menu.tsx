@@ -7,19 +7,22 @@ export function Menu() {
     <ul className="flex flex-col gap-4 p-4 h-screen min-w-fit bg-blue-100">
       <li>
         <Link href="/my-lists" className={primaryBtnClass}>
-          My Lists <Sparkle />
+          <p className="font-mono">My Lists</p>
+          <Sparkle />
         </Link>
       </li>
 
       <li>
         <Link href="create-lists" className={primaryBtnClass}>
-          Create List <Plus />
+          <p className="font-mono">Create List</p>
+          <Plus />
         </Link>
       </li>
 
       <li>
         <Link href="shared-lists" className={primaryBtnClass}>
-          Shared Lists <People />
+          <p className="font-mono">Shared Lists</p>
+          <People />
         </Link>
       </li>
     </ul>

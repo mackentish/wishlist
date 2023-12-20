@@ -1,10 +1,7 @@
 import React from "react";
 
-interface ButtonProps {
-  children: React.ReactNode;
-  onClick: () => void;
+interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   btnType?: "primary" | "secondary";
-  disabled?: boolean;
   styles?: string;
 }
 
@@ -14,11 +11,9 @@ export const primaryBtnClass = `text-white bg-blue-500 hover:bg-blue-600 disable
 export const secondaryBtnClass = `text-blue-500 border border-blue-500 hover:border-blue-600 hover:text-blue-600 disabled:text-gray-600 disabled:border-gray-600 ${sharedStyles}`;
 
 export function Button({
-  children,
-  onClick,
   btnType = "primary",
-  disabled = false,
   styles = "",
+  ...props
 }: ButtonProps) {
   let selectedClassName = "";
   switch (btnType) {
@@ -34,12 +29,8 @@ export function Button({
   }
 
   return (
-    <button
-      disabled={disabled}
-      onClick={onClick}
-      className={`${selectedClassName} ${styles}`}
-    >
-      {children}
+    <button className={`${selectedClassName} ${styles}`} {...props}>
+      {props.children}
     </button>
   );
 }
