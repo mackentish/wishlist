@@ -7,7 +7,7 @@ export const mockUserResponse: UserResponse = {
   lists: [
     {
       id: 1,
-      ownerId: 1,
+      userId: 1,
       name: "Brandon's Christmas List",
       description: "What I want for Christmas",
       items: [
@@ -34,7 +34,7 @@ export const mockUserResponse: UserResponse = {
     },
     {
       id: 2,
-      ownerId: 1,
+      userId: 1,
       name: "Brandon's Birthday List",
       description: "What I want for Christmas",
       items: [
@@ -63,7 +63,7 @@ export const mockUserResponse: UserResponse = {
   sharedLists: [
     {
       id: 3,
-      ownerId: 2,
+      userId: 2,
       name: "Katie's Christmas List",
       description: "What I want for Christmas",
       items: [

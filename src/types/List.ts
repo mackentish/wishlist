@@ -2,7 +2,7 @@ import { ListItem } from ".";
 
 export type List = {
   id: number;
-  ownerId: number;
+  userId: number;
   name: string;
   description?: string;
   items: ListItem[];
