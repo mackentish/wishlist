@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id        Int    @id
+  firstName String @db.VarChar(45)
+  lastName  String @db.VarChar(45)
+  lists     list[]
+}
+
+model list {
+  id          Int     @id
+  name        String  @db.VarChar(45)
+  description String? @db.VarChar(100)
+  userId      Int   
+  user        user    @relation(fields: [userId], references: [id])
+  items       listItem[]
+}
+
+model listItem {
+  id          Int     @id
+  name        String  @db.VarChar(45)
+  description String? @db.VarChar(100)
+  listId      Int   
+  list        list    @relation(fields: [listId], references: [id])
+}
