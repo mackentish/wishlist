@@ -8,6 +8,12 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Authentication
+
+This project leverage NextAuth with Google as the authentication provider.
+TODO: Add production url to "Authorized redirect URIs" in Google Developer Console:
+`https://{YOUR_DOMAIN}/api/auth/callback/google`
+
 ## Database Migrations
 
 This project uses prisma to manage the database. To run migrations, run the following command after making updates to the schema
