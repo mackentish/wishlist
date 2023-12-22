@@ -6,13 +6,16 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<UserResponseData>
 ) {
-  // TODO: use next auth getServerSession
-  if (req.method !== "GET") {
-    res.status(405);
-    return;
-  }
-  // TODO: get actual data from database
-  setTimeout(() => {
-    res.status(200).json(mockUserResponse);
-  }, 1000);
+  return new Promise<void>((resolve, reject) => {
+    // TODO: use next auth getServerSession
+    if (req.method !== "GET") {
+      res.status(405);
+      reject();
+    }
+    // TODO: get actual data from database
+    setTimeout(() => {
+      res.status(200).send(mockUserResponse);
+      resolve();
+    }, 1000);
+  });
 }

@@ -2,8 +2,8 @@ import { UserResponseData } from "@/types/api";
 
 export const mockUserResponse: UserResponseData = {
   id: 1,
-  firstName: "Brandon",
-  lastName: "Trzepacz Tish",
+  name: "Brandon Trzepacz Tish",
+  email: "brandon.tish@gmail.com",
   lists: [
     {
       id: 1,

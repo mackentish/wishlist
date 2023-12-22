@@ -9,8 +9,8 @@ datasource db {
 
 model user {
   id        Int    @id
-  firstName String @db.VarChar(45)
-  lastName  String @db.VarChar(45)
+  name      String @db.VarChar(50)
+  email     String @db.VarChar(45)
   lists     list[]
 }
 

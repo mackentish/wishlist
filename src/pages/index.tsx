@@ -1,6 +1,7 @@
 import { ErrorView, List, SignIn } from "@/components";
 import { useUser } from "@/hooks";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -30,9 +31,6 @@ export default function Home() {
       <h1>
         <code className="font-mono font-bold text-3xl">wishlist</code>
       </h1>
-      <p className="font-mono text-xl">
-        Signed in as: <code className="font-bold">{session.user.email}</code>
-      </p>
       {user.lists
         .filter((list) => list.userId === user.id)
         .map((list, index) => (
