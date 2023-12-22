@@ -1,6 +1,6 @@
-import { UserResponse } from "@/types";
+import { UserResponseData } from "@/types/api";
 
-export const mockUserResponse: UserResponse = {
+export const mockUserResponse: UserResponseData = {
   id: 1,
   firstName: "Brandon",
   lastName: "Trzepacz Tish",

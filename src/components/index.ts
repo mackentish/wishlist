@@ -8,3 +8,4 @@ export * from "./Button";
 export * from "./Input";
 export * from "./InputError";
 export * from "./AddItem";
+export * from "./ErrorView";
