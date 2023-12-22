@@ -5,7 +5,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 export default function Home() {
   const { data: session } = useSession();
   const { isLoading, error, data: user } = useUser();
-  /* 
+
   if (!session?.user) {
     return (
       <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
@@ -17,7 +17,7 @@ export default function Home() {
       </div>
     );
   }
- */
+
   if (isLoading) {
     return (
       <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
@@ -38,9 +38,9 @@ export default function Home() {
       <h1>
         <code className="font-mono font-bold text-3xl">wishlist</code>
       </h1>
-      {/*       <p className="font-mono text-xl">
+      <p className="font-mono text-xl">
         Signed in as: <code className="font-bold">{session.user.email}</code>
-      </p> */}
+      </p>
       <List isOwner={true} items={user.lists[0].items} />
       <List isOwner={false} items={user.lists[0].items} />
       <div className="absolute top-4 right-4 w-50">
