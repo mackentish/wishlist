@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE `list` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(45) NOT NULL,
     `description` VARCHAR(100) NULL,
     `userId` INTEGER NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE `list` (
 
 -- CreateTable
 CREATE TABLE `listItem` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(45) NOT NULL,
     `description` VARCHAR(100) NULL,
     `listId` INTEGER NOT NULL,

@@ -8,14 +8,14 @@ datasource db {
 }
 
 model user {
-  id        Int    @id
+  id        Int    @id  @default(autoincrement())  @unique
   name      String @db.VarChar(50)
-  email     String @db.VarChar(45)
+  email     String @db.VarChar(45) @unique
   lists     list[]
 }
 
 model list {
-  id          Int     @id
+  id          Int    @id  @default(autoincrement())  @unique
   name        String  @db.VarChar(45)
   description String? @db.VarChar(100)
   userId      Int   
@@ -24,9 +24,11 @@ model list {
 }
 
 model listItem {
-  id          Int     @id
+  id          Int    @id  @default(autoincrement())  @unique
   name        String  @db.VarChar(45)
-  description String? @db.VarChar(100)
+  note String? @db.VarChar(100)
+  link        String @db.VarChar(255)
+  isBought    Boolean @default(false)
   listId      Int   
   list        list    @relation(fields: [listId], references: [id])
 }

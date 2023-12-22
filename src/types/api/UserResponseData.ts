@@ -5,5 +5,5 @@ export type UserResponseData = {
   name: string;
   email: string;
   lists: List[];
-  sharedLists: List[];
+  // sharedLists: List[];
 };

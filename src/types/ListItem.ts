@@ -1,7 +1,7 @@
 export type ListItem = {
   id: number;
   name: string;
-  url: string;
+  link: string;
   note?: string;
   isBought: boolean;
 };

@@ -9,7 +9,7 @@ DROP TABLE `users`;
 
 -- CreateTable
 CREATE TABLE `user` (
-    `id` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `firstName` VARCHAR(45) NOT NULL,
     `lastName` VARCHAR(45) NOT NULL,
 
