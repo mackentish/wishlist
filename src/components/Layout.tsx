@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Menu } from ".";
+import { Button } from ".";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 
@@ -7,7 +7,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   return (
     <main className="flex flex-row min-h-screen min-w-screen">
-      {session?.user && <Menu />}
       <div className="flex flex-row justify-center items-center w-full">
         {children}
       </div>

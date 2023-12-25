@@ -1,14 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import { Sparkle, Plus, People, primaryBtnClass } from ".";
+import { Pages } from "@/types";
 
 export function Menu() {
   const currentPage = window.location.pathname;
-  enum Pages {
-    Home = "/",
-    CreateLists = "/create-lists",
-    SharedLists = "/shared-lists",
-  }
   const selectedStyle = "bg-blue-600";
 
   return (

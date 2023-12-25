@@ -8,13 +8,13 @@ interface ListProps {
 }
 
 export function List({ items, isOwner }: ListProps) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
 
   const addItem = (data: { name: string; link: string; note?: string }) => {
     alert(
       `TODO: add validation and add item to DB: ${data.name} ${data.link} ${data.note}`
     );
-    setIsEditing(false);
+    setIsAdding(false);
   };
 
   return (
@@ -24,11 +24,11 @@ export function List({ items, isOwner }: ListProps) {
       ))}
       {isOwner && (
         <>
-          {isEditing ? (
-            <AddItem onDone={addItem} onCancel={() => setIsEditing(false)} />
+          {isAdding ? (
+            <AddItem onDone={addItem} onCancel={() => setIsAdding(false)} />
           ) : (
             <div className="flex flex-row gap-4 w-full">
-              <Button onClick={() => setIsEditing(true)}>
+              <Button onClick={() => setIsAdding(true)}>
                 <p className="font-mono">Add Item</p>
               </Button>
               <Button

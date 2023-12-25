@@ -1,5 +1,5 @@
 export * from "./ListItem";
 export * from "./List";
-export * from "./UserResponse";
+export * from "./Pages";
 
 export * from "./api";

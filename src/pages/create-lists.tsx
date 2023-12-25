@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Input, Button, InputError, Spacer, List } from "@/components";
-import { ListItem } from "@/types";
+import {
+  Input,
+  Button,
+  InputError,
+  Spacer,
+  List,
+  secondaryBtnClass,
+} from "@/components";
+import { ListItem, Pages } from "@/types";
+import Link from "next/link";
 
 type Inputs = {
   name: string;
@@ -151,9 +159,9 @@ export default function CreateLists() {
           <Button onClick={() => handleSubmit(onSubmit)}>
             <p className="font-mono">Done</p>
           </Button>
-          <Button onClick={onCancel} btnType="secondary">
+          <Link href={Pages.Home} className={secondaryBtnClass}>
             <p className="font-mono">Cancel</p>
-          </Button>
+          </Link>
         </div>
       </form>
     </div>
