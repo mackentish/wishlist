@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Button, Input, InputError } from ".";
 
 interface AddItemProps {
-  onDone: (name: string, link: string, note?: string) => void;
+  onDone: (data: { name: string; link: string; note?: string }) => void;
   onCancel: () => void;
 }
 
@@ -21,7 +21,7 @@ export function AddItem({ onDone, onCancel }: AddItemProps) {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    onDone(data.name, data.link, data.note);
+    onDone(data);
   };
 
   return (
@@ -30,7 +30,7 @@ export function AddItem({ onDone, onCancel }: AddItemProps) {
         {/* Name Input */}
         <span className="w-full">
           <Input
-            placeholder="Name"
+            placeholder="Item Name"
             isError={!!errors.name}
             {...register("name", { required: true })}
           />
@@ -40,7 +40,7 @@ export function AddItem({ onDone, onCancel }: AddItemProps) {
         {/* Link Input */}
         <span className="w-full">
           <Input
-            placeholder="Link"
+            placeholder="Item Link"
             isError={!!errors.link}
             type="url"
             {...register("link", { required: true })}
@@ -49,7 +49,12 @@ export function AddItem({ onDone, onCancel }: AddItemProps) {
         </span>
       </div>
       {/* Note Input */}
-      <Input placeholder="Note?" {...register("note", { required: false })} />
+      <Input
+        placeholder="Item Note?"
+        {...register("note", { required: false })}
+      />
+
+      {/* Buttons */}
       <div className="flex flex-row gap-4 w-full">
         <Button onClick={() => handleSubmit(onSubmit)}>
           <p className="font-mono">Done</p>

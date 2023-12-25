@@ -10,8 +10,10 @@ interface ListProps {
 export function List({ items, isOwner }: ListProps) {
   const [isEditing, setIsEditing] = useState(false);
 
-  const addItem = (name: string, link: string, note?: string) => {
-    alert(`TODO: add validation and add item to DB: ${name} ${link} ${note}`);
+  const addItem = (data: { name: string; link: string; note?: string }) => {
+    alert(
+      `TODO: add validation and add item to DB: ${data.name} ${data.link} ${data.note}`
+    );
     setIsEditing(false);
   };
 

@@ -13,9 +13,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
-        <h1>
-          <p className="font-mono font-bold text-3xl">wishlist</p>
-        </h1>
+        <h1 className="font-mono font-bold text-3xl">wishlist</h1>
         <p className="font-mono text-xl">Loading...</p>
       </div>
     );
@@ -27,18 +25,12 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
-      <h1>
-        <p className="font-mono font-bold text-3xl">wishlist</p>
-      </h1>
+      <h1 className="font-mono font-bold text-3xl">wishlist</h1>
       {user.lists.length > 0 ? (
         user.lists
           .filter((list) => list.userId === user.id)
           .map((list, index) => (
-            <List
-              key={`${index}-${list.name}`}
-              isOwner={true}
-              items={list.items}
-            />
+            <List key={`${index}-${list.name}`} isOwner items={list.items} />
           ))
       ) : (
         <p className="font-mono text-xl">No lists yet!</p>
