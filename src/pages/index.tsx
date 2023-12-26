@@ -40,15 +40,13 @@ export default function Home() {
               <List key={`${index}-${list.name}`} isOwner items={list.items} />
             ))
         ) : (
-          <div className="w-full flex flex-col gap-2">
-            <p className="font-mono text-sm italic">
-              No lists yet! Click the button below to get started!
-            </p>
-            <Link href={Pages.CreateLists} className={primaryBtnClass}>
-              Create a List
-            </Link>
-          </div>
+          <p className="font-mono text-sm italic">
+            No lists yet! Click the button below to get started!
+          </p>
         )}
+        <Link href={Pages.CreateLists} className={primaryBtnClass}>
+          Create a List
+        </Link>
       </div>
 
       {/* Shared Lists */}
