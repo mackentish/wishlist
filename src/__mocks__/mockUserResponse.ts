@@ -1,6 +1,6 @@
-import { UserResponseData } from "@/types/api";
+import { User } from "@/types";
 
-export const mockUserResponse: UserResponseData = {
+export const mockUserResponse: User = {
   id: 1,
   name: "Brandon Trzepacz Tish",
   email: "brandon.tish@gmail.com",
@@ -14,20 +14,20 @@ export const mockUserResponse: UserResponseData = {
         {
           id: 1,
           name: "Jersey",
-          url: "https://google.com/search?q=jersey",
+          link: "https://google.com/search?q=jersey",
           note: "A test note about this item",
           isBought: false,
         },
         {
           id: 2,
           name: "Two front teeth",
-          url: "https://google.com/search?q=two+front+teeth",
+          link: "https://google.com/search?q=two+front+teeth",
           isBought: false,
         },
         {
           id: 3,
           name: "Hippopotamus",
-          url: "https://google.com/search?q=hippopotamus",
+          link: "https://google.com/search?q=hippopotamus",
           isBought: true,
         },
       ],
@@ -41,20 +41,20 @@ export const mockUserResponse: UserResponseData = {
         {
           id: 1,
           name: "Big ol' cake",
-          url: "https://google.com/search?q=jersey",
+          link: "https://google.com/search?q=jersey",
           note: "A test note about this item",
           isBought: false,
         },
         {
           id: 2,
           name: "Some discs or somethin'",
-          url: "https://google.com/search?q=two+front+teeth",
+          link: "https://google.com/search?q=two+front+teeth",
           isBought: false,
         },
         {
           id: 3,
           name: "Birthday Hippopotamus",
-          url: "https://google.com/search?q=hippopotamus",
+          link: "https://google.com/search?q=hippopotamus",
           isBought: true,
         },
       ],
@@ -70,20 +70,20 @@ export const mockUserResponse: UserResponseData = {
         {
           id: 1,
           name: "Jersey",
-          url: "https://google.com/search?q=jersey",
+          link: "https://google.com/search?q=jersey",
           note: "A test note about this item",
           isBought: false,
         },
         {
           id: 2,
           name: "Two front teeth",
-          url: "https://google.com/search?q=two+front+teeth",
+          link: "https://google.com/search?q=two+front+teeth",
           isBought: false,
         },
         {
           id: 3,
           name: "Hippopotamus",
-          url: "https://google.com/search?q=hippopotamus",
+          link: "https://google.com/search?q=hippopotamus",
           isBought: true,
         },
       ],

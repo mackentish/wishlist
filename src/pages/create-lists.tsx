@@ -1,19 +1,16 @@
-import React, { useState } from "react";
+"use client";
+
+import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import {
-  Input,
-  Button,
-  InputError,
-  Spacer,
-  List,
-  secondaryBtnClass,
-} from "@/components";
-import { ListItem, Pages } from "@/types";
+import { useRouter } from "next/navigation";
+import { Input, Button, InputError, secondaryBtnClass } from "@/components";
+import { Pages } from "@/types";
 import Link from "next/link";
+import { useLists } from "@/hooks";
 
 type Inputs = {
   name: string;
-  description: string;
+  description?: string;
 };
 
 export default function CreateLists() {
@@ -22,54 +19,17 @@ export default function CreateLists() {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
+  const { createList } = useLists();
+  const router = useRouter();
 
-  const [items, setItems] = useState<ListItem[]>([]);
-  // Add Item State
-  const [isAddingItem, setIsAddingItem] = useState<boolean>(false);
-  const [itemName, setItemName] = useState<string>("");
-  const [itemLink, setItemLink] = useState<string>("");
-  const [itemNote, setItemNote] = useState<string>("");
-  const [addItemErrors, setAddItemErrors] = useState<("name" | "link")[]>([]);
-
-  const addItem = () => {
-    // validate fields
-    if (itemName === "") {
-      setAddItemErrors([...addItemErrors, "name"]);
-    }
-    if (itemLink === "") {
-      setAddItemErrors([...addItemErrors, "link"]);
-    }
-    if (addItemErrors.length > 0) {
-      return;
-    }
-
-    setItems([
-      ...items,
-      {
-        // this is just a placeholder, we will get the id from the backend
-        id: items.length,
-        name: itemName,
-        link: itemLink,
-        note: itemNote === "" ? undefined : itemNote,
-        isBought: false,
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    /*
+    await createList.mutate(data, {
+      onSuccess: () => {
+        router.push(Pages.Home);
       },
-    ]);
-  };
-
-  const cancelAddItem = () => {
-    setIsAddingItem(false);
-    setItemName("");
-    setItemLink("");
-    setItemNote("");
-    setAddItemErrors([]);
-  };
-
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    alert("TODO: submit data to backend with items");
-  };
-
-  const onCancel = () => {
-    alert("TODO: cancel and clear fields");
+    });
+    */
   };
 
   return (

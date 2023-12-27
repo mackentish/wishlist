@@ -7,3 +7,5 @@ export type List = {
   description?: string;
   items: ListItem[];
 };
+
+export type CreateListRequest = Omit<Omit<Omit<List, "id">, "userId">, "items">;

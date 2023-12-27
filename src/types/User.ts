@@ -1,6 +1,6 @@
-import { List } from "..";
+import { List } from ".";
 
-export type UserResponseData = {
+export type User = {
   id: number;
   name: string;
   email: string;
