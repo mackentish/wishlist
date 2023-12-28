@@ -3,10 +3,11 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { Input, Button, InputError, secondaryBtnClass } from "@/components";
+import { Button, InputError, secondaryBtnClass } from "@/components";
 import { Pages } from "@/types";
 import Link from "next/link";
 import { useLists } from "@/hooks";
+import { inputStyles } from "@/styles/globalTailwind";
 
 type Inputs = {
   name: string;
@@ -30,6 +31,7 @@ export default function CreateLists() {
       },
     });
     */
+    console.log("submit");
   };
 
   return (
@@ -41,17 +43,18 @@ export default function CreateLists() {
       >
         {/* Name Input */}
         <span>
-          <Input
+          <input
             placeholder="List Name"
-            isError={!!errors.name}
+            className={!!errors.name ? inputStyles.error : inputStyles.default}
             {...register("name", { required: true })}
           />
           {errors.name && <InputError message="A list must have a name" />}
         </span>
 
-        {/* Note Input */}
-        <Input
+        {/* Description Input */}
+        <input
           placeholder="List Description?"
+          className={inputStyles.default}
           {...register("description", { required: false })}
         />
         {/* Buttons */}

@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Button, Input, InputError } from ".";
+import { inputStyles } from "@/styles/globalTailwind";
+import { Button, InputError } from ".";
 
 interface AddItemProps {
   onDone: (data: { name: string; link: string; note?: string }) => void;
@@ -29,9 +30,9 @@ export function AddItem({ onDone, onCancel }: AddItemProps) {
       <div className="flex flex-row gap-4">
         {/* Name Input */}
         <span className="w-full">
-          <Input
+          <input
             placeholder="Item Name"
-            isError={!!errors.name}
+            className={!!errors.name ? inputStyles.error : inputStyles.default}
             {...register("name", { required: true })}
           />
           {errors.name && <InputError message="An item must have a name" />}
@@ -39,9 +40,9 @@ export function AddItem({ onDone, onCancel }: AddItemProps) {
 
         {/* Link Input */}
         <span className="w-full">
-          <Input
+          <input
             placeholder="Item Link"
-            isError={!!errors.link}
+            className={!!errors.link ? inputStyles.error : inputStyles.default}
             type="url"
             {...register("link", { required: true })}
           />
@@ -49,8 +50,9 @@ export function AddItem({ onDone, onCancel }: AddItemProps) {
         </span>
       </div>
       {/* Note Input */}
-      <Input
+      <input
         placeholder="Item Note?"
+        className={inputStyles.default}
         {...register("note", { required: false })}
       />
 

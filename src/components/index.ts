@@ -5,7 +5,6 @@ export * from "./icons";
 export * from "./Menu";
 export * from "./Layout";
 export * from "./Button";
-export * from "./Input";
 export * from "./InputError";
 export * from "./AddItem";
 export * from "./ErrorView";
