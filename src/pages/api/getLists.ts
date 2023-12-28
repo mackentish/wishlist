@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "./_base";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { List } from "@/types";
 import { getServerSession } from "next-auth/next";
@@ -26,7 +26,6 @@ export default function handler(
   res: NextApiResponse<List[]>
 ) {
   return new Promise<void>(async (resolve, reject) => {
-    const prisma = new PrismaClient();
     try {
       if (req.method !== "GET") {
         res.status(405);
@@ -65,8 +64,6 @@ export default function handler(
       res.status(500);
       reject();
       return;
-    } finally {
-      prisma.$disconnect();
     }
   });
 }

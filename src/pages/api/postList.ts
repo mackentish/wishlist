@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "./_base";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
@@ -9,7 +9,6 @@ export default function handler(
   res: NextApiResponse<void>
 ) {
   return new Promise<void>(async (resolve, reject) => {
-    const prisma = new PrismaClient();
     try {
       if (req.method !== "POST") {
         res.status(405);
@@ -32,9 +31,8 @@ export default function handler(
         return;
       }
 
-      console.log(req.body);
       // validate data
-      const { name, description } = req.body as CreateListRequest;
+      const { name, description } = JSON.parse(req.body) as CreateListRequest;
       if (!name) {
         res.status(400);
         reject();
@@ -50,14 +48,13 @@ export default function handler(
         },
       });
 
+      res.status(200).send();
       resolve();
       return;
-    } catch {
+    } catch (err) {
       res.status(500);
       reject();
       return;
-    } finally {
-      await prisma.$disconnect();
     }
   });
 }

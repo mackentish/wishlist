@@ -19,14 +19,14 @@ export function useLists() {
    */
   const createList = useMutation({
     mutationFn: async (newList: CreateListRequest) => {
-      const res = await fetch("/api/postList", {
+      await fetch("/api/postList", {
         method: "POST",
         body: JSON.stringify(newList),
       });
-      const data = await res.json();
-      return data;
     },
-    onSuccess: () => fetchLists.refetch(),
+    onSuccess: () => {
+      fetchLists.refetch();
+    },
   });
 
   return { fetchLists, createList };

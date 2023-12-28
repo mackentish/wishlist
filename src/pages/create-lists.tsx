@@ -24,14 +24,15 @@ export default function CreateLists() {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    /*
     await createList.mutate(data, {
       onSuccess: () => {
-        router.push(Pages.Home);
+        console.log("here");
+        router.back();
+      },
+      onError: (error) => {
+        console.error("err", error);
       },
     });
-    */
-    console.log("submit");
   };
 
   return (

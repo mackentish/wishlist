@@ -24,7 +24,7 @@ export function ListItem({ item, isOwner }: ListItemProps) {
 
   return (
     <a
-      href={item.url}
+      href={item.link}
       target="_blank"
       className="flex flex-row items-center justify-between p-2 border border-gray-950 rounded"
     >
