@@ -1,7 +1,7 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { User } from "@/types";
+import { GetUserResponse } from "@/types";
 
-export function useUser(): UseQueryResult<User> {
+export function useUser(): UseQueryResult<GetUserResponse> {
   return useQuery({
     queryKey: ["user"],
     queryFn: async () => {

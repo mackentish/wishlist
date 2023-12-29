@@ -7,3 +7,5 @@ export type User = {
   lists: List[];
   // sharedLists: List[];
 };
+
+export type GetUserResponse = Omit<User, "lists">;

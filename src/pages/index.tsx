@@ -1,18 +1,21 @@
 import { ErrorView, List, SignIn, Spacer, primaryBtnClass } from "@/components";
-import { useUser } from "@/hooks";
+import { useLists, useUser } from "@/hooks";
 import { Pages } from "@/types";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 export default function Home() {
   const { data: session } = useSession();
-  const { isLoading, error, data: user } = useUser();
+  const { isLoading: userLoading, error: userError, data: user } = useUser();
+  const {
+    fetchLists: { isLoading: listsLoading, error: listsError, data: lists },
+  } = useLists();
 
   if (!session?.user) {
     return <SignIn />;
   }
 
-  if (isLoading) {
+  if (userLoading || listsLoading) {
     return (
       <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
         <h1 className="font-mono font-bold text-3xl">wishlist</h1>
@@ -21,7 +24,7 @@ export default function Home() {
     );
   }
 
-  if (error || !user) {
+  if (userError || !user || listsError || lists === undefined) {
     return <ErrorView />;
   }
 
@@ -32,8 +35,8 @@ export default function Home() {
       {/* My Lists */}
       <div className="flex flex-col w-full gap-2">
         <h2 className="font-mono font-bold text-xl">Your Lists:</h2>
-        {user.lists.length > 0 ? (
-          user.lists
+        {lists.length > 0 ? (
+          lists
             .filter((list) => list.userId === user.id)
             .map((list, index) => (
               <List key={`${index}-${list.name}`} isOwner list={list} />
@@ -52,8 +55,8 @@ export default function Home() {
       {/* Shared Lists */}
       <div className="flex flex-col w-full gap-2">
         <h2 className="font-mono font-bold text-xl">Shared Lists:</h2>
-        {user.lists.length > 0 ? (
-          user.lists
+        {lists.length > 0 ? (
+          lists
             .filter((list) => list.userId !== user.id)
             .map((list, index) => (
               <List key={`${index}-${list.name}`} list={list} isOwner={false} />

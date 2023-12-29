@@ -1,35 +1,12 @@
 import { prisma } from "./_base";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { User } from "@/types";
+import { GetUserResponse } from "@/types";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 
-function mapUser(user: any): User {
-  return {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    lists:
-      user.lists?.map((list: any) => ({
-        id: list.id,
-        name: list.name,
-        description: list.description ?? undefined,
-        items:
-          list.items?.map((item: any) => ({
-            id: item.id,
-            name: item.name,
-            note: item.note ?? undefined,
-            link: item.link,
-            isBought: item.isBought,
-          })) ?? [],
-        userId: list.userId,
-      })) ?? [],
-  };
-}
-
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<User>
+  res: NextApiResponse<GetUserResponse>
 ) {
   return new Promise<void>(async (resolve, reject) => {
     try {
@@ -52,7 +29,7 @@ export default function handler(
         include: { lists: { include: { items: true } } },
       });
       if (existingUser) {
-        res.status(200).send(mapUser(existingUser));
+        res.status(200).send(existingUser);
       } else {
         // create user
         const newUser = await prisma.user.create({
@@ -62,7 +39,7 @@ export default function handler(
           },
         });
         // return it
-        res.status(201).send(mapUser(newUser));
+        res.status(201).send(newUser);
       }
 
       resolve();
