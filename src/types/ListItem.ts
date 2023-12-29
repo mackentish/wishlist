@@ -4,4 +4,7 @@ export type ListItem = {
   link: string;
   note?: string;
   isBought: boolean;
+  listId: number;
 };
+
+export type CreateListItemRequest = Omit<ListItem, "id">;

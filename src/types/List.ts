@@ -8,4 +8,4 @@ export type List = {
   items: ListItem[];
 };
 
-export type CreateListRequest = Omit<Omit<Omit<List, "id">, "userId">, "items">;
+export type CreateListRequest = Omit<List, "id" | "userId" | "items">;

@@ -6,6 +6,7 @@ import { Button, InputError } from ".";
 interface AddItemProps {
   onDone: (data: { name: string; link: string; note?: string }) => void;
   onCancel: () => void;
+  errorMessage?: string;
 }
 
 type Inputs = {
@@ -14,7 +15,11 @@ type Inputs = {
   note: string;
 };
 
-export function AddItem({ onDone, onCancel }: AddItemProps) {
+export function AddItem({
+  onDone,
+  onCancel,
+  errorMessage = undefined,
+}: AddItemProps) {
   const {
     register,
     handleSubmit,
@@ -55,6 +60,9 @@ export function AddItem({ onDone, onCancel }: AddItemProps) {
         className={inputStyles.default}
         {...register("note", { required: false })}
       />
+
+      {/* Error Message */}
+      {errorMessage && <InputError message={errorMessage} />}
 
       {/* Buttons */}
       <div className="flex flex-row gap-4 w-full">

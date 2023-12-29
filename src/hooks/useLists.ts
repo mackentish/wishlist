@@ -1,5 +1,10 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { List, CreateListRequest } from "@/types";
+import {
+  List,
+  CreateListRequest,
+  ListItem,
+  CreateListItemRequest,
+} from "@/types";
 
 export function useLists() {
   /**
@@ -29,5 +34,20 @@ export function useLists() {
     },
   });
 
-  return { fetchLists, createList };
+  /**
+   * Updates a list belonging to the user
+   */
+  const addListItem = useMutation({
+    mutationFn: async (item: CreateListItemRequest) => {
+      await fetch("/api/postListItem", {
+        method: "POST",
+        body: JSON.stringify(item),
+      });
+    },
+    onSuccess: () => {
+      fetchLists.refetch();
+    },
+  });
+
+  return { fetchLists, createList, addListItem };
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ListItem, Button, AddItem } from ".";
 import { List as ListType } from "../types";
+import { useLists } from "@/hooks";
 
 interface ListProps {
   list: ListType;
@@ -9,19 +10,42 @@ interface ListProps {
 
 export function List({ list, isOwner }: ListProps) {
   const [isAdding, setIsAdding] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
+  const { addListItem } = useLists();
 
-  const addItem = (data: { name: string; link: string; note?: string }) => {
-    alert(
-      `TODO: add validation and add item to DB: ${data.name} ${data.link} ${data.note}`
+  const addItem = async (data: {
+    name: string;
+    link: string;
+    note?: string;
+  }) => {
+    await addListItem.mutate(
+      {
+        listId: list.id,
+        name: data.name,
+        link: data.link,
+        note: data.note,
+        isBought: false,
+      },
+      {
+        onSuccess: () => {
+          setIsAdding(false);
+        },
+        onError: () => {
+          setError("Something went wrong creating your new list item!");
+        },
+      }
     );
-    setIsAdding(false);
   };
 
   const ListWithOutItemsButtons = () => {
     return (
       <>
         {isAdding ? (
-          <AddItem onDone={addItem} onCancel={() => setIsAdding(false)} />
+          <AddItem
+            onDone={addItem}
+            onCancel={() => setIsAdding(false)}
+            errorMessage={error}
+          />
         ) : (
           <div className="flex flex-col gap-2 w-full">
             <p className="font-mono text-sm italic self-center">
@@ -40,7 +64,13 @@ export function List({ list, isOwner }: ListProps) {
     return (
       <>
         {isAdding ? (
-          <AddItem onDone={addItem} onCancel={() => setIsAdding(false)} />
+          <span>
+            <AddItem
+              onDone={addItem}
+              onCancel={() => setIsAdding(false)}
+              errorMessage={error}
+            />
+          </span>
         ) : (
           <div className="flex flex-row gap-4 w-full">
             <Button onClick={() => setIsAdding(true)}>
