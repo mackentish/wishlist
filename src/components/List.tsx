@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ListItem, Button, AddItem } from ".";
+import { ListItem, Button, AddItem, ChevronDown, ChevronUp } from ".";
 import { List as ListType } from "../types";
 import { useLists } from "@/hooks";
 
@@ -11,6 +11,7 @@ interface ListProps {
 export function List({ list, isOwner }: ListProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [isOpen, setIsOpen] = useState(true);
   const { addListItem } = useLists();
 
   const addItem = async (data: {
@@ -90,19 +91,29 @@ export function List({ list, isOwner }: ListProps) {
 
   return (
     <div className="flex flex-col gap-2 w-full p-4 border rounded-md border-slate-950">
-      <div className="flex flex-col">
-        <p className="font-mono font-bold text-md">{list.name}</p>
-        <p className="font-mono text-xs">{list.description}</p>
-      </div>
-      {list.items.map((item) => (
-        <ListItem key={item.id} item={item} isOwner={isOwner} />
-      ))}
-      {isOwner && (
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex flex-row justify-between items-center"
+      >
+        <div className="flex flex-col items-start">
+          <p className="font-mono font-bold text-md">{list.name}</p>
+          <p className="font-mono text-xs">{list.description}</p>
+        </div>
+        {isOpen ? <ChevronUp /> : <ChevronDown />}
+      </button>
+      {isOpen && (
         <>
-          {list.items.length > 0 ? (
-            <ListWithItemsButtons />
-          ) : (
-            <ListWithOutItemsButtons />
+          {list.items.map((item) => (
+            <ListItem key={item.id} item={item} isOwner={isOwner} />
+          ))}
+          {isOwner && (
+            <>
+              {list.items.length > 0 ? (
+                <ListWithItemsButtons />
+              ) : (
+                <ListWithOutItemsButtons />
+              )}
+            </>
           )}
         </>
       )}
