@@ -13,7 +13,7 @@ export function List({ list, isOwner }: ListProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(true);
-  const { addListItem } = useLists();
+  const { addListItem, deleteList } = useLists();
 
   const addItem = async (data: {
     name: string;
@@ -39,36 +39,20 @@ export function List({ list, isOwner }: ListProps) {
     );
   };
 
-  const deleteList = async () => {
+  const onDelete = async () => {
     if (confirm("Are you sure you want to delete this list?")) {
-      alert("TODO: delete list");
+      await deleteList.mutateAsync(list.id, {
+        onSuccess: () => {
+          setIsEditing(false);
+        },
+        onError: () => {
+          setError("Something went wrong deleting your list!");
+        },
+      });
     }
   };
 
-  const ListWithOutItemsButtons = () => {
-    return (
-      <>
-        {isAdding ? (
-          <AddItem
-            onDone={addItem}
-            onCancel={() => setIsAdding(false)}
-            errorMessage={error}
-          />
-        ) : (
-          <div className="flex flex-col gap-2 w-full">
-            <p className="font-mono text-sm italic self-center">
-              No items yet! Click the button below to get started!
-            </p>
-            <Button onClick={() => setIsAdding(true)}>
-              <p className="font-mono">Add Item</p>
-            </Button>
-          </div>
-        )}
-      </>
-    );
-  };
-
-  const ListWithItemsButtons = () => {
+  const OwnerList = () => {
     return (
       <>
         {isAdding && (
@@ -86,13 +70,20 @@ export function List({ list, isOwner }: ListProps) {
           </Button>
         )}
         {!isAdding && !isEditing && (
-          <div className="flex flex-row gap-4 w-full">
-            <Button onClick={() => setIsAdding(true)}>
-              <p className="font-mono">Add Item</p>
-            </Button>
-            <Button onClick={() => setIsEditing(true)} btnType="secondary">
-              <p className="font-mono">Edit List</p>
-            </Button>
+          <div className="flex flex-col gap-2 w-full">
+            {list.items.length === 0 && (
+              <p className="font-mono text-sm italic self-center">
+                No items yet! Click the button below to get started!
+              </p>
+            )}
+            <div className="flex flex-row gap-4 w-full">
+              <Button onClick={() => setIsAdding(true)}>
+                <p className="font-mono">Add Item</p>
+              </Button>
+              <Button onClick={() => setIsEditing(true)} btnType="secondary">
+                <p className="font-mono">Edit List</p>
+              </Button>
+            </div>
           </div>
         )}
       </>
@@ -112,7 +103,7 @@ export function List({ list, isOwner }: ListProps) {
           <p className="font-mono text-xs">{list.description}</p>
         </div>
         {isEditing ? (
-          <button onClick={deleteList}>
+          <button onClick={onDelete}>
             <p className="font-mono font-bold text-blue-500 hover:text-blue-600">
               Delete List
             </p>
@@ -133,15 +124,7 @@ export function List({ list, isOwner }: ListProps) {
               isEditing={isEditing}
             />
           ))}
-          {isOwner && (
-            <>
-              {list.items.length > 0 ? (
-                <ListWithItemsButtons />
-              ) : (
-                <ListWithOutItemsButtons />
-              )}
-            </>
-          )}
+          {isOwner && <OwnerList />}
         </>
       )}
     </div>

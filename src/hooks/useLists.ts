@@ -1,10 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import {
-  List,
-  CreateListRequest,
-  ListItem,
-  CreateListItemRequest,
-} from "@/types";
+import { List, CreateListRequest, CreateListItemRequest } from "@/types";
 
 export function useLists() {
   /**
@@ -49,5 +44,19 @@ export function useLists() {
     },
   });
 
-  return { fetchLists, createList, addListItem };
+  /**
+   * Deletes a list belonging to the user
+   */
+  const deleteList = useMutation({
+    mutationFn: async (listId: number) => {
+      await fetch(`/api/deleteList/${listId}`, {
+        method: "DELETE",
+      });
+    },
+    onSuccess: () => {
+      fetchLists.refetch();
+    },
+  });
+
+  return { fetchLists, createList, addListItem, deleteList };
 }
