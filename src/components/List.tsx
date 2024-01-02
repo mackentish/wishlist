@@ -10,6 +10,7 @@ interface ListProps {
 
 export function List({ list, isOwner }: ListProps) {
   const [isAdding, setIsAdding] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(true);
   const { addListItem } = useLists();
@@ -38,6 +39,12 @@ export function List({ list, isOwner }: ListProps) {
     );
   };
 
+  const deleteList = async () => {
+    if (confirm("Are you sure you want to delete this list?")) {
+      alert("TODO: delete list");
+    }
+  };
+
   const ListWithOutItemsButtons = () => {
     return (
       <>
@@ -64,7 +71,7 @@ export function List({ list, isOwner }: ListProps) {
   const ListWithItemsButtons = () => {
     return (
       <>
-        {isAdding ? (
+        {isAdding && (
           <span>
             <AddItem
               onDone={addItem}
@@ -72,15 +79,18 @@ export function List({ list, isOwner }: ListProps) {
               errorMessage={error}
             />
           </span>
-        ) : (
+        )}
+        {isEditing && (
+          <Button btnType="secondary" onClick={() => setIsEditing(false)}>
+            <p className="font-mono">Done</p>
+          </Button>
+        )}
+        {!isAdding && !isEditing && (
           <div className="flex flex-row gap-4 w-full">
             <Button onClick={() => setIsAdding(true)}>
               <p className="font-mono">Add Item</p>
             </Button>
-            <Button
-              onClick={() => alert("TODO: edit lists")}
-              btnType="secondary"
-            >
+            <Button onClick={() => setIsEditing(true)} btnType="secondary">
               <p className="font-mono">Edit List</p>
             </Button>
           </div>
@@ -92,19 +102,36 @@ export function List({ list, isOwner }: ListProps) {
   return (
     <div className="flex flex-col gap-2 w-full p-4 border rounded-md border-slate-950">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (!isEditing) setIsOpen(!isOpen);
+        }}
         className="flex flex-row justify-between items-center"
       >
         <div className="flex flex-col items-start">
           <p className="font-mono font-bold text-md">{list.name}</p>
           <p className="font-mono text-xs">{list.description}</p>
         </div>
-        {isOpen ? <ChevronUp /> : <ChevronDown />}
+        {isEditing ? (
+          <button onClick={deleteList}>
+            <p className="font-mono font-bold text-blue-500 hover:text-blue-600">
+              Delete List
+            </p>
+          </button>
+        ) : isOpen ? (
+          <ChevronUp />
+        ) : (
+          <ChevronDown />
+        )}
       </button>
       {isOpen && (
         <>
           {list.items.map((item) => (
-            <ListItem key={item.id} item={item} isOwner={isOwner} />
+            <ListItem
+              key={item.id}
+              item={item}
+              isOwner={isOwner}
+              isEditing={isEditing}
+            />
           ))}
           {isOwner && (
             <>

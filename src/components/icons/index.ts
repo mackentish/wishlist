@@ -5,3 +5,5 @@ export * from "./Plus";
 export * from "./People";
 export * from "./ChevronDown";
 export * from "./ChevronUp";
+export * from "./Trash";
+export * from "./Pencil";

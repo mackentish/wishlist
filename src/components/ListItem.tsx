@@ -2,15 +2,15 @@
 
 import React from "react";
 import { ListItem as ListItemType } from "../types";
-import { OpenTab } from "./icons";
-import { Checkbox } from ".";
+import { Checkbox, OpenTab, Pencil, Trash } from ".";
 
 interface ListItemProps {
   item: ListItemType;
   isOwner: boolean;
+  isEditing: boolean;
 }
 
-export function ListItem({ item, isOwner }: ListItemProps) {
+export function ListItem({ item, isOwner, isEditing }: ListItemProps) {
   const handleClick = () => {
     const confirmed = confirm(
       `Are you sure you want to mark "${item.name}" as ${
@@ -37,7 +37,19 @@ export function ListItem({ item, isOwner }: ListItemProps) {
           )}
         </div>
       </div>
-      <OpenTab />
+      {isEditing ? (
+        <div className="flex flex-row gap-4">
+          <button onClick={() => alert("TODO: edit item")}>
+            <Pencil />
+          </button>
+
+          <button onClick={() => alert("TODO: delete item")}>
+            <Trash />
+          </button>
+        </div>
+      ) : (
+        <OpenTab />
+      )}
     </a>
   );
 }
