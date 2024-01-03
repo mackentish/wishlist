@@ -1,62 +1,29 @@
-import { prisma } from "../_base";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { List } from "@/types";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]";
+import { deleteItemById, getSessionUser } from "@/repo";
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<List[]>
+  res: NextApiResponse
 ) {
-  return new Promise<void>(async (resolve, reject) => {
-    try {
-      if (req.method !== "DELETE") {
-        res.status(405);
-        reject();
-        return;
-      }
+  if (req.method !== "DELETE") {
+    res.send(405);
+    return;
+  }
 
-      const session = await getServerSession(req, res, authOptions);
-      if (!session || !session.user) {
-        res.status(404);
-        reject();
-        return;
-      }
+  // find user
+  const existingUser = await getSessionUser(req, res);
+  if (!existingUser) {
+    res.send(404);
+    return;
+  }
 
-      // find user
-      const existingUser = await prisma.user.findUnique({
-        where: { email: session.user.email!! },
-      });
-      if (!existingUser) {
-        res.status(404);
-        reject();
-        return;
-      }
-
-      // verify listItem exists for user
-      const itemId = Number.parseInt(req.query.itemId as string);
-      const item = await prisma.listItem.findUnique({
-        where: { id: itemId },
-      });
-      // verify user owns list item
-      const list = await prisma.list.findUnique({
-        where: { id: item?.listId, userId: existingUser.id },
-      });
-      if (!item || !list) {
-        res.status(404);
-        reject();
-        return;
-      }
-
-      // delete list item
-      await prisma.listItem.delete({ where: { id: item.id } });
-      res.status(204);
-      resolve();
-      return;
-    } catch {
-      res.status(500);
-      reject();
-      return;
-    }
-  });
+  // delete list item
+  const itemId = Number.parseInt(req.query.itemId as string);
+  const success = await deleteItemById(itemId, existingUser.id);
+  if (success) {
+    res.send(204);
+  } else {
+    res.send(404);
+  }
+  return;
 }

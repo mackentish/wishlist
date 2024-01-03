@@ -18,7 +18,7 @@ export function List({ list, isOwner }: ListProps) {
   const addItem = async (data: {
     name: string;
     link: string;
-    note?: string;
+    note: string | null;
   }) => {
     await addListItem.mutate(
       {

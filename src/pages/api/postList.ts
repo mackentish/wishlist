@@ -1,60 +1,32 @@
-import { prisma } from "./_base";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "./auth/[...nextauth]";
 import { CreateListRequest } from "@/types";
+import { createList, getSessionUser } from "@/repo";
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<void>
+  res: NextApiResponse
 ) {
-  return new Promise<void>(async (resolve, reject) => {
-    try {
-      if (req.method !== "POST") {
-        res.status(405);
-        reject();
-        return;
-      }
+  if (req.method !== "POST") {
+    res.send(405);
+    return;
+  }
 
-      const session = await getServerSession(req, res, authOptions);
-      if (!session || !session.user) {
-        res.status(404);
-        reject();
-        return;
-      }
-      const user = await prisma.user.findUnique({
-        where: { email: session.user.email!! },
-      });
-      if (!user) {
-        res.status(404);
-        reject();
-        return;
-      }
+  const existingUser = await getSessionUser(req, res);
+  // if no user, return unauthorized
+  if (!existingUser) {
+    res.send(401);
+    return;
+  }
 
-      // validate data
-      const { name, description } = JSON.parse(req.body) as CreateListRequest;
-      if (!name) {
-        res.status(400);
-        reject();
-        return;
-      }
+  // validate data
+  const data = JSON.parse(req.body) as CreateListRequest;
+  if (!data.name) {
+    res.send(400);
+    return;
+  }
 
-      // create list
-      await prisma.list.create({
-        data: {
-          name,
-          description,
-          user: { connect: { id: user.id } },
-        },
-      });
+  await createList(data, existingUser.id);
 
-      res.status(200).send();
-      resolve();
-      return;
-    } catch (err) {
-      res.status(500);
-      reject();
-      return;
-    }
-  });
+  res.send(200);
+  return;
 }

@@ -4,7 +4,7 @@ export type List = {
   id: number;
   userId: number;
   name: string;
-  description?: string;
+  description: string | null;
   items: ListItem[];
 };
 

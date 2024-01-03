@@ -11,7 +11,7 @@ import { inputStyles } from "@/styles/globalTailwind";
 
 type Inputs = {
   name: string;
-  description?: string;
+  description: string | null;
 };
 
 export default function CreateLists() {

@@ -1,59 +1,29 @@
-import { prisma } from "../_base";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { List } from "@/types";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]";
+import { deleteListById, getSessionUser } from "@/repo";
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<List[]>
+  res: NextApiResponse
 ) {
-  return new Promise<void>(async (resolve, reject) => {
-    try {
-      if (req.method !== "DELETE") {
-        res.status(405);
-        reject();
-        return;
-      }
+  if (req.method !== "DELETE") {
+    res.send(405);
+    return;
+  }
 
-      const session = await getServerSession(req, res, authOptions);
-      if (!session || !session.user) {
-        res.status(404);
-        reject();
-        return;
-      }
+  // find user
+  const existingUser = await getSessionUser(req, res);
+  if (!existingUser) {
+    res.send(404);
+    return;
+  }
 
-      // find user
-      const existingUser = await prisma.user.findUnique({
-        where: { email: session.user.email!! },
-      });
-      if (!existingUser) {
-        res.status(404);
-        reject();
-        return;
-      }
-
-      // verify list exists for user
-      const listId = Number.parseInt(req.query.listId as string);
-      const list = await prisma.list.findUnique({
-        where: { id: listId, userId: existingUser.id },
-      });
-      if (!list) {
-        res.status(404);
-        reject();
-        return;
-      }
-
-      // delete list and it's items
-      await prisma.listItem.deleteMany({ where: { listId: list.id } });
-      await prisma.list.delete({ where: { id: list.id } });
-      res.status(204);
-      resolve();
-      return;
-    } catch {
-      res.status(500);
-      reject();
-      return;
-    }
-  });
+  // delete list
+  const listId = Number.parseInt(req.query.listId as string);
+  const success = await deleteListById(listId, existingUser.id);
+  if (success) {
+    res.send(204);
+  } else {
+    res.send(404);
+  }
+  return;
 }

@@ -4,7 +4,7 @@ import { inputStyles } from "@/styles/globalTailwind";
 import { Button, InputError } from ".";
 
 interface AddItemProps {
-  onDone: (data: { name: string; link: string; note?: string }) => void;
+  onDone: (data: { name: string; link: string; note: string | null }) => void;
   onCancel: () => void;
   errorMessage?: string;
 }
@@ -12,7 +12,7 @@ interface AddItemProps {
 type Inputs = {
   name: string;
   link: string;
-  note: string;
+  note: string | null;
 };
 
 export function AddItem({
