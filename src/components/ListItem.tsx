@@ -3,15 +3,18 @@
 import React from "react";
 import { ListItem as ListItemType } from "../types";
 import { Checkbox, OpenTab, Pencil, Trash } from ".";
+import { useLists } from "@/hooks";
 
 interface ListItemProps {
   item: ListItemType;
   isOwner: boolean;
-  isEditing: boolean;
+  isListEditing: boolean;
 }
 
-export function ListItem({ item, isOwner, isEditing }: ListItemProps) {
-  const handleClick = () => {
+export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
+  const { deleteListItem } = useLists();
+
+  const markAsBought = () => {
     const confirmed = confirm(
       `Are you sure you want to mark "${item.name}" as ${
         item.isBought ? "not bought" : "bought"
@@ -22,6 +25,21 @@ export function ListItem({ item, isOwner, isEditing }: ListItemProps) {
     }
   };
 
+  const beginEditing = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    alert("TODO: edit item");
+    e.preventDefault();
+  };
+
+  const deleteItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const confirmed = confirm(
+      `Are you sure you want to delete "${item.name}"?`
+    );
+    if (confirmed) {
+      deleteListItem.mutate(item.id);
+    }
+    e.preventDefault();
+  };
+
   return (
     <a
       href={item.link}
@@ -29,7 +47,9 @@ export function ListItem({ item, isOwner, isEditing }: ListItemProps) {
       className="flex flex-row items-center justify-between p-2 border border-gray-950 rounded"
     >
       <div className="flex flex-row items-center gap-2">
-        {!isOwner && <Checkbox checked={item.isBought} onClick={handleClick} />}
+        {!isOwner && (
+          <Checkbox checked={item.isBought} onClick={markAsBought} />
+        )}
         <div className="flex flex-col">
           <p className="font-mono">{item.name}</p>
           {item.note && (
@@ -37,13 +57,13 @@ export function ListItem({ item, isOwner, isEditing }: ListItemProps) {
           )}
         </div>
       </div>
-      {isEditing ? (
+      {isListEditing ? (
         <div className="flex flex-row gap-4">
-          <button onClick={() => alert("TODO: edit item")}>
+          <button onClick={beginEditing}>
             <Pencil />
           </button>
 
-          <button onClick={() => alert("TODO: delete item")}>
+          <button onClick={deleteItem}>
             <Trash />
           </button>
         </div>

@@ -121,7 +121,7 @@ export function List({ list, isOwner }: ListProps) {
               key={item.id}
               item={item}
               isOwner={isOwner}
-              isEditing={isEditing}
+              isListEditing={isEditing}
             />
           ))}
           {isOwner && <OwnerList />}

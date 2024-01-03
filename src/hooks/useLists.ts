@@ -45,6 +45,20 @@ export function useLists() {
   });
 
   /**
+   * Deletes a list item belonging to the user
+   */
+  const deleteListItem = useMutation({
+    mutationFn: async (itemId: number) => {
+      await fetch(`/api/deleteItem/${itemId}`, {
+        method: "DELETE",
+      });
+    },
+    onSuccess: () => {
+      fetchLists.refetch();
+    },
+  });
+
+  /**
    * Deletes a list belonging to the user
    */
   const deleteList = useMutation({
@@ -58,5 +72,5 @@ export function useLists() {
     },
   });
 
-  return { fetchLists, createList, addListItem, deleteList };
+  return { fetchLists, createList, addListItem, deleteListItem, deleteList };
 }

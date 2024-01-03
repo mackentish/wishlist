@@ -1,25 +1,8 @@
-import { prisma } from "./_base";
+import { prisma } from "../_base";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { List } from "@/types";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "./auth/[...nextauth]";
-
-function mapLists(lists: any[]): List[] {
-  return lists.map((list) => ({
-    id: list.id,
-    name: list.name,
-    description: list.description ?? undefined,
-    items:
-      list.items?.map((item: any) => ({
-        id: item.id,
-        name: item.name,
-        note: item.note ?? undefined,
-        link: item.link,
-        isBought: item.isBought,
-      })) ?? [],
-    userId: list.userId,
-  }));
-}
+import { authOptions } from "../auth/[...nextauth]";
 
 export default function handler(
   req: NextApiRequest,
@@ -27,8 +10,7 @@ export default function handler(
 ) {
   return new Promise<void>(async (resolve, reject) => {
     try {
-      console.log("FETCHING LISTS", new Date().toTimeString());
-      if (req.method !== "GET") {
+      if (req.method !== "DELETE") {
         res.status(405);
         reject();
         return;
@@ -51,14 +33,24 @@ export default function handler(
         return;
       }
 
-      // find all lists associated with user
-      // TODO: add shared lists once implemented
-      const lists = await prisma.list.findMany({
-        where: { userId: existingUser.id },
-        include: { items: true },
+      // verify listItem exists for user
+      const itemId = Number.parseInt(req.query.itemId as string);
+      const item = await prisma.listItem.findUnique({
+        where: { id: itemId },
       });
+      // verify user owns list item
+      const list = await prisma.list.findUnique({
+        where: { id: item?.listId, userId: existingUser.id },
+      });
+      if (!item || !list) {
+        res.status(404);
+        reject();
+        return;
+      }
 
-      res.status(200).send(mapLists(lists));
+      // delete list item
+      await prisma.listItem.delete({ where: { id: item.id } });
+      res.status(204);
       resolve();
       return;
     } catch {
