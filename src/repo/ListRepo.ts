@@ -21,11 +21,19 @@ export async function deleteListById(
 
 export async function getListsForUser(userId: number): Promise<List[]> {
   // find all lists associated with user
-  // TODO: add shared lists once implemented
-  return await prisma.list.findMany({
+  // first, get lists owned by user
+  const userLists = await prisma.list.findMany({
     where: { userId: userId },
     include: { items: true },
   });
+  // next, get lists shared with user
+  const sharedLists = await prisma.sharedList.findMany({
+    where: { sharedUserId: userId },
+    include: { list: { include: { items: true } } },
+  });
+
+  // combine lists and return
+  return [...userLists, ...sharedLists.map((sl) => sl.list)];
 }
 
 export async function createList(

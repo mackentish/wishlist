@@ -3,6 +3,7 @@ import { useLists, useUser } from "@/hooks";
 import { Pages } from "@/types";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useMemo } from "react";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -10,6 +11,16 @@ export default function Home() {
   const {
     fetchLists: { isLoading: listsLoading, error: listsError, data: lists },
   } = useLists();
+
+  const userLists = useMemo(() => {
+    if (!lists) return [];
+    return lists.filter((list) => list.userId === user?.id);
+  }, [lists, user?.id]);
+
+  const sharedLists = useMemo(() => {
+    if (!lists) return [];
+    return lists.filter((list) => list.userId !== user?.id);
+  }, [lists, user?.id]);
 
   if (!session?.user) {
     return <SignIn />;
@@ -35,7 +46,7 @@ export default function Home() {
       {/* My Lists */}
       <div className="flex flex-col w-full gap-2">
         <h2 className="font-mono font-bold text-xl">Your Lists:</h2>
-        {lists.length > 0 ? (
+        {userLists.length > 0 ? (
           lists
             .filter((list) => list.userId === user.id)
             .map((list, index) => (
@@ -55,7 +66,7 @@ export default function Home() {
       {/* Shared Lists */}
       <div className="flex flex-col w-full gap-2">
         <h2 className="font-mono font-bold text-xl">Shared Lists:</h2>
-        {lists.length > 0 ? (
+        {sharedLists.length > 0 ? (
           lists
             .filter((list) => list.userId !== user.id)
             .map((list, index) => (
