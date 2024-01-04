@@ -3,7 +3,6 @@ import { ListItem, Button, ItemForm, Share, Spacer } from ".";
 import { List as ListType } from "../types";
 import { useLists } from "@/hooks";
 import { inputStyles } from "@/styles/globalTailwind";
-import { set } from "react-hook-form";
 
 interface ListProps {
   list: ListType;
@@ -13,6 +12,10 @@ interface ListProps {
 export function List({ list, isOwner }: ListProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [listName, setListName] = useState(list.name);
+  const [listDescription, setListDescription] = useState(
+    list.description || ""
+  );
   const [error, setError] = useState<string | undefined>(undefined);
   const { addListItem, deleteList, updateList } = useLists();
 
@@ -41,7 +44,19 @@ export function List({ list, isOwner }: ListProps) {
   };
 
   const onSaveChanges = async () => {
-    alert("TODO: update list name and description");
+    await updateList.mutateAsync(
+      {
+        ...list,
+        id: list.id,
+        name: listName,
+        description: listDescription,
+      },
+      {
+        onSuccess: () => {
+          setIsEditing(false);
+        },
+      }
+    );
     setIsEditing(false);
   };
 
@@ -104,12 +119,14 @@ export function List({ list, isOwner }: ListProps) {
           <div className="flex flex-col lg:grid lg:grid-cols-5 gap-2 w-full">
             <input
               className={`${inputStyles.editing} col-span-2`}
-              defaultValue={list.name}
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
               placeholder="List Name"
             />
             <input
               className={`${inputStyles.editing} col-span-3`}
-              defaultValue={list.description || ""}
+              value={listDescription}
+              onChange={(e) => setListDescription(e.target.value)}
               placeholder="List Description?"
             />
           </div>
