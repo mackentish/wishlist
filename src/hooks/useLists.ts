@@ -92,6 +92,21 @@ export function useLists() {
     },
   });
 
+  /**
+   * Updates a list belonging to the user
+   */
+  const updateList = useMutation({
+    mutationFn: async (list: List) => {
+      await fetch(`/api/updateList/${list.id}`, {
+        method: "PUT",
+        body: JSON.stringify(list),
+      });
+    },
+    onSuccess: () => {
+      fetchLists.refetch();
+    },
+  });
+
   return {
     fetchLists,
     createList,
@@ -99,5 +114,6 @@ export function useLists() {
     deleteListItem,
     updateListItem,
     deleteList,
+    updateList,
   };
 }

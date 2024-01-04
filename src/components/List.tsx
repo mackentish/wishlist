@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { ListItem, Button, ItemForm, Share, Spacer } from ".";
 import { List as ListType } from "../types";
 import { useLists } from "@/hooks";
+import { inputStyles } from "@/styles/globalTailwind";
+import { set } from "react-hook-form";
 
 interface ListProps {
   list: ListType;
@@ -12,7 +14,7 @@ export function List({ list, isOwner }: ListProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
-  const { addListItem, deleteList } = useLists();
+  const { addListItem, deleteList, updateList } = useLists();
 
   const addItem = async (data: {
     name: string;
@@ -36,6 +38,11 @@ export function List({ list, isOwner }: ListProps) {
         },
       }
     );
+  };
+
+  const onSaveChanges = async () => {
+    alert("TODO: update list name and description");
+    setIsEditing(false);
   };
 
   const onDelete = async () => {
@@ -92,31 +99,40 @@ export function List({ list, isOwner }: ListProps) {
 
   return (
     <div className="flex flex-col gap-2 w-full p-4 border rounded-md border-slate-950">
-      <div className="flex flex-row justify-between items-center">
-        {isEditing ? (
-          <>
-            <div className="flex flex-col items-start">
-              <p className="font-mono font-bold text-md">{list.name}</p>
-              <p className="font-mono text-xs">{list.description}</p>
-            </div>
-            <button onClick={onDelete}>
-              <p className="font-mono font-bold text-blue-500 hover:text-blue-600">
-                Delete List
-              </p>
-            </button>
-          </>
-        ) : (
-          <>
-            <div className="flex flex-col items-start">
-              <p className="font-mono font-bold text-md">{list.name}</p>
-              <p className="font-mono text-xs">{list.description}</p>
-            </div>
-            <button onClick={() => alert("TODO: Share List")}>
-              <Share />
-            </button>
-          </>
-        )}
-      </div>
+      {isEditing ? (
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-col lg:grid lg:grid-cols-5 gap-2 w-full">
+            <input
+              className={`${inputStyles.editing} col-span-2`}
+              defaultValue={list.name}
+              placeholder="List Name"
+            />
+            <input
+              className={`${inputStyles.editing} col-span-3`}
+              defaultValue={list.description || ""}
+              placeholder="List Description?"
+            />
+          </div>
+          <div className="flex flex-row gap-4 w-full">
+            <Button onClick={onSaveChanges}>
+              <p className="font-mono">Save Changes</p>
+            </Button>
+            <Button btnType="danger" onClick={onDelete}>
+              <p className="font-mono">Delete List</p>
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-row justify-between items-center">
+          <div className="flex flex-col items-start">
+            <p className="font-mono font-bold text-md">{list.name}</p>
+            <p className="font-mono text-xs">{list.description}</p>
+          </div>
+          <button onClick={() => alert("TODO: Share List")}>
+            <Share />
+          </button>
+        </div>
+      )}
       {list.items.map((item) => (
         <ListItem
           key={item.id}
