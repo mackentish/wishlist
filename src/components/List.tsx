@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ListItem, Button, ItemForm, ChevronDown, ChevronUp, Spacer } from ".";
+import { ListItem, Button, ItemForm, Share, Spacer } from ".";
 import { List as ListType } from "../types";
 import { useLists } from "@/hooks";
 
@@ -12,7 +12,6 @@ export function List({ list, isOwner }: ListProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
-  const [isOpen, setIsOpen] = useState(true);
   const { addListItem, deleteList } = useLists();
 
   const addItem = async (data: {
@@ -93,41 +92,40 @@ export function List({ list, isOwner }: ListProps) {
 
   return (
     <div className="flex flex-col gap-2 w-full p-4 border rounded-md border-slate-950">
-      <button
-        onClick={() => {
-          if (!isEditing) setIsOpen(!isOpen);
-        }}
-        className="flex flex-row justify-between items-center"
-      >
-        <div className="flex flex-col items-start">
-          <p className="font-mono font-bold text-md">{list.name}</p>
-          <p className="font-mono text-xs">{list.description}</p>
-        </div>
+      <div className="flex flex-row justify-between items-center">
         {isEditing ? (
-          <button onClick={onDelete}>
-            <p className="font-mono font-bold text-blue-500 hover:text-blue-600">
-              Delete List
-            </p>
-          </button>
-        ) : isOpen ? (
-          <ChevronUp />
+          <>
+            <div className="flex flex-col items-start">
+              <p className="font-mono font-bold text-md">{list.name}</p>
+              <p className="font-mono text-xs">{list.description}</p>
+            </div>
+            <button onClick={onDelete}>
+              <p className="font-mono font-bold text-blue-500 hover:text-blue-600">
+                Delete List
+              </p>
+            </button>
+          </>
         ) : (
-          <ChevronDown />
+          <>
+            <div className="flex flex-col items-start">
+              <p className="font-mono font-bold text-md">{list.name}</p>
+              <p className="font-mono text-xs">{list.description}</p>
+            </div>
+            <button onClick={() => alert("TODO: Share List")}>
+              <Share />
+            </button>
+          </>
         )}
-      </button>
-      {isOpen && (
-        <>
-          {list.items.map((item) => (
-            <ListItem
-              key={item.id}
-              item={item}
-              isOwner={isOwner}
-              isListEditing={isEditing}
-            />
-          ))}
-          {isOwner && <OwnerList />}
-        </>
-      )}
+      </div>
+      {list.items.map((item) => (
+        <ListItem
+          key={item.id}
+          item={item}
+          isOwner={isOwner}
+          isListEditing={isEditing}
+        />
+      ))}
+      {isOwner && <OwnerList />}
     </div>
   );
 }
