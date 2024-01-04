@@ -6,12 +6,9 @@ import Image from "next/image";
 export function Layout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   return (
-    <main className="flex flex-row min-h-screen min-w-screen">
-      <div className="flex flex-row justify-center items-center w-full">
-        {children}
-      </div>
+    <main className="flex flex-col min-h-screen min-w-screen p-4">
       {session?.user && (
-        <div className="flex flex-row gap-2 items-center absolute top-4 right-4 w-50">
+        <div className="flex flex-row gap-2 items-center self-center lg:self-end">
           <Image
             src={session.user.image!!}
             alt="User Avatar"
@@ -25,6 +22,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </Button>
         </div>
       )}
+      <div className="flex flex-row justify-center items-center w-full">
+        {children}
+      </div>
     </main>
   );
 }
