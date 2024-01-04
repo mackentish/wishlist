@@ -44,3 +44,34 @@ export async function createItem(
   });
   return true;
 }
+
+export async function updateItemById(
+  itemId: number,
+  data: CreateListItemRequest,
+  userId: number
+): Promise<boolean> {
+  // validate that list belongs to user
+  const list = await prisma.list.findUnique({
+    where: { id: data.listId, userId },
+  });
+  if (!list) {
+    return false;
+  }
+
+  // update list item
+  const updatedItem = await prisma.listItem.update({
+    where: { id: itemId },
+    data: {
+      name: data.name,
+      link: data.link,
+      note: data.note,
+      isBought: data.isBought,
+    },
+  });
+
+  if (updatedItem) {
+    return true;
+  } else {
+    return false;
+  }
+}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ListItem, Button, AddItem, ChevronDown, ChevronUp } from ".";
+import { ListItem, Button, ItemForm, ChevronDown, ChevronUp, Spacer } from ".";
 import { List as ListType } from "../types";
 import { useLists } from "@/hooks";
 
@@ -56,13 +56,14 @@ export function List({ list, isOwner }: ListProps) {
     return (
       <>
         {isAdding && (
-          <span>
-            <AddItem
+          <div className="flex flex-col">
+            <Spacer />
+            <ItemForm
               onDone={addItem}
               onCancel={() => setIsAdding(false)}
               errorMessage={error}
             />
-          </span>
+          </div>
         )}
         {isEditing && (
           <Button btnType="secondary" onClick={() => setIsEditing(false)}>

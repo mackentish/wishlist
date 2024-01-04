@@ -3,10 +3,12 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { inputStyles } from "@/styles/globalTailwind";
 import { Button, InputError } from ".";
 
-interface AddItemProps {
+interface ItemFormProps {
   onDone: (data: { name: string; link: string; note: string | null }) => void;
   onCancel: () => void;
   errorMessage?: string;
+  defaults?: { name: string; link: string; note: string | null };
+  doneText?: string;
 }
 
 type Inputs = {
@@ -15,11 +17,13 @@ type Inputs = {
   note: string | null;
 };
 
-export function AddItem({
+export function ItemForm({
   onDone,
   onCancel,
   errorMessage = undefined,
-}: AddItemProps) {
+  defaults = undefined,
+  doneText = "Done",
+}: ItemFormProps) {
   const {
     register,
     handleSubmit,
@@ -31,14 +35,12 @@ export function AddItem({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-2 mt-4"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
       <div className="flex flex-row gap-4">
         {/* Name Input */}
         <span className="w-full">
           <input
+            defaultValue={defaults?.name}
             placeholder="Item Name"
             className={!!errors.name ? inputStyles.error : inputStyles.default}
             {...register("name", { required: true })}
@@ -49,6 +51,7 @@ export function AddItem({
         {/* Link Input */}
         <span className="w-full">
           <input
+            defaultValue={defaults?.link}
             placeholder="Item Link"
             className={!!errors.link ? inputStyles.error : inputStyles.default}
             type="url"
@@ -59,6 +62,7 @@ export function AddItem({
       </div>
       {/* Note Input */}
       <input
+        defaultValue={defaults?.note ?? undefined}
         placeholder="Item Note?"
         className={inputStyles.default}
         {...register("note", { required: false })}
@@ -70,7 +74,7 @@ export function AddItem({
       {/* Buttons */}
       <div className="flex flex-row gap-4 w-full">
         <Button onClick={() => handleSubmit(onSubmit)}>
-          <p className="font-mono">Done</p>
+          <p className="font-mono">{doneText}</p>
         </Button>
         <Button onClick={onCancel} btnType="secondary">
           <p className="font-mono">Cancel</p>
