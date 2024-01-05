@@ -1,16 +1,35 @@
-import { Button, ErrorView } from "@/components";
-import { useLists, useSharedList } from "@/hooks";
-import { useRouter } from "next/router";
 import React from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { Button, ErrorView, SignIn } from "@/components";
+import { useLists, useSharedList, useUser } from "@/hooks";
 
 export default function ConfirmShareList() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const { isLoading: userLoading, error: userError } = useUser();
   const { listId } = router.query;
   const parsedId = Number.parseInt(listId as string) || undefined;
   const { addSharedList } = useLists();
   const { isLoading, error, data } = useSharedList(parsedId);
 
   if (!parsedId) {
+    return <ErrorView />;
+  }
+
+  if (!session?.user) {
+    return <SignIn />;
+  }
+  if (userLoading) {
+    return (
+      <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
+        <h1 className="font-mono font-bold text-3xl">wishlist</h1>
+        <p className="font-mono text-xl">Loading...</p>
+      </div>
+    );
+  }
+
+  if (userError) {
     return <ErrorView />;
   }
 
