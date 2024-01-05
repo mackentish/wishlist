@@ -16,9 +16,13 @@ export function List({ list, isOwner }: ListProps) {
   const [listDescription, setListDescription] = useState(
     list.description || ""
   );
-  const [error, setError] = useState<string | undefined>(undefined);
+  const [itemFormError, setItemFormError] = useState<string | undefined>(
+    undefined
+  );
+  const [isLinkLoading, setIsLinkLoading] = useState(false);
   const { addListItem, deleteList, updateList } = useLists();
 
+  // Functions:
   const addItem = async (data: {
     name: string;
     link: string;
@@ -37,7 +41,7 @@ export function List({ list, isOwner }: ListProps) {
           setIsAdding(false);
         },
         onError: () => {
-          setError("Something went wrong creating your new list item!");
+          setItemFormError("Something went wrong creating your new list item!");
         },
       }
     );
@@ -67,10 +71,69 @@ export function List({ list, isOwner }: ListProps) {
           setIsEditing(false);
         },
         onError: () => {
-          setError("Something went wrong deleting your list!");
+          setItemFormError("Something went wrong deleting your list!");
         },
       });
     }
+  };
+
+  const generateLink = async () => {
+    setIsLinkLoading(true);
+    const res = await fetch(`/api/shareLink/${list.id}`);
+    if (res.ok) {
+      const { link } = await res.json();
+      await navigator.clipboard.writeText(link);
+      alert(
+        `Link copied to clipboard. Send this link with your friends to share your '${list.name}' list!`
+      );
+    } else {
+      alert("Something went wrong generating your share link!");
+    }
+    setIsLinkLoading(false);
+  };
+
+  // Refactored components for readability:
+  const EditingList = () => {
+    return (
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col lg:grid lg:grid-cols-5 gap-2 w-full">
+          <input
+            className={`${inputStyles.editing} col-span-2`}
+            value={listName}
+            onChange={(e) => setListName(e.target.value)}
+            placeholder="List Name"
+          />
+          <input
+            className={`${inputStyles.editing} col-span-3`}
+            value={listDescription}
+            onChange={(e) => setListDescription(e.target.value)}
+            placeholder="List Description?"
+          />
+        </div>
+        <div className="flex flex-row gap-4 w-full">
+          <Button onClick={onSaveChanges}>
+            <p className="font-mono">Save Changes</p>
+          </Button>
+          <Button btnType="danger" onClick={onDelete}>
+            <p className="font-mono">Delete List</p>
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const DefaultList = () => {
+    return (
+      <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-col items-start">
+          <p className="font-mono font-bold text-md">{list.name}</p>
+          <p className="font-mono text-xs">{list.description}</p>
+        </div>
+        <button onClick={generateLink} disabled={isLinkLoading}>
+          <Share disabled={isLinkLoading} />
+        </button>
+      </div>
+    );
   };
 
   const OwnerList = () => {
@@ -82,7 +145,7 @@ export function List({ list, isOwner }: ListProps) {
             <ItemForm
               onDone={addItem}
               onCancel={() => setIsAdding(false)}
-              errorMessage={error}
+              errorMessage={itemFormError}
             />
           </div>
         )}
@@ -114,42 +177,7 @@ export function List({ list, isOwner }: ListProps) {
 
   return (
     <div className="flex flex-col gap-2 w-full p-4 border rounded-md border-slate-950">
-      {isEditing ? (
-        <div className="flex flex-col gap-2">
-          <div className="flex flex-col lg:grid lg:grid-cols-5 gap-2 w-full">
-            <input
-              className={`${inputStyles.editing} col-span-2`}
-              value={listName}
-              onChange={(e) => setListName(e.target.value)}
-              placeholder="List Name"
-            />
-            <input
-              className={`${inputStyles.editing} col-span-3`}
-              value={listDescription}
-              onChange={(e) => setListDescription(e.target.value)}
-              placeholder="List Description?"
-            />
-          </div>
-          <div className="flex flex-row gap-4 w-full">
-            <Button onClick={onSaveChanges}>
-              <p className="font-mono">Save Changes</p>
-            </Button>
-            <Button btnType="danger" onClick={onDelete}>
-              <p className="font-mono">Delete List</p>
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-col items-start">
-            <p className="font-mono font-bold text-md">{list.name}</p>
-            <p className="font-mono text-xs">{list.description}</p>
-          </div>
-          <button onClick={() => alert("TODO: Share List")}>
-            <Share />
-          </button>
-        </div>
-      )}
+      {isEditing ? <EditingList /> : <DefaultList />}
       {list.items.map((item) => (
         <ListItem
           key={item.id}

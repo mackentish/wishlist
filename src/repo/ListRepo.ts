@@ -82,3 +82,25 @@ export async function updateListById(
   });
   return true;
 }
+
+export async function updateListToShare(
+  listId: number,
+  userId: number
+): Promise<boolean> {
+  // verify list exists for user
+  const list = await prisma.list.findUnique({
+    where: { id: listId, userId: userId },
+  });
+  if (!list) {
+    return false;
+  }
+
+  // update list so it is able to be shared for 24 hours
+  await prisma.list.update({
+    where: { id: list.id },
+    data: {
+      linkExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    },
+  });
+  return true;
+}

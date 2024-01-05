@@ -1,11 +1,17 @@
 import React from "react";
 
-export function Share() {
+interface ShareProps {
+  disabled: boolean;
+}
+
+export function Share({ disabled }: ShareProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className="w-6 h-6 fill-blue-500 hover:fill-blue-600"
+      className={`w-6 h-6 ${
+        disabled ? "fill-slate-600" : "fill-blue-500 hover:fill-blue-600"
+      }`}
     >
       <path
         fill-rule="evenodd"
