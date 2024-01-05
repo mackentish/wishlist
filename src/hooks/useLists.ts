@@ -107,6 +107,26 @@ export function useLists() {
     },
   });
 
+  /**
+   * Add shared list to user's account
+   */
+  const addSharedList = useMutation({
+    mutationFn: async (listId: number) => {
+      const res = await fetch(`/api/addSharedList/${listId}`, {
+        method: "POST",
+      });
+
+      if (!res.ok) {
+        throw new Error("Unable to add shared list");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      fetchLists.refetch();
+    },
+    retry: false,
+  });
+
   return {
     fetchLists,
     createList,
@@ -115,5 +135,6 @@ export function useLists() {
     updateListItem,
     deleteList,
     updateList,
+    addSharedList,
   };
 }

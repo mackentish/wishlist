@@ -1,14 +1,18 @@
-import { Button } from "@/components";
-import { useSharedList } from "@/hooks";
+import { Button, ErrorView } from "@/components";
+import { useLists, useSharedList } from "@/hooks";
 import { useRouter } from "next/router";
 import React from "react";
 
 export default function ConfirmShareList() {
   const router = useRouter();
   const { listId } = router.query;
-  const { isLoading, error, data } = useSharedList(
-    Number.parseInt(listId as string) || undefined
-  );
+  const parsedId = Number.parseInt(listId as string) || undefined;
+  const { addSharedList } = useLists();
+  const { isLoading, error, data } = useSharedList(parsedId);
+
+  if (!parsedId) {
+    return <ErrorView />;
+  }
 
   return (
     <div className="flex flex-col gap-8 items-center w-full max-w-3xl py-20">
@@ -28,7 +32,21 @@ export default function ConfirmShareList() {
             Would you like to add their list to your account?
           </p>
           <div className="flex flex-row gap-2">
-            <Button onClick={() => alert("TODO: Add list to user")}>Yes</Button>
+            <Button
+              onClick={async () => {
+                await addSharedList.mutateAsync(parsedId, {
+                  onSuccess: () => {
+                    router.push("/");
+                  },
+                  onError: (error) => {
+                    console.error(error);
+                    alert("Error adding shared list");
+                  },
+                });
+              }}
+            >
+              Yes
+            </Button>
             <Button btnType="secondary" onClick={() => router.push("/")}>
               No
             </Button>

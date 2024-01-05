@@ -133,3 +133,36 @@ export async function getSharedListData(
     listDescription: list.description,
   };
 }
+
+export async function addSharedList(
+  listId: number,
+  userId: number
+): Promise<boolean> {
+  // verify list exists
+  const list = await prisma.list.findUnique({ where: { id: listId } });
+  if (!list) {
+    return false;
+  }
+
+  // verify list is not owned by user
+  if (list.userId === userId) {
+    return false;
+  }
+
+  // verify list is not already shared with user
+  const sharedList = await prisma.sharedList.findFirst({
+    where: { listId: list.id, sharedUserId: userId },
+  });
+  if (sharedList) {
+    return false;
+  }
+
+  // add shared list
+  await prisma.sharedList.create({
+    data: {
+      listId: list.id,
+      sharedUserId: userId,
+    },
+  });
+  return true;
+}
