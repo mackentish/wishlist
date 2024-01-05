@@ -111,11 +111,9 @@ export function List({ list, isOwner }: ListProps) {
           />
         </div>
         <div className="flex flex-row gap-4 w-full">
-          <Button onClick={onSaveChanges}>
-            <p className="font-mono">Save Changes</p>
-          </Button>
+          <Button onClick={onSaveChanges}>Save Changes</Button>
           <Button btnType="danger" onClick={onDelete}>
-            <p className="font-mono">Delete List</p>
+            Delete List
           </Button>
         </div>
       </div>
@@ -151,7 +149,7 @@ export function List({ list, isOwner }: ListProps) {
         )}
         {isEditing && (
           <Button btnType="secondary" onClick={() => setIsEditing(false)}>
-            <p className="font-mono">Done</p>
+            Done
           </Button>
         )}
         {!isAdding && !isEditing && (
@@ -162,11 +160,9 @@ export function List({ list, isOwner }: ListProps) {
               </p>
             )}
             <div className="flex flex-row gap-4 w-full">
-              <Button onClick={() => setIsAdding(true)}>
-                <p className="font-mono">Add Item</p>
-              </Button>
+              <Button onClick={() => setIsAdding(true)}>Add Item</Button>
               <Button onClick={() => setIsEditing(true)} btnType="secondary">
-                <p className="font-mono">Edit List</p>
+                Edit List
               </Button>
             </div>
           </div>

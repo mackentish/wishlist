@@ -9,3 +9,9 @@ export type List = {
 };
 
 export type CreateListRequest = Omit<List, "id" | "userId" | "items">;
+
+export type SharedListResponse = {
+  userName: string;
+  listName: string;
+  listDescription: string | null;
+};

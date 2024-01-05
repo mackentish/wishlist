@@ -73,11 +73,9 @@ export function ItemForm({
 
       {/* Buttons */}
       <div className="flex flex-row gap-4 w-full">
-        <Button onClick={() => handleSubmit(onSubmit)}>
-          <p className="font-mono">{doneText}</p>
-        </Button>
+        <Button onClick={() => handleSubmit(onSubmit)}>{doneText}</Button>
         <Button onClick={onCancel} btnType="secondary">
-          <p className="font-mono">Cancel</p>
+          Cancel
         </Button>
       </div>
     </form>

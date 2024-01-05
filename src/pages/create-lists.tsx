@@ -60,11 +60,9 @@ export default function CreateLists() {
         />
         {/* Buttons */}
         <div className="flex flex-row gap-4 w-full">
-          <Button onClick={() => handleSubmit(onSubmit)}>
-            <p className="font-mono">Done</p>
-          </Button>
+          <Button onClick={() => handleSubmit(onSubmit)}>Done</Button>
           <Link href={Pages.Home} className={secondaryBtnClass}>
-            <p className="font-mono">Cancel</p>
+            Cancel
           </Link>
         </div>
       </form>

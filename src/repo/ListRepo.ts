@@ -1,4 +1,4 @@
-import { CreateListRequest, List } from "@/types";
+import { CreateListRequest, List, SharedListResponse } from "@/types";
 import { prisma } from "./_base";
 
 export async function deleteListById(
@@ -103,4 +103,33 @@ export async function updateListToShare(
     },
   });
   return true;
+}
+
+export async function getSharedListData(
+  listId: number
+): Promise<SharedListResponse | null> {
+  // find list
+  const list = await prisma.list.findUnique({
+    where: { id: listId },
+    include: {
+      user: {
+        select: { name: true },
+      },
+    },
+  });
+  if (!list) {
+    return null;
+  }
+
+  // check if link has expired
+  if (list.linkExpires && list.linkExpires < new Date()) {
+    return null;
+  }
+
+  // return list data
+  return {
+    userName: list.user.name,
+    listName: list.name,
+    listDescription: list.description,
+  };
 }

@@ -6,7 +6,7 @@ interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
 }
 
 const sharedStyles =
-  "flex flex-row gap-2 justify-center font-bold py-2 px-4 rounded w-full";
+  "flex flex-row gap-2 justify-center font-bold py-2 px-4 rounded w-full font-mono";
 export const primaryBtnClass = `text-white bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 ${sharedStyles}`;
 export const secondaryBtnClass = `text-blue-500 border border-blue-500 hover:border-blue-600 hover:text-blue-600 disabled:text-gray-600 disabled:border-gray-600 ${sharedStyles}`;
 export const dangerBtnClass = `text-white bg-red-600 hover:bg-red-700 disabled:bg-gray-600 ${sharedStyles}`;
