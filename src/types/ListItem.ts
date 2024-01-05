@@ -8,3 +8,8 @@ export type ListItem = {
 };
 
 export type CreateListItemRequest = Omit<ListItem, "id">;
+
+export type ToggleBoughtRequest = {
+  itemId: number;
+  isBought: boolean;
+};

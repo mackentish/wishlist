@@ -13,7 +13,7 @@ interface ListItemProps {
 
 export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const { deleteListItem, updateListItem } = useLists();
+  const { deleteListItem, updateListItem, toggleItemBought } = useLists();
 
   const markAsBought = () => {
     const confirmed = confirm(
@@ -22,7 +22,10 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
       }?`
     );
     if (confirmed) {
-      console.log("TODO: update item's isBought property");
+      toggleItemBought.mutate({
+        itemId: item.id,
+        isBought: !item.isBought,
+      });
     }
   };
 

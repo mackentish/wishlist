@@ -13,7 +13,7 @@ export default async function handler(
   // find user
   const existingUser = await getSessionUser(req, res);
   if (!existingUser) {
-    res.status(404).json({ error: "User not found" });
+    res.status(401).json({ error: "User not found, unauthorized" });
     return;
   }
 

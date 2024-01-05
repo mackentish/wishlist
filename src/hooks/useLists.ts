@@ -4,6 +4,7 @@ import {
   CreateListRequest,
   CreateListItemRequest,
   ListItem,
+  ToggleBoughtRequest,
 } from "@/types";
 
 export function useLists() {
@@ -121,6 +122,26 @@ export function useLists() {
   });
 
   /**
+   * Marks a list item as bought
+   */
+  const toggleItemBought = useMutation({
+    mutationFn: async (data: ToggleBoughtRequest) => {
+      const res = await fetch(`/api/boughtItem/${data.itemId}`, {
+        method: "PUT",
+        body: JSON.stringify({ isBought: data.isBought }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Unable to mark item as bought");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      fetchLists.refetch();
+    },
+  });
+
+  /**
    * Updates a list belonging to the user
    */
   const updateList = useMutation({
@@ -166,6 +187,7 @@ export function useLists() {
     addListItem,
     deleteListItem,
     updateListItem,
+    toggleItemBought,
     deleteList,
     updateList,
     addSharedList,
