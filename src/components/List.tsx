@@ -47,8 +47,8 @@ export function List({ list, isOwner }: ListProps) {
     );
   };
 
-  const onSaveChanges = async () => {
-    await updateList.mutateAsync(
+  const onSaveChanges = () => {
+    updateList.mutate(
       {
         ...list,
         id: list.id,
@@ -64,9 +64,9 @@ export function List({ list, isOwner }: ListProps) {
     setIsEditing(false);
   };
 
-  const onDelete = async () => {
+  const onDelete = () => {
     if (confirm("Are you sure you want to delete this list?")) {
-      await deleteList.mutateAsync(list.id, {
+      deleteList.mutate(list.id, {
         onSuccess: () => {
           setIsEditing(false);
         },

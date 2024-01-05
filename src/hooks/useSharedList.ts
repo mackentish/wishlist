@@ -6,8 +6,10 @@ export function useSharedList(listId: number | undefined) {
     queryKey: ["sharedList", listId],
     queryFn: async () => {
       const res = await fetch(`/api/getSharedList/${listId}`);
-      const data = await res.json();
-      return data;
+      if (!res.ok) {
+        throw new Error("Unable to get shared list");
+      }
+      return res.json();
     },
     enabled: !!listId,
   });

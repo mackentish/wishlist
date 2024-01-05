@@ -14,8 +14,11 @@ export function useLists() {
     queryKey: ["lists"],
     queryFn: async () => {
       const res = await fetch("/api/getLists");
-      const data = await res.json();
-      return data;
+
+      if (!res.ok) {
+        throw new Error("Unable to fetch lists");
+      }
+      return res.json();
     },
   });
 
@@ -24,10 +27,15 @@ export function useLists() {
    */
   const createList = useMutation({
     mutationFn: async (newList: CreateListRequest) => {
-      await fetch("/api/postList", {
+      const res = await fetch("/api/postList", {
         method: "POST",
         body: JSON.stringify(newList),
       });
+
+      if (!res.ok) {
+        throw new Error("Unable to create list");
+      }
+      return res.json();
     },
     onSuccess: () => {
       fetchLists.refetch();
@@ -39,10 +47,15 @@ export function useLists() {
    */
   const addListItem = useMutation({
     mutationFn: async (item: CreateListItemRequest) => {
-      await fetch("/api/postListItem", {
+      const res = await fetch("/api/postListItem", {
         method: "POST",
         body: JSON.stringify(item),
       });
+
+      if (!res.ok) {
+        throw new Error("Unable to add list item");
+      }
+      return res.json();
     },
     onSuccess: () => {
       fetchLists.refetch();
@@ -54,9 +67,14 @@ export function useLists() {
    */
   const deleteListItem = useMutation({
     mutationFn: async (itemId: number) => {
-      await fetch(`/api/deleteItem/${itemId}`, {
+      const res = await fetch(`/api/deleteItem/${itemId}`, {
         method: "DELETE",
       });
+
+      if (!res.ok) {
+        throw new Error("Unable to delete list item");
+      }
+      return res.json();
     },
     onSuccess: () => {
       fetchLists.refetch();
@@ -68,9 +86,14 @@ export function useLists() {
    */
   const deleteList = useMutation({
     mutationFn: async (listId: number) => {
-      await fetch(`/api/deleteList/${listId}`, {
+      const res = await fetch(`/api/deleteList/${listId}`, {
         method: "DELETE",
       });
+
+      if (!res.ok) {
+        throw new Error("Unable to delete list");
+      }
+      return res.json();
     },
     onSuccess: () => {
       fetchLists.refetch();
@@ -82,10 +105,15 @@ export function useLists() {
    */
   const updateListItem = useMutation({
     mutationFn: async (item: ListItem) => {
-      await fetch(`/api/updateItem/${item.id}`, {
+      const res = await fetch(`/api/updateItem/${item.id}`, {
         method: "PUT",
         body: JSON.stringify(item),
       });
+
+      if (!res.ok) {
+        throw new Error("Unable to update list item");
+      }
+      return res.json();
     },
     onSuccess: () => {
       fetchLists.refetch();
@@ -97,10 +125,15 @@ export function useLists() {
    */
   const updateList = useMutation({
     mutationFn: async (list: List) => {
-      await fetch(`/api/updateList/${list.id}`, {
+      const res = await fetch(`/api/updateList/${list.id}`, {
         method: "PUT",
         body: JSON.stringify(list),
       });
+
+      if (!res.ok) {
+        throw new Error("Unable to update list");
+      }
+      return res.json();
     },
     onSuccess: () => {
       fetchLists.refetch();

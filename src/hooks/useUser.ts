@@ -6,8 +6,10 @@ export function useUser(): UseQueryResult<GetUserResponse> {
     queryKey: ["user"],
     queryFn: async () => {
       const res = await fetch("/api/getUser");
-      const data = await res.json();
-      return data;
+      if (!res.ok) {
+        throw new Error("Unable to fetch user");
+      }
+      return res.json();
     },
   });
 }

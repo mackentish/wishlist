@@ -33,8 +33,8 @@ export default function ConfirmShareList() {
           </p>
           <div className="flex flex-row gap-2">
             <Button
-              onClick={async () => {
-                await addSharedList.mutateAsync(parsedId, {
+              onClick={() => {
+                addSharedList.mutate(parsedId, {
                   onSuccess: () => {
                     router.push("/");
                   },
