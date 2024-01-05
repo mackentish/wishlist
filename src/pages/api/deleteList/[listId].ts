@@ -6,14 +6,14 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "DELETE") {
-    res.send(405);
+    res.status(405).json({ message: "Method not allowed" });
     return;
   }
 
   // find user
   const existingUser = await getSessionUser(req, res);
   if (!existingUser) {
-    res.send(404);
+    res.status(401).json({ message: "No user found, unauthorized." });
     return;
   }
 
@@ -21,9 +21,9 @@ export default async function handler(
   const listId = Number.parseInt(req.query.listId as string);
   const success = await deleteListById(listId, existingUser.id);
   if (success) {
-    res.send(204);
+    res.status(204).json({ message: "List deleted" });
   } else {
-    res.send(404);
+    res.status(404).json({ message: "List not found for user" });
   }
   return;
 }

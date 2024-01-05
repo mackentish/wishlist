@@ -7,21 +7,21 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "PUT") {
-    res.send(405);
+    res.status(405).json({ message: "Method not allowed" });
     return;
   }
 
   // find user
   const existingUser = await getSessionUser(req, res);
   if (!existingUser) {
-    res.send(404);
+    res.status(401).json({ message: "No user found, unauthorized." });
     return;
   }
 
   // validate data
   const data = JSON.parse(req.body) as CreateListItemRequest;
   if (!data.listId || !data.name || !data.link || data.isBought === undefined) {
-    res.send(400);
+    res.status(400).json({ message: "Invalid data" });
     return;
   }
 
@@ -29,9 +29,9 @@ export default async function handler(
   const itemId = Number.parseInt(req.query.itemId as string);
   const success = await updateItemById(itemId, data, existingUser.id);
   if (success) {
-    res.send(200);
+    res.status(200).json({ message: "Item updated" });
   } else {
-    res.send(404);
+    res.status(404).json({ message: "Item not found for user" });
   }
   return;
 }

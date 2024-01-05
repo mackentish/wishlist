@@ -7,26 +7,26 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "POST") {
-    res.send(405);
+    res.status(405).json({ error: "Method not allowed" });
     return;
   }
 
   const existingUser = await getSessionUser(req, res);
   // if no user, return unauthorized
   if (!existingUser) {
-    res.send(401);
+    res.status(401).json({ error: "No user found, unauthorized." });
     return;
   }
 
   // validate data
   const data = JSON.parse(req.body) as CreateListRequest;
   if (!data.name) {
-    res.send(400);
+    res.status(400).json({ error: "Invalid data" });
     return;
   }
 
   await createList(data, existingUser.id);
 
-  res.send(200);
+  res.status(200).json({ message: "List created" });
   return;
 }
