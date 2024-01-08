@@ -8,3 +8,4 @@ export * from "./ChevronUp";
 export * from "./Trash";
 export * from "./Pencil";
 export * from "./Share";
+export * from "./Check";

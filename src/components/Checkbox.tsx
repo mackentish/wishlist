@@ -1,4 +1,5 @@
 import React from "react";
+import { Check } from ".";
 
 interface CheckboxProps {
   checked: boolean;
@@ -7,14 +8,19 @@ interface CheckboxProps {
 
 export function Checkbox({ checked, onClick }: CheckboxProps) {
   return (
-    <button onClick={onClick} className="flex items-center">
-      <input
-        checked={checked}
-        readOnly
-        type="checkbox"
-        value=""
-        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-      />
+    <button
+      onClick={(e) => {
+        e.preventDefault();
+        onClick();
+        e.stopPropagation();
+      }}
+      className={`p-1 border border-slate-950 rounded-full ${
+        checked ? "bg-blue-500" : "bg-gray-100"
+      }`}
+      role="checkbox"
+      aria-checked={checked}
+    >
+      <Check stroke={checked ? "slate-50" : "bg-gray-100"} />
     </button>
   );
 }

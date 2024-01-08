@@ -93,33 +93,6 @@ export function List({ list, isOwner }: ListProps) {
   };
 
   // Refactored components for readability:
-  const EditingList = () => {
-    return (
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-col lg:grid lg:grid-cols-5 gap-2 w-full">
-          <input
-            className={`${inputStyles.editing} col-span-2`}
-            value={listName}
-            onChange={(e) => setListName(e.target.value)}
-            placeholder="List Name"
-          />
-          <input
-            className={`${inputStyles.editing} col-span-3`}
-            value={listDescription}
-            onChange={(e) => setListDescription(e.target.value)}
-            placeholder="List Description?"
-          />
-        </div>
-        <div className="flex flex-row gap-4 w-full">
-          <Button onClick={onSaveChanges}>Save Changes</Button>
-          <Button btnType="danger" onClick={onDelete}>
-            Delete List
-          </Button>
-        </div>
-      </div>
-    );
-  };
-
   const DefaultList = () => {
     return (
       <div className="flex flex-row justify-between items-center">
@@ -173,7 +146,32 @@ export function List({ list, isOwner }: ListProps) {
 
   return (
     <div className="flex flex-col gap-2 w-full p-4 border rounded-md border-slate-950">
-      {isEditing ? <EditingList /> : <DefaultList />}
+      {isEditing ? (
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-col lg:grid lg:grid-cols-5 gap-2 w-full">
+            <input
+              className={`${inputStyles.editing} col-span-2`}
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
+              placeholder="List Name"
+            />
+            <input
+              className={`${inputStyles.editing} col-span-3`}
+              value={listDescription}
+              onChange={(e) => setListDescription(e.target.value)}
+              placeholder="List Description?"
+            />
+          </div>
+          <div className="flex flex-row gap-4 w-full">
+            <Button onClick={onSaveChanges}>Save Changes</Button>
+            <Button btnType="danger" onClick={onDelete}>
+              Delete List
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <DefaultList />
+      )}
       {list.items.map((item) => (
         <ListItem
           key={item.id}

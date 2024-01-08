@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { ListItem as ListItemType } from "../types";
-import { ItemForm, Button, Checkbox, OpenTab, Pencil, Trash } from ".";
+import { ItemForm, Checkbox, OpenTab, Pencil, Trash } from ".";
 import { useLists } from "@/hooks";
 
 interface ListItemProps {
