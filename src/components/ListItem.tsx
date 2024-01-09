@@ -80,9 +80,9 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
         <a
           href={item.link}
           target="_blank"
-          className="flex flex-row items-center justify-between p-2 border border-gray-950 rounded"
+          className="flex flex-row items-center justify-between p-2 pl-4 border border-gray-950 rounded"
         >
-          <div className="flex flex-row items-center gap-2">
+          <div className="flex flex-row items-center gap-4">
             {!isOwner && (
               <Checkbox checked={item.isBought} onClick={markAsBought} />
             )}
