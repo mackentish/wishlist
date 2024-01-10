@@ -1,16 +1,16 @@
 import React from "react";
 
 interface CheckProps {
-  stroke?: string;
+  style?: string;
 }
 
-export function Check({ stroke = "slate-50" }: CheckProps) {
+export function Check({ style = "stroke-white" }: CheckProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
-      className={`w-4 h-4 stroke-${stroke} stroke-[4px]`}
+      className={`w-4 h-4 stroke-[4px] ${style}`}
     >
       <path
         stroke-linecap="round"

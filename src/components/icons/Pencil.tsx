@@ -6,7 +6,7 @@ export function Pencil() {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
-      className="w-6 h-6 stroke-slate-950"
+      className="w-6 h-6 stroke-primary hover:stroke-primaryHover transition-colors duration-200"
     >
       <path
         stroke-linecap="round"

@@ -1,6 +1,7 @@
-const input = "font-mono border text-slate-950 rounded p-2 w-full";
+const input =
+  "font-mono border dark:bg-darkGrey text-black dark:text-white dark:placeholder:text-lightGrey rounded p-2 w-full";
 export const inputStyles = {
-  default: `${input} border-slate-950`,
-  editing: `${input} border-dashed border-slate-950`,
-  error: `${input} border-red-500`,
+  default: `${input} border-lightGrey dark:border-primary dark:border-opacity-40`,
+  editing: `${input} border-dashed border-lightGrey dark:border-primary dark:border-opacity-40`,
+  error: `${input} border-error dark:border-opacity-40`,
 };

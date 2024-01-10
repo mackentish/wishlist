@@ -29,8 +29,12 @@ export default function Home() {
   if (userLoading || listsLoading) {
     return (
       <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
-        <h1 className="font-mono font-bold text-3xl">wishlist</h1>
-        <p className="font-mono text-xl">Loading...</p>
+        <h1 className="font-mono font-bold text-3xl text-black dark:text-white">
+          wishlist
+        </h1>
+        <p className="font-mono text-xl text-black dark:text-white">
+          Loading...
+        </p>
       </div>
     );
   }
@@ -41,11 +45,15 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-8 items-center w-full max-w-3xl py-20">
-      <h1 className="font-mono font-bold text-3xl">wishlist</h1>
+      <h1 className="font-mono font-bold text-3xl text-black dark:text-white">
+        wishlist
+      </h1>
 
       {/* My Lists */}
       <div className="flex flex-col w-full gap-2">
-        <h2 className="font-mono font-bold text-xl">Your Lists:</h2>
+        <h2 className="font-mono font-bold text-xl text-black dark:text-white">
+          Your Lists:
+        </h2>
         {userLists.length > 0 ? (
           lists
             .filter((list) => list.userId === user.id)
@@ -53,7 +61,7 @@ export default function Home() {
               <List key={`${index}-${list.name}`} isOwner list={list} />
             ))
         ) : (
-          <p className="font-mono text-sm italic">
+          <p className="font-mono text-sm italic text-black dark:text-white">
             No lists yet! Click the button below to get started!
           </p>
         )}
@@ -65,7 +73,9 @@ export default function Home() {
 
       {/* Shared Lists */}
       <div className="flex flex-col w-full gap-2">
-        <h2 className="font-mono font-bold text-xl">Shared Lists:</h2>
+        <h2 className="font-mono font-bold text-xl text-black dark:text-white">
+          Shared Lists:
+        </h2>
         {sharedLists.length > 0 ? (
           lists
             .filter((list) => list.userId !== user.id)
@@ -73,7 +83,7 @@ export default function Home() {
               <List key={`${index}-${list.name}`} list={list} isOwner={false} />
             ))
         ) : (
-          <p className="font-mono text-sm italic">
+          <p className="font-mono text-sm italic text-black dark:text-white">
             No lists shared with you. Ask your friends to share their lists with
             you!
           </p>

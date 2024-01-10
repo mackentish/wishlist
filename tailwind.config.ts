@@ -5,6 +5,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/styles/globalTailwind.ts",
   ],
   theme: {
     extend: {
@@ -14,6 +15,9 @@ const config: Config = {
         lightGrey: "#CCC5B9",
         darkGrey: "#3F3D39",
         primary: "#EB5E27",
+        primaryHover: "#C75521",
+        error: "#EC2D2D",
+        errorHover: "#D11F1F",
       },
     },
   },

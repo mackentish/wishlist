@@ -37,7 +37,9 @@ export default function CreateLists() {
 
   return (
     <div className="h-full pt-20 flex flex-col gap-8 items-center align-top w-full max-w-3xl">
-      <h1 className="font-mono font-bold text-3xl">Create a New List!</h1>
+      <h1 className="font-mono font-bold text-3xl text-black dark:text-white">
+        Create a New List!
+      </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-4 w-full h-full pb-4"

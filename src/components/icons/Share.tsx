@@ -10,7 +10,9 @@ export function Share({ disabled }: ShareProps) {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       className={`w-6 h-6 ${
-        disabled ? "fill-slate-600" : "fill-blue-500 hover:fill-blue-600"
+        disabled
+          ? "fill-slate-600"
+          : "fill-primary hover:fill-primaryHover transition-colors duration-200"
       }`}
     >
       <path

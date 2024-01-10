@@ -97,12 +97,18 @@ export function List({ list, isOwner }: ListProps) {
     return (
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-col items-start">
-          <p className="font-mono font-bold text-md">{list.name}</p>
-          <p className="font-mono text-xs">{list.description}</p>
+          <p className="font-mono font-bold text-md text-black dark:text-white">
+            {list.name}
+          </p>
+          <p className="font-mono text-xs text-black dark:text-white">
+            {list.description}
+          </p>
         </div>
-        <button onClick={generateLink} disabled={isLinkLoading}>
-          <Share disabled={isLinkLoading} />
-        </button>
+        {isOwner && (
+          <button onClick={generateLink} disabled={isLinkLoading}>
+            <Share disabled={isLinkLoading} />
+          </button>
+        )}
       </div>
     );
   };

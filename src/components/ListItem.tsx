@@ -18,7 +18,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
   const markAsBought = () => {
     const confirmed = confirm(
       `Are you sure you want to mark "${item.name}" as ${
-        item.isBought ? "not bought" : "bought"
+        item.isBought ? "available for purchase" : "purchased"
       }?`
     );
     if (confirmed) {
@@ -80,16 +80,20 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
         <a
           href={item.link}
           target="_blank"
-          className="flex flex-row items-center justify-between p-2 pl-4 border border-gray-950 rounded"
+          className="flex flex-row items-center justify-between p-2 pl-4 border border-lightGrey dark:border-primary dark:border-opacity-40 rounded"
         >
           <div className="flex flex-row items-center gap-4">
             {!isOwner && (
               <Checkbox checked={item.isBought} onClick={markAsBought} />
             )}
             <div className="flex flex-col">
-              <p className="font-mono">{item.name}</p>
+              <p className="font-mono text-black dark:text-primary">
+                {item.name}
+              </p>
               {item.note && (
-                <p className="text-sm text-gray-500 font-mono">{item.note}</p>
+                <p className="text-sm text-darkGrey dark:text-lightGrey font-mono">
+                  {item.note}
+                </p>
               )}
             </div>
           </div>

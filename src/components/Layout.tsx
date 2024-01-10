@@ -6,7 +6,7 @@ import Image from "next/image";
 export function Layout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   return (
-    <main className="flex flex-col min-h-screen min-w-screen p-4">
+    <main className="flex flex-col min-h-screen min-w-screen p-4 bg-white dark:bg-black">
       {session?.user && (
         <div className="flex flex-row gap-2 items-center self-center md:self-end">
           <Image
@@ -16,7 +16,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
             height={32}
             style={{ borderRadius: "50%" }}
           />
-          <p className="font-mono font-bold text-sm">{session.user.email}</p>
+          <p className="font-mono font-bold text-sm text-black dark:text-white">
+            {session.user.email}
+          </p>
           <Button btnType="danger" onClick={() => signOut()}>
             Sign out
           </Button>

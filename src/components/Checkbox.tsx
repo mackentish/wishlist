@@ -14,13 +14,17 @@ export function Checkbox({ checked, onClick }: CheckboxProps) {
         onClick();
         e.stopPropagation();
       }}
-      className={`p-1 border border-slate-950 rounded-full ${
-        checked ? "bg-blue-500" : "bg-gray-100"
+      className={`p-1 border border-black dark:border-lightGrey rounded-full ${
+        checked ? "bg-primary" : "bg-lightGrey dark:bg-darkGrey"
       }`}
       role="checkbox"
       aria-checked={checked}
     >
-      <Check stroke={checked ? "slate-50" : "bg-gray-100"} />
+      <Check
+        style={
+          checked ? "stroke-white" : "stroke-lightGrey dark:stroke-darkGrey"
+        }
+      />
     </button>
   );
 }
