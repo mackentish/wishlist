@@ -100,7 +100,7 @@ export function List({ list, isOwner }: ListProps) {
           <p className="font-mono font-bold text-md text-black dark:text-white">
             {list.name}
           </p>
-          <p className="font-mono text-xs text-black dark:text-white">
+          <p className="font-mono text-sm text-black dark:text-white">
             {list.description}
           </p>
           {list.items.length === 0 && !isOwner && (
