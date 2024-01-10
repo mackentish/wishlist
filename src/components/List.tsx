@@ -96,13 +96,20 @@ export function List({ list, isOwner }: ListProps) {
   const DefaultList = () => {
     return (
       <div className="flex flex-row justify-between items-center">
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-start w-full">
           <p className="font-mono font-bold text-md text-black dark:text-white">
             {list.name}
           </p>
           <p className="font-mono text-xs text-black dark:text-white">
             {list.description}
           </p>
+          {list.items.length === 0 && !isOwner && (
+            <p className="mt-4 self-center font-mono text-sm italic text-darkGrey dark:text-lightGrey">
+              {
+                "This list doesn't have any items yet! You'll see them here when they are added."
+              }
+            </p>
+          )}
         </div>
         {isOwner && (
           <button onClick={generateLink} disabled={isLinkLoading}>
@@ -134,8 +141,10 @@ export function List({ list, isOwner }: ListProps) {
         {!isAdding && !isEditing && (
           <div className="flex flex-col gap-2 w-full">
             {list.items.length === 0 && (
-              <p className="font-mono text-sm italic self-center">
-                No items yet! Click the button below to get started!
+              <p className="font-mono text-sm italic self-center text-darkGrey dark:text-lightGrey">
+                {
+                  'No items yet! Click the "Add Item" button below to get started!'
+                }
               </p>
             )}
             <div className="flex flex-row gap-4 w-full">

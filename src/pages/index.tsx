@@ -61,7 +61,7 @@ export default function Home() {
               <List key={`${index}-${list.name}`} isOwner list={list} />
             ))
         ) : (
-          <p className="font-mono text-sm italic text-black dark:text-white">
+          <p className="font-mono text-sm italic text-darkGrey dark:text-lightGrey">
             No lists yet! Click the button below to get started!
           </p>
         )}
@@ -83,7 +83,7 @@ export default function Home() {
               <List key={`${index}-${list.name}`} list={list} isOwner={false} />
             ))
         ) : (
-          <p className="font-mono text-sm italic text-black dark:text-white">
+          <p className="font-mono text-sm italic text-darkGrey dark:text-lightGrey">
             No lists shared with you. Ask your friends to share their lists with
             you!
           </p>

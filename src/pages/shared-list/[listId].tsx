@@ -23,8 +23,12 @@ export default function ConfirmShareList() {
   if (userLoading) {
     return (
       <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
-        <h1 className="font-mono font-bold text-3xl">wishlist</h1>
-        <p className="font-mono text-xl">Loading...</p>
+        <h1 className="font-mono font-bold text-3xl text-black dark:text-white">
+          wishlist
+        </h1>
+        <p className="font-mono text-xl text-black dark:text-white">
+          Loading...
+        </p>
       </div>
     );
   }
@@ -35,19 +39,31 @@ export default function ConfirmShareList() {
 
   return (
     <div className="flex flex-col gap-8 items-center w-full max-w-3xl py-20">
-      <h1 className="font-mono text-3xl">Confirm Shared List</h1>
-      {isLoading && <p className="font-mono text-xl">Loading...</p>}
-      {error && <p className="font-mono text-xl">Error: {error.message}</p>}
+      <h1 className="font-mono text-3xl text-black dark:text-white">
+        Confirm Shared List
+      </h1>
+      {isLoading && (
+        <p className="font-mono text-xl text-black dark:text-white">
+          Loading...
+        </p>
+      )}
+      {error && (
+        <p className="font-mono text-xl text-error">Error: {error.message}</p>
+      )}
       {data && (
         <div className="flex flex-col gap-4">
-          <p className="font-mono text-xl">
+          <p className="font-mono text-xl text-black dark:text-white">
             {data.userName} has shared their list with you:
           </p>
-          <div className="flex flex-col border rounded border-slate-950 p-4">
-            <p className="font-mono font-bold text-md">{data.listName}</p>
-            <p className="font-mono text-xs">{data.listDescription}</p>
+          <div className="flex flex-col border rounded border-black dark:border-white border-opacity-40 p-4">
+            <p className="font-mono font-bold text-md text-black dark:text-white">
+              {data.listName}
+            </p>
+            <p className="font-mono text-xs text-black dark:text-lightGrey">
+              {data.listDescription}
+            </p>
           </div>
-          <p className="font-mono text-xl">
+          <p className="font-mono text-xl text-black dark:text-white">
             Would you like to add their list to your account?
           </p>
           <div className="flex flex-row gap-2">

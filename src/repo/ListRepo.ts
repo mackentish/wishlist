@@ -154,7 +154,7 @@ export async function addSharedList(
     where: { listId: list.id, sharedUserId: userId },
   });
   if (sharedList) {
-    return false;
+    return true;
   }
 
   // add shared list
