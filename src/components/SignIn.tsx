@@ -12,16 +12,6 @@ export function SignIn() {
         Not signed in
       </p>
       <Button onClick={() => signIn()}>Sign in</Button>
-      <Button
-        onClick={async () => {
-          const endpoint = "/data-api/rest/user";
-          const response = await fetch(endpoint);
-          const data = await response.json();
-          console.table(data.value);
-        }}
-      >
-        TEST
-      </Button>
     </div>
   );
 }

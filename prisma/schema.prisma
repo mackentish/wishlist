@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_NON_POOLING")
 }
 
 model user {
@@ -19,7 +20,7 @@ model list {
   id          Int           @id  @default(autoincrement())  @unique
   name        String        @db.VarChar(45)
   description String?       @db.VarChar(100)
-  linkExpires DateTime?     @db.DateTime
+  linkExpires DateTime?     @db.Time()
   userId      Int   
   user        user          @relation(fields: [userId], references: [id])
   items       listItem[]
