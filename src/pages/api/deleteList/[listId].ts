@@ -21,7 +21,7 @@ export default async function handler(
   const listId = Number.parseInt(req.query.listId as string);
   const success = await deleteListById(listId, existingUser.id);
   if (success) {
-    res.status(204).json({ message: "List deleted" });
+    res.status(200).json({ message: "List deleted" });
   } else {
     res.status(404).json({ message: "List not found for user" });
   }

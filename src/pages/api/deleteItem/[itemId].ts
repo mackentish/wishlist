@@ -21,7 +21,7 @@ export default async function handler(
   const itemId = Number.parseInt(req.query.itemId as string);
   const success = await deleteItemById(itemId, existingUser.id);
   if (success) {
-    res.status(204).json({ message: "Item deleted" });
+    res.status(200).json({ message: "Item deleted" });
   } else {
     res.status(404).json({ error: "Item not found" });
   }
