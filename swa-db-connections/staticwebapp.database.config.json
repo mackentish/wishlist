@@ -18,7 +18,10 @@
     },
     "host": {
       "cors": {
-        "origins": ["https://orange-bush-08a9b1510.4.azurestaticapps.net"],
+        "origins": [
+          "http://localhost:3000",
+          "https://orange-bush-08a9b1510.4.azurestaticapps.net"
+        ],
         "allow-credentials": false
       },
       "authentication": {
