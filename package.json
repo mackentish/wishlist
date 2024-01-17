@@ -4,12 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && prisma generate",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --check .",
-    "format:fix": "prettier --write --list-different .",
-    "postinstall": "prisma generate"
+    "format:fix": "prettier --write --list-different ."
   },
   "engines": {
     "node": "18.17.1"
