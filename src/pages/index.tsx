@@ -39,8 +39,6 @@ export default function Home() {
     );
   }
 
-  console.log("TEST", user);
-
   if (userError || !user || listsError || lists === undefined) {
     return <ErrorView />;
   }
