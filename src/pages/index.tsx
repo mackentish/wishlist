@@ -26,6 +26,8 @@ export default function Home() {
     return <SignIn />;
   }
 
+  console.log("TEST", process.env.DATABASE_URL);
+
   if (userLoading || listsLoading) {
     return (
       <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
