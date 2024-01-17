@@ -13,6 +13,8 @@ export default async function handler(
     return;
   }
 
+  console.log("TEST", process.env.DATABASE_URL);
+
   const session = await getServerSession(req, res, authOptions);
   if (!session?.user?.email || !session?.user?.name) {
     res.status(400).json({ message: "Invalid session" });
