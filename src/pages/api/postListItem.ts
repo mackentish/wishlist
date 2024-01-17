@@ -26,7 +26,7 @@ export default async function handler(
 
   const success = await createItem(data, existingUser.id);
   if (success) {
-    res.status(204).json({ message: "Item created" });
+    res.status(201).json({ message: "Item created" });
   } else {
     res.status(401).json({ message: "No list found for user, unauthorized." });
   }
