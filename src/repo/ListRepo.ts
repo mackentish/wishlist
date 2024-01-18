@@ -122,7 +122,7 @@ export async function getSharedListData(
   }
 
   // check if link has expired
-  if (list.linkExpires && list.linkExpires < new Date()) {
+  if (!list.linkExpires || list.linkExpires < new Date()) {
     return null;
   }
 
