@@ -20,7 +20,7 @@ model list {
   id          Int           @id  @default(autoincrement())  @unique
   name        String        @db.VarChar(45)
   description String?       @db.VarChar(100)
-  linkExpires DateTime?     @db.Time()
+  linkExpires DateTime?     @db.Timestamptz()
   userId      Int   
   user        user          @relation(fields: [userId], references: [id])
   items       listItem[]
@@ -31,7 +31,7 @@ model listItem {
   id          Int           @id  @default(autoincrement())  @unique
   name        String        @db.VarChar(45)
   note        String?       @db.VarChar(100)
-  link        String        @db.VarChar(255)
+  link        String        @db.Text
   isBought    Boolean       @default(false)
   listId      Int   
   list        list          @relation(fields: [listId], references: [id])
