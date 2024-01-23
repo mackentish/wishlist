@@ -11,9 +11,6 @@
     "format:fix": "prettier --write --list-different .",
     "postinstall": "prisma generate"
   },
-  "engines": {
-    "node": "18.17.1"
-  },
   "dependencies": {
     "@prisma/client": "^5.7.1",
     "@tanstack/react-query": "^5.14.2",
