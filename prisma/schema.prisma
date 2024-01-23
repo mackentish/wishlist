@@ -20,7 +20,6 @@ model list {
   id          Int           @id  @default(autoincrement())  @unique
   name        String        @db.VarChar(45)
   description String?       @db.VarChar(100)
-  linkExpires DateTime?     @db.Timestamptz()
   userId      Int   
   user        user          @relation(fields: [userId], references: [id])
   items       listItem[]
