@@ -5,6 +5,7 @@ import {
   CreateListItemRequest,
   ListItem,
   ToggleBoughtRequest,
+  ShareListRequest,
 } from "@/types";
 
 export function useLists() {
@@ -162,23 +163,43 @@ export function useLists() {
   });
 
   /**
-   * Add shared list to user's account
+   * Shares a list with other users
    */
-  const addSharedList = useMutation({
-    mutationFn: async (listId: number) => {
-      const res = await fetch(`/api/addSharedList/${listId}`, {
+  const shareList = useMutation({
+    mutationFn: async (data: ShareListRequest) => {
+      const res = await fetch("/api/shareList", {
         method: "POST",
+        body: JSON.stringify(data),
       });
 
       if (!res.ok) {
-        throw new Error("Unable to add shared list");
+        throw new Error("Unable to share list");
       }
       return res.json();
     },
     onSuccess: () => {
       fetchLists.refetch();
     },
-    retry: false,
+  });
+
+  /**
+   * Removes the link between a list and a user it's shared with
+   */
+  const deleteSharedList = useMutation({
+    mutationFn: async (listId: number) => {
+      const res = await fetch(`/api/deleteSharedList`, {
+        method: "DELETE",
+        body: JSON.stringify({ listId }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Unable to remove shared list");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      fetchLists.refetch();
+    },
   });
 
   return {
@@ -190,6 +211,7 @@ export function useLists() {
     toggleItemBought,
     deleteList,
     updateList,
-    addSharedList,
+    shareList,
+    deleteSharedList,
   };
 }

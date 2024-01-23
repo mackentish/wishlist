@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { prisma } from "./_base";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
-import { GetUserResponse, User } from "@/types";
+import { GetUserResponse, ShareUser, User } from "@/types";
 
 export async function getSessionUser(
   req: NextApiRequest,
@@ -45,4 +45,19 @@ export async function findOrCreateUser(
     // return it
     return newUser;
   }
+}
+
+export async function getShareableUsers(email: string): Promise<ShareUser[]> {
+  return await prisma.user.findMany({
+    select: {
+      id: false,
+      email: true,
+      name: true,
+    },
+    where: {
+      email: {
+        not: email,
+      },
+    },
+  });
 }

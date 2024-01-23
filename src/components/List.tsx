@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { ListItem, Button, ItemForm, Share, Spacer } from ".";
+import {
+  ListItem,
+  Button,
+  ItemForm,
+  Share,
+  Spacer,
+  ShareList,
+  CircleX,
+} from ".";
 import { List as ListType } from "../types";
 import { useLists } from "@/hooks";
 import { inputStyles } from "@/styles/globalTailwind";
@@ -19,8 +27,10 @@ export function List({ list, isOwner }: ListProps) {
   const [itemFormError, setItemFormError] = useState<string | undefined>(
     undefined
   );
-  const [isLinkLoading, setIsLinkLoading] = useState(false);
-  const { addListItem, deleteList, updateList } = useLists();
+  const [isSharing, setIsSharing] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { addListItem, deleteList, updateList, deleteSharedList } = useLists();
 
   // Functions:
   const addItem = async (data: {
@@ -77,19 +87,30 @@ export function List({ list, isOwner }: ListProps) {
     }
   };
 
-  const generateLink = async () => {
-    setIsLinkLoading(true);
-    const res = await fetch(`/api/shareLink/${list.id}`);
-    if (res.ok) {
-      const { link } = await res.json();
-      await navigator.clipboard.writeText(link);
-      alert(
-        `Link copied to clipboard. Send this link with your friends to share your '${list.name}' list!`
-      );
-    } else {
-      alert("Something went wrong generating your share link!");
+  const shareList = async () => {
+    setIsSharing(true);
+    setIsModalOpen(true);
+    setIsSharing(false);
+  };
+
+  const removeSharedList = () => {
+    if (
+      confirm(
+        "Are you sure you want to remove this shared list? Once you do, you won't have access to it unless the owner re-shares it with you."
+      )
+    ) {
+      setIsRemoving(true);
+      deleteSharedList.mutate(list.id, {
+        onSuccess: () => {
+          alert("Shared list removed!");
+          setIsRemoving(false);
+        },
+        onError: () => {
+          alert("Something went wrong removing your shared list!");
+          setIsRemoving(false);
+        },
+      });
     }
-    setIsLinkLoading(false);
   };
 
   // Refactored components for readability:
@@ -111,9 +132,21 @@ export function List({ list, isOwner }: ListProps) {
             </p>
           )}
         </div>
-        {isOwner && (
-          <button onClick={generateLink} disabled={isLinkLoading}>
-            <Share disabled={isLinkLoading} />
+        {isOwner ? (
+          <button
+            onClick={shareList}
+            disabled={isSharing}
+            className="self-start"
+          >
+            <Share disabled={isSharing} />
+          </button>
+        ) : (
+          <button
+            onClick={removeSharedList}
+            disabled={isRemoving}
+            className="self-start"
+          >
+            <CircleX disabled={isRemoving} />
           </button>
         )}
       </div>
@@ -155,6 +188,11 @@ export function List({ list, isOwner }: ListProps) {
             </div>
           </div>
         )}
+        <ShareList
+          isOpen={isModalOpen}
+          close={() => setIsModalOpen(false)}
+          listId={list.id}
+        />
       </>
     );
   };

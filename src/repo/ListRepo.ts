@@ -1,4 +1,4 @@
-import { CreateListRequest, List, SharedListResponse } from "@/types";
+import { CreateListRequest, List } from "@/types";
 import { prisma } from "./_base";
 
 export async function deleteListById(
@@ -83,8 +83,9 @@ export async function updateListById(
   return true;
 }
 
-export async function updateListToShare(
+export async function shareList(
   listId: number,
+  sharedUserEmails: string[],
   userId: number
 ): Promise<boolean> {
   // verify list exists for user
@@ -95,74 +96,41 @@ export async function updateListToShare(
     return false;
   }
 
-  // update list so it is able to be shared for 24 hours
-  await prisma.list.update({
-    where: { id: list.id },
-    data: {
-      linkExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+  // find user ids for emails
+  const sharedUsers = await prisma.user.findMany({
+    where: { email: { in: sharedUserEmails } },
+    select: { id: true },
+  });
+
+  // filter out any users that already have the list shared with them
+  const existingSharedUsers = await prisma.sharedList.findMany({
+    where: {
+      listId: list.id,
+      sharedUserId: { in: sharedUsers.map((u) => u.id) },
     },
+    select: { sharedUserId: true },
+  });
+  const netNewSharedUsers = sharedUsers.filter(
+    (u) => !existingSharedUsers.map((eu) => eu.sharedUserId).includes(u.id)
+  );
+
+  // create new shared list entries
+  await prisma.sharedList.createMany({
+    data: netNewSharedUsers.map((user) => ({
+      listId: list.id,
+      sharedUserId: user.id,
+    })),
   });
   return true;
 }
 
-export async function getSharedListData(
-  listId: number
-): Promise<SharedListResponse | null> {
-  // find list
-  const list = await prisma.list.findUnique({
-    where: { id: listId },
-    include: {
-      user: {
-        select: { name: true },
-      },
-    },
-  });
-  if (!list) {
-    return null;
-  }
-
-  // check if link has expired
-  if (!list.linkExpires || list.linkExpires < new Date()) {
-    return null;
-  }
-
-  // return list data
-  return {
-    userName: list.user.name,
-    listName: list.name,
-    listDescription: list.description,
-  };
-}
-
-export async function addSharedList(
+export async function deleteSharedList(
   listId: number,
   userId: number
-): Promise<boolean> {
-  // verify list exists
-  const list = await prisma.list.findUnique({ where: { id: listId } });
-  if (!list) {
-    return false;
-  }
-
-  // verify list is not owned by user
-  if (list.userId === userId) {
-    return false;
-  }
-
-  // verify list is not already shared with user
-  const sharedList = await prisma.sharedList.findFirst({
-    where: { listId: list.id, sharedUserId: userId },
+): Promise<void> {
+  // allow to find more than one here to clean up any extra relationships
+  // that may have slipped through. This is a redundancy.
+  await prisma.sharedList.deleteMany({
+    where: { listId: listId, sharedUserId: userId },
   });
-  if (sharedList) {
-    return true;
-  }
-
-  // add shared list
-  await prisma.sharedList.create({
-    data: {
-      listId: list.id,
-      sharedUserId: userId,
-    },
-  });
-  return true;
 }

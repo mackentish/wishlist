@@ -3,6 +3,7 @@ import React from "react";
 interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   btnType?: "primary" | "secondary" | "danger";
   styles?: string;
+  disabled?: boolean;
 }
 
 const sharedStyles =
