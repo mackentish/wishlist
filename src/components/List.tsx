@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { ListItem, Button, ItemForm, Share, Spacer, ShareList } from ".";
+import {
+  ListItem,
+  Button,
+  ItemForm,
+  Share,
+  Spacer,
+  ShareList,
+  CircleX,
+} from ".";
 import { List as ListType } from "../types";
 import { useLists } from "@/hooks";
 import { inputStyles } from "@/styles/globalTailwind";
@@ -19,9 +27,10 @@ export function List({ list, isOwner }: ListProps) {
   const [itemFormError, setItemFormError] = useState<string | undefined>(
     undefined
   );
-  const [isLinkLoading, setIsLinkLoading] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { addListItem, deleteList, updateList } = useLists();
+  const { addListItem, deleteList, updateList, deleteSharedList } = useLists();
 
   // Functions:
   const addItem = async (data: {
@@ -79,10 +88,29 @@ export function List({ list, isOwner }: ListProps) {
   };
 
   const shareList = async () => {
-    setIsLinkLoading(true);
-    // TODO: pop up modal to choose user(s) to share with
+    setIsSharing(true);
     setIsModalOpen(true);
-    setIsLinkLoading(false);
+    setIsSharing(false);
+  };
+
+  const removeSharedList = () => {
+    if (
+      confirm(
+        "Are you sure you want to remove this shared list? Once you do, you won't have access to it unless the owner re-shares it with you."
+      )
+    ) {
+      setIsRemoving(true);
+      deleteSharedList.mutate(list.id, {
+        onSuccess: () => {
+          alert("Shared list removed!");
+          setIsRemoving(false);
+        },
+        onError: () => {
+          alert("Something went wrong removing your shared list!");
+          setIsRemoving(false);
+        },
+      });
+    }
   };
 
   // Refactored components for readability:
@@ -104,16 +132,23 @@ export function List({ list, isOwner }: ListProps) {
             </p>
           )}
         </div>
-        {isOwner && (
-          <button onClick={shareList} disabled={isLinkLoading}>
-            <Share disabled={isLinkLoading} />
+        {isOwner ? (
+          <button
+            onClick={shareList}
+            disabled={isSharing}
+            className="self-start"
+          >
+            <Share disabled={isSharing} />
+          </button>
+        ) : (
+          <button
+            onClick={removeSharedList}
+            disabled={isRemoving}
+            className="self-start"
+          >
+            <CircleX disabled={isRemoving} />
           </button>
         )}
-        <ShareList
-          isOpen={isModalOpen}
-          close={() => setIsModalOpen(false)}
-          listId={list.id}
-        />
       </div>
     );
   };
@@ -153,6 +188,11 @@ export function List({ list, isOwner }: ListProps) {
             </div>
           </div>
         )}
+        <ShareList
+          isOpen={isModalOpen}
+          close={() => setIsModalOpen(false)}
+          listId={list.id}
+        />
       </>
     );
   };

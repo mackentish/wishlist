@@ -123,3 +123,14 @@ export async function shareList(
   });
   return true;
 }
+
+export async function deleteSharedList(
+  listId: number,
+  userId: number
+): Promise<void> {
+  // allow to find more than one here to clean up any extra relationships
+  // that may have slipped through. This is a redundancy.
+  await prisma.sharedList.deleteMany({
+    where: { listId: listId, sharedUserId: userId },
+  });
+}

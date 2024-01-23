@@ -166,7 +166,6 @@ export function useLists() {
    * Shares a list with other users
    */
   const shareList = useMutation({
-    mutationKey: ["shareList"],
     mutationFn: async (data: ShareListRequest) => {
       const res = await fetch("/api/shareList", {
         method: "POST",
@@ -175,6 +174,26 @@ export function useLists() {
 
       if (!res.ok) {
         throw new Error("Unable to share list");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      fetchLists.refetch();
+    },
+  });
+
+  /**
+   * Removes the link between a list and a user it's shared with
+   */
+  const deleteSharedList = useMutation({
+    mutationFn: async (listId: number) => {
+      const res = await fetch(`/api/deleteSharedList`, {
+        method: "DELETE",
+        body: JSON.stringify({ listId }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Unable to remove shared list");
       }
       return res.json();
     },
@@ -193,5 +212,6 @@ export function useLists() {
     deleteList,
     updateList,
     shareList,
+    deleteSharedList,
   };
 }
