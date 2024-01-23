@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ListItem, Button, ItemForm, Share, Spacer } from ".";
+import { ListItem, Button, ItemForm, Share, Spacer, ShareList } from ".";
 import { List as ListType } from "../types";
 import { useLists } from "@/hooks";
 import { inputStyles } from "@/styles/globalTailwind";
@@ -20,6 +20,7 @@ export function List({ list, isOwner }: ListProps) {
     undefined
   );
   const [isLinkLoading, setIsLinkLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { addListItem, deleteList, updateList } = useLists();
 
   // Functions:
@@ -77,18 +78,10 @@ export function List({ list, isOwner }: ListProps) {
     }
   };
 
-  const generateLink = async () => {
+  const shareList = async () => {
     setIsLinkLoading(true);
-    const res = await fetch(`/api/shareLink/${list.id}`);
-    if (res.ok) {
-      const { link } = await res.json();
-      await navigator.clipboard.writeText(link);
-      alert(
-        `Link copied to clipboard. Send this link with your friends to share your '${list.name}' list!`
-      );
-    } else {
-      alert("Something went wrong generating your share link!");
-    }
+    // TODO: pop up modal to choose user(s) to share with
+    setIsModalOpen(true);
     setIsLinkLoading(false);
   };
 
@@ -112,10 +105,14 @@ export function List({ list, isOwner }: ListProps) {
           )}
         </div>
         {isOwner && (
-          <button onClick={generateLink} disabled={isLinkLoading}>
+          <button onClick={shareList} disabled={isLinkLoading}>
             <Share disabled={isLinkLoading} />
           </button>
         )}
+        <ShareList
+          isOpen={isModalOpen}
+          onRequestClose={() => setIsModalOpen(false)}
+        />
       </div>
     );
   };

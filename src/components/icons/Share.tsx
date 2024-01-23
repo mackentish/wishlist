@@ -1,7 +1,7 @@
 import React from "react";
 
 interface ShareProps {
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 export function Share({ disabled }: ShareProps) {
