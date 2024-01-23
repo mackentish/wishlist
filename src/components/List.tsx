@@ -111,7 +111,8 @@ export function List({ list, isOwner }: ListProps) {
         )}
         <ShareList
           isOpen={isModalOpen}
-          onRequestClose={() => setIsModalOpen(false)}
+          close={() => setIsModalOpen(false)}
+          listId={list.id}
         />
       </div>
     );

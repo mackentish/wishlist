@@ -1,18 +1,43 @@
 import React, { useState } from "react";
 import { BaseModal } from "./BaseModal";
-import { useAllUsers } from "@/hooks";
+import { useAllUsers, useLists } from "@/hooks";
 import { Button, Checkbox } from "..";
 import { ShareUser } from "@/types";
 
 interface ShareListProps {
   isOpen: boolean;
-  onRequestClose: () => void;
+  close: () => void;
+  listId: number;
 }
 
-export function ShareList({ isOpen, onRequestClose }: ShareListProps) {
+export function ShareList({ isOpen, close, listId }: ShareListProps) {
   const { data: users, isLoading, error } = useAllUsers();
+  const { shareList } = useLists();
   const [filter, setFilter] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<ShareUser[]>([]);
+  const [isSharing, setIsSharing] = useState(false);
+
+  const shareListWithUsers = () => {
+    console.log("Share with:", selectedUsers);
+    setIsSharing(true);
+    shareList.mutate(
+      {
+        listId: listId,
+        sharedUserEmails: selectedUsers.map((user) => user.email),
+      },
+      {
+        onSuccess: () => {
+          setIsSharing(false);
+          alert("List shared successfully!");
+          close();
+        },
+        onError: () => {
+          setIsSharing(false);
+          alert("Error sharing list, try again later.");
+        },
+      }
+    );
+  };
 
   const filteredUsers =
     users?.filter((user) => {
@@ -47,7 +72,7 @@ export function ShareList({ isOpen, onRequestClose }: ShareListProps) {
         <input
           type="text"
           placeholder="Search users by name..."
-          className="p-2 border border-black dark:border-white rounded bg-transparent"
+          className="font-mono p-2 border border-black dark:border-white rounded bg-transparent"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         />
@@ -91,19 +116,23 @@ export function ShareList({ isOpen, onRequestClose }: ShareListProps) {
             )}
           </div>
         </div>
-        <Button
-          onClick={() => {
-            console.log("Share with:", selectedUsers);
-          }}
-        >
-          Share
-        </Button>
+        <div className="flex flex-col gap-4 w-full">
+          <Button
+            onClick={shareListWithUsers}
+            disabled={isSharing || selectedUsers.length === 0}
+          >
+            {isSharing ? "Sharing..." : "Share List"}
+          </Button>
+          <Button btnType="secondary" onClick={close}>
+            Cancel
+          </Button>
+        </div>
       </div>
     );
   };
 
   return (
-    <BaseModal isOpen={isOpen} onRequestClose={onRequestClose}>
+    <BaseModal isOpen={isOpen} onRequestClose={close}>
       <h1 className="font-mono font-bold text-3xl text-black dark:text-white">
         Share List 🙏
       </h1>
