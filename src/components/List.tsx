@@ -201,15 +201,15 @@ export function List({ list, isOwner }: ListProps) {
     <div className="flex flex-col gap-2 w-full p-4 border rounded-md border-black dark:border-white">
       {isEditing ? (
         <div className="flex flex-col gap-2">
-          <div className="flex flex-col lg:grid lg:grid-cols-5 gap-2 w-full">
+          <div className="flex flex-col gap-2 w-full">
             <input
-              className={`${inputStyles.editing} col-span-2`}
+              className={inputStyles.editing}
               value={listName}
               onChange={(e) => setListName(e.target.value)}
               placeholder="List Name"
             />
             <input
-              className={`${inputStyles.editing} col-span-3`}
+              className={inputStyles.editing}
               value={listDescription}
               onChange={(e) => setListDescription(e.target.value)}
               placeholder="List Description?"
