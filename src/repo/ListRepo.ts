@@ -1,5 +1,9 @@
+import { EmailTemplate } from '@/components'
 import { CreateListRequest, List } from '@/types'
+import { Resend } from 'resend'
 import { prisma } from './_base'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function deleteListById(
     listId: number,
@@ -84,6 +88,25 @@ export async function updateListById(
     return true
 }
 
+async function sendShareEmail(
+    email: string,
+    userName: string,
+    listName: string,
+    ownerName: string
+) {
+    await resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to: [email],
+        subject: 'New List Shared with You',
+        react: EmailTemplate({
+            ownerName,
+            userName,
+            listName,
+            userEmail: email,
+        }),
+    })
+}
+
 export async function shareList(
     listId: number,
     sharedUserEmails: string[],
@@ -92,6 +115,7 @@ export async function shareList(
     // verify list exists for user
     const list = await prisma.list.findUnique({
         where: { id: listId, userId: userId },
+        include: { user: { select: { name: true } } },
     })
     if (!list) {
         return false
@@ -100,7 +124,7 @@ export async function shareList(
     // find user ids for emails
     const sharedUsers = await prisma.user.findMany({
         where: { email: { in: sharedUserEmails } },
-        select: { id: true },
+        select: { id: true, email: true, name: true },
     })
 
     // filter out any users that already have the list shared with them
@@ -122,6 +146,12 @@ export async function shareList(
             sharedUserId: user.id,
         })),
     })
+
+    // send email to shared users
+    for (const user of netNewSharedUsers) {
+        await sendShareEmail(user.email, user.name, list.name, list.user.name)
+    }
+
     return true
 }
 

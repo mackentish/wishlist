@@ -32,8 +32,16 @@ export default async function handler(
         return
     }
 
-    await shareList(data.listId, data.sharedUserEmails, existingUser.id)
+    const success = await shareList(
+        data.listId,
+        data.sharedUserEmails,
+        existingUser.id
+    )
+    if (!success) {
+        res.status(400).json({ error: 'Could not share list' })
+        return
+    }
 
-    res.status(200).json({ message: 'List created' })
+    res.status(200).json({ message: 'List shared' })
     return
 }
