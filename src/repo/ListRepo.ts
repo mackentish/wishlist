@@ -88,23 +88,27 @@ export async function updateListById(
     return true
 }
 
-async function sendShareEmail(
-    email: string,
-    userName: string,
+async function sendShareEmails(
+    users: { email: string; name: string }[],
     listName: string,
     ownerName: string
 ) {
-    await resend.emails.send({
-        from: 'onboarding@resend.dev',
-        to: [email],
-        subject: 'New List Shared with You',
+    const objects = users.map((user) => ({
+        from: 'wishlist <onboarding@resend.dev>',
+        to: [user.email],
+        subject: 'A new list has been shared with you!',
         react: EmailTemplate({
             ownerName,
-            userName,
+            userName: user.name,
             listName,
-            userEmail: email,
         }),
-    })
+    }))
+    const { error, data } = await resend.batch.send(objects)
+    if (error) {
+        console.error('Error sending emails', error)
+    } else {
+        console.log('Emails sent', data)
+    }
 }
 
 export async function shareList(
@@ -148,9 +152,7 @@ export async function shareList(
     })
 
     // send email to shared users
-    for (const user of netNewSharedUsers) {
-        await sendShareEmail(user.email, user.name, list.name, list.user.name)
-    }
+    await sendShareEmails(netNewSharedUsers, list.name, list.user.name)
 
     return true
 }

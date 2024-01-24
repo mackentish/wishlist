@@ -1,11 +1,9 @@
-import { Pages } from '@/types'
 import Link from 'next/link'
 import React from 'react'
 
 interface EmailTemplateProps {
     ownerName: string
     userName: string
-    userEmail: string
     listName: string
 }
 
