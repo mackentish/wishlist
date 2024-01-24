@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react'
 
 interface InputErrorProps {
-  message: string;
+    message: string
 }
 
 export function InputError({ message }: InputErrorProps) {
-  return <span className="text-error text-xs font-mono">{message}</span>;
+    return <span className="text-error text-xs font-mono">{message}</span>
 }

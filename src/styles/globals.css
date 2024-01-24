@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 body {
-  background-color: theme("colors.white", white);
+    background-color: theme('colors.white', white);
 }
 
 @media (prefers-color-scheme: dark) {
-  body {
-    background-color: theme("colors.black", black);
-  }
+    body {
+        background-color: theme('colors.black', black);
+    }
 }
