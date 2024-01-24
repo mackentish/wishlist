@@ -13,8 +13,9 @@ export async function deleteListById(
     return false;
   }
 
-  // delete list and it's items
+  // delete list items, the shared list entries, and the list itself
   await prisma.listItem.deleteMany({ where: { listId: list.id } });
+  await prisma.sharedList.deleteMany({ where: { listId: list.id } });
   await prisma.list.delete({ where: { id: list.id } });
   return true;
 }
