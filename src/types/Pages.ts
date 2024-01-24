@@ -1,4 +1,4 @@
 export enum Pages {
-  Home = "/",
-  CreateLists = "/create-lists",
+    Home = '/',
+    CreateLists = '/create-lists',
 }

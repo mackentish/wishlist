@@ -1,1 +1,1 @@
-export * from "./ShareList";
+export * from './ShareList'
