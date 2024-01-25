@@ -1,13 +1,27 @@
 import colorThemes from '@/styles/colorThemes';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '.';
 
 export function Layout({ children }: { children: React.ReactNode }) {
     const { data: session } = useSession();
     const [theme, setTheme] = useState<keyof typeof colorThemes>('orange');
-    const themeSize = 6;
+
+    useEffect(() => {
+        let value;
+        value = localStorage.getItem('theme') as keyof typeof colorThemes;
+        if (value) {
+            setTheme(value);
+        }
+    }, []);
+
+    const handleThemeChange = (theme: keyof typeof colorThemes) => {
+        setTheme(theme);
+        localStorage.setItem('theme', theme);
+    };
+
+    const selectedBorder = 'border-2 border-black dark:border-white';
 
     return (
         <main
@@ -15,22 +29,25 @@ export function Layout({ children }: { children: React.ReactNode }) {
             className="flex flex-col min-h-screen min-w-screen p-4 bg-white dark:bg-black"
         >
             <div className="flex flex-col md:flex-row md:justify-between items-center gap-2">
-                <div className="flex flex-row border border-black dark:border-white rounded">
+                <div className="flex flex-row">
+                    {/* According to the tailwind docs (https://tailwindcss.com/docs/content-configuration#class-detection-in-depth), 
+                    you can't break up the class name by using dynamic style. So something like `w-${size}` or `bg-[${colorThemes.orange.primary}]`
+                    wouldn't work. Therefore, I'm unable to supply the colors dynamically and instead have to paste them in. */}
                     <button
-                        onClick={() => setTheme('orange')}
-                        className={`w-${themeSize} h-${themeSize} bg-[${colorThemes.orange.primary}]`}
+                        onClick={() => handleThemeChange('orange')}
+                        className={`w-8 h-8 bg-[#EB5E27] rounded-l ${theme === 'orange' && selectedBorder}`}
                     />
                     <button
-                        onClick={() => setTheme('maroon')}
-                        className={`w-${themeSize} h-${themeSize} bg-[${colorThemes.maroon.primary}]`}
+                        onClick={() => handleThemeChange('maroon')}
+                        className={`w-8 h-8 bg-[#A8328F] ${theme === 'maroon' && selectedBorder}`}
                     />
                     <button
-                        onClick={() => setTheme('purple')}
-                        className={`w-${themeSize} h-${themeSize} bg-[${colorThemes.purple.primary}]`}
+                        onClick={() => handleThemeChange('purple')}
+                        className={`w-8 h-8 bg-[#7B32A8] ${theme === 'purple' && selectedBorder}`}
                     />
                     <button
-                        onClick={() => setTheme('turquoise')}
-                        className={`w-${themeSize} h-${themeSize} bg-[${colorThemes.turquoise.primary}]`}
+                        onClick={() => handleThemeChange('turquoise')}
+                        className={`w-8 h-8 bg-[#32A8A4] rounded-r ${theme === 'turquoise' && selectedBorder}`}
                     />
                 </div>
                 {session?.user && (
