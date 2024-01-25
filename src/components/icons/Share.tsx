@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 interface ShareProps {
-    disabled?: boolean
+    disabled?: boolean;
 }
 
 export function Share({ disabled }: ShareProps) {
@@ -21,5 +21,5 @@ export function Share({ disabled }: ShareProps) {
                 clip-rule="evenodd"
             />
         </svg>
-    )
+    );
 }

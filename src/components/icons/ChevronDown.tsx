@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 export function ChevronDown() {
     return (
@@ -14,5 +14,5 @@ export function ChevronDown() {
                 d="m19.5 8.25-7.5 7.5-7.5-7.5"
             />
         </svg>
-    )
+    );
 }

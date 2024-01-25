@@ -1,10 +1,10 @@
-import Link from 'next/link'
-import React from 'react'
+import Link from 'next/link';
+import React from 'react';
 
 interface EmailTemplateProps {
-    ownerName: string
-    userName: string
-    listName: string
+    ownerName: string;
+    userName: string;
+    listName: string;
 }
 
 export function EmailTemplate({
@@ -26,5 +26,5 @@ export function EmailTemplate({
                 to view it now.
             </p>
         </div>
-    )
+    );
 }

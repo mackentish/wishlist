@@ -1,21 +1,21 @@
-import { inputStyles } from '@/styles/globalTailwind'
-import React from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { Button, InputError } from '.'
+import { inputStyles } from '@/styles/globalTailwind';
+import React from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { Button, InputError } from '.';
 
 interface ItemFormProps {
-    onDone: (data: { name: string; link: string; note: string | null }) => void
-    onCancel: () => void
-    errorMessage?: string
-    defaults?: { name: string; link: string; note: string | null }
-    doneText?: string
+    onDone: (data: { name: string; link: string; note: string | null }) => void;
+    onCancel: () => void;
+    errorMessage?: string;
+    defaults?: { name: string; link: string; note: string | null };
+    doneText?: string;
 }
 
 type Inputs = {
-    name: string
-    link: string
-    note: string | null
-}
+    name: string;
+    link: string;
+    note: string | null;
+};
 
 export function ItemForm({
     onDone,
@@ -28,11 +28,11 @@ export function ItemForm({
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<Inputs>()
+    } = useForm<Inputs>();
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
-        onDone(data)
-    }
+        onDone(data);
+    };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
@@ -93,5 +93,5 @@ export function ItemForm({
                 </Button>
             </div>
         </form>
-    )
+    );
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 export function ErrorView() {
     return (
@@ -7,5 +7,5 @@ export function ErrorView() {
                 Something went wrong. Please try again later 😞
             </p>
         </div>
-    )
+    );
 }

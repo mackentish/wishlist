@@ -1,8 +1,8 @@
-import { Layout } from '@/components'
-import '@/styles/globals.css'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { SessionProvider } from 'next-auth/react'
-import type { AppProps } from 'next/app'
+import { Layout } from '@/components';
+import '@/styles/globals.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SessionProvider } from 'next-auth/react';
+import type { AppProps } from 'next/app';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -12,7 +12,7 @@ const queryClient = new QueryClient({
             staleTime: 1000 * 60 * 5,
         },
     },
-})
+});
 
 export default function MyApp({
     Component,
@@ -26,5 +26,5 @@ export default function MyApp({
                 </Layout>
             </QueryClientProvider>
         </SessionProvider>
-    )
+    );
 }

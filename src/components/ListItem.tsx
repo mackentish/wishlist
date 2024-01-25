@@ -1,44 +1,44 @@
-'use client'
+'use client';
 
-import { useLists } from '@/hooks'
-import React, { useState } from 'react'
-import { Checkbox, ItemForm, OpenTab, Pencil, Trash } from '.'
-import { ListItem as ListItemType } from '../types'
+import { useLists } from '@/hooks';
+import React, { useState } from 'react';
+import { Checkbox, ItemForm, OpenTab, Pencil, Trash } from '.';
+import { ListItem as ListItemType } from '../types';
 
 interface ListItemProps {
-    item: ListItemType
-    isOwner: boolean
-    isListEditing: boolean
+    item: ListItemType;
+    isOwner: boolean;
+    isListEditing: boolean;
 }
 
 export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
-    const [isEditing, setIsEditing] = useState(false)
-    const { deleteListItem, updateListItem, toggleItemBought } = useLists()
+    const [isEditing, setIsEditing] = useState(false);
+    const { deleteListItem, updateListItem, toggleItemBought } = useLists();
 
     const markAsBought = () => {
         const confirmed = confirm(
             `Are you sure you want to mark "${item.name}" as ${
                 item.isBought ? 'available for purchase' : 'purchased'
             }?`
-        )
+        );
         if (confirmed) {
             toggleItemBought.mutate({
                 itemId: item.id,
                 isBought: !item.isBought,
-            })
+            });
         }
-    }
+    };
 
     const beginEditing = (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
-        setIsEditing(true)
-        e.preventDefault()
-    }
+        setIsEditing(true);
+        e.preventDefault();
+    };
     const submitEditing = async (data: {
-        name: string
-        link: string
-        note: string | null
+        name: string;
+        link: string;
+        note: string | null;
     }) => {
         updateListItem.mutate(
             {
@@ -51,21 +51,21 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
             },
             {
                 onSuccess: () => {
-                    setIsEditing(false)
+                    setIsEditing(false);
                 },
             }
-        )
-    }
+        );
+    };
 
     const deleteItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         const confirmed = confirm(
             `Are you sure you want to delete "${item.name}"?`
-        )
+        );
         if (confirmed) {
-            deleteListItem.mutate(item.id)
+            deleteListItem.mutate(item.id);
         }
-        e.preventDefault()
-    }
+        e.preventDefault();
+    };
 
     return (
         <>
@@ -86,7 +86,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                 <a
                     href={item.link}
                     target="_blank"
-                    className="flex flex-row items-center justify-between p-2 pl-4 border border-darkGrey dark:border-lightGrey dark:border-opacity-40 rounded"
+                    className="flex flex-row items-center justify-between p-2 pl-4 border border-darkGrey dark:border-lightGrey/40 rounded"
                 >
                     <div className="flex flex-row items-center gap-4">
                         {!isOwner && (
@@ -122,5 +122,5 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                 </a>
             )}
         </>
-    )
+    );
 }

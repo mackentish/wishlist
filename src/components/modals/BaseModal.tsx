@@ -1,5 +1,5 @@
-import React from 'react'
-import ReactModal from 'react-modal'
+import React from 'react';
+import ReactModal from 'react-modal';
 
 export function BaseModal({ children, isOpen, onRequestClose }: any) {
     return (
@@ -12,5 +12,5 @@ export function BaseModal({ children, isOpen, onRequestClose }: any) {
                 {children}
             </div>
         </ReactModal>
-    )
+    );
 }

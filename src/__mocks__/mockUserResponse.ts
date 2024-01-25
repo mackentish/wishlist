@@ -1,4 +1,4 @@
-import { User } from '@/types'
+import { User } from '@/types';
 
 export const mockUserResponse: User = {
     id: 1,
@@ -89,4 +89,4 @@ export const mockUserResponse: User = {
             ],
         },
     ],
-}
+};

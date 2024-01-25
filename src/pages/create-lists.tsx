@@ -1,39 +1,39 @@
-'use client'
+'use client';
 
-import { Button, InputError, secondaryBtnClass } from '@/components'
-import { useLists } from '@/hooks'
-import { inputStyles } from '@/styles/globalTailwind'
-import { Pages } from '@/types'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Button, InputError, secondaryBtnClass } from '@/components';
+import { useLists } from '@/hooks';
+import { inputStyles } from '@/styles/globalTailwind';
+import { Pages } from '@/types';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
-    name: string
-    description: string | null
-}
+    name: string;
+    description: string | null;
+};
 
 export default function CreateLists() {
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<Inputs>()
-    const { createList } = useLists()
-    const router = useRouter()
+    } = useForm<Inputs>();
+    const { createList } = useLists();
+    const router = useRouter();
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         await createList.mutate(data, {
             onSuccess: () => {
-                console.log('here')
-                router.back()
+                console.log('here');
+                router.back();
             },
             onError: (error) => {
-                console.error('err', error)
+                console.error('err', error);
             },
-        })
-    }
+        });
+    };
 
     return (
         <div className="h-full pt-20 flex flex-col gap-8 items-center align-top w-full max-w-3xl">
@@ -75,5 +75,5 @@ export default function CreateLists() {
                 </div>
             </form>
         </div>
-    )
+    );
 }

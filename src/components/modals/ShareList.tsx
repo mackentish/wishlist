@@ -1,25 +1,25 @@
-import { useAllUsers, useLists } from '@/hooks'
-import { ShareUser } from '@/types'
-import React, { useState } from 'react'
-import { Button, Checkbox } from '..'
-import { BaseModal } from './BaseModal'
+import { useAllUsers, useLists } from '@/hooks';
+import { ShareUser } from '@/types';
+import React, { useState } from 'react';
+import { Button, Checkbox } from '..';
+import { BaseModal } from './BaseModal';
 
 interface ShareListProps {
-    isOpen: boolean
-    close: () => void
-    listId: number
+    isOpen: boolean;
+    close: () => void;
+    listId: number;
 }
 
 export function ShareList({ isOpen, close, listId }: ShareListProps) {
-    const { data: users, isLoading, error } = useAllUsers()
-    const { shareList } = useLists()
-    const [filter, setFilter] = useState('')
-    const [selectedUsers, setSelectedUsers] = useState<ShareUser[]>([])
-    const [isSharing, setIsSharing] = useState(false)
+    const { data: users, isLoading, error } = useAllUsers();
+    const { shareList } = useLists();
+    const [filter, setFilter] = useState('');
+    const [selectedUsers, setSelectedUsers] = useState<ShareUser[]>([]);
+    const [isSharing, setIsSharing] = useState(false);
 
     const shareListWithUsers = () => {
-        console.log('Share with:', selectedUsers)
-        setIsSharing(true)
+        console.log('Share with:', selectedUsers);
+        setIsSharing(true);
         shareList.mutate(
             {
                 listId: listId,
@@ -27,41 +27,41 @@ export function ShareList({ isOpen, close, listId }: ShareListProps) {
             },
             {
                 onSuccess: () => {
-                    setIsSharing(false)
-                    alert('List shared successfully!')
-                    close()
+                    setIsSharing(false);
+                    alert('List shared successfully!');
+                    close();
                 },
                 onError: () => {
-                    setIsSharing(false)
-                    alert('Error sharing list, try again later.')
+                    setIsSharing(false);
+                    alert('Error sharing list, try again later.');
                 },
             }
-        )
-    }
+        );
+    };
 
     const filteredUsers =
         users?.filter((user) => {
-            if (!filter) return false
+            if (!filter) return false;
             else if (filter.length < 2)
-                return user.name.toLowerCase().startsWith(filter.toLowerCase())
-            else return user.name.toLowerCase().includes(filter.toLowerCase())
-        }) || []
+                return user.name.toLowerCase().startsWith(filter.toLowerCase());
+            else return user.name.toLowerCase().includes(filter.toLowerCase());
+        }) || [];
 
     const renderLoading = () => {
         return (
             <p className="font-mono text-sm text-black dark:text-white">
                 Loading users... 🧐
             </p>
-        )
-    }
+        );
+    };
 
     const renderError = () => {
         return (
             <p className="font-mono text-sm text-black dark:text-white">
                 Error loading users, try again later. 😞
             </p>
-        )
-    }
+        );
+    };
 
     const renderContent = () => {
         return (
@@ -85,9 +85,9 @@ export function ShareList({ isOpen, close, listId }: ShareListProps) {
                                 if (selectedUsers.includes(user)) {
                                     setSelectedUsers(
                                         selectedUsers.filter((u) => u !== user)
-                                    )
+                                    );
                                 } else {
-                                    setSelectedUsers([...selectedUsers, user])
+                                    setSelectedUsers([...selectedUsers, user]);
                                 }
                             }}
                         />
@@ -130,8 +130,8 @@ export function ShareList({ isOpen, close, listId }: ShareListProps) {
                     </Button>
                 </div>
             </div>
-        )
-    }
+        );
+    };
 
     return (
         <BaseModal isOpen={isOpen} onRequestClose={close}>
@@ -142,21 +142,21 @@ export function ShareList({ isOpen, close, listId }: ShareListProps) {
             {(error || !users) && renderError()}
             {!isLoading && !error && renderContent()}
         </BaseModal>
-    )
+    );
 }
 
 interface UserRowProps {
-    user: ShareUser
-    toggleUser: (user: ShareUser) => void
+    user: ShareUser;
+    toggleUser: (user: ShareUser) => void;
 }
 
 function UserRow({ user, toggleUser }: UserRowProps) {
-    const [isChecked, setIsChecked] = useState(false)
+    const [isChecked, setIsChecked] = useState(false);
     return (
         <button
             onClick={() => {
-                setIsChecked(!isChecked)
-                toggleUser(user)
+                setIsChecked(!isChecked);
+                toggleUser(user);
             }}
             className="flex flex-row gap-4 items-center w-full p-2 border rounded border-black dark:border-white"
         >
@@ -170,5 +170,5 @@ function UserRow({ user, toggleUser }: UserRowProps) {
                 </p>
             </div>
         </button>
-    )
+    );
 }
