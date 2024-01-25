@@ -1,29 +1,29 @@
-import { ErrorView, List, SignIn, Spacer, primaryBtnClass } from '@/components'
-import { useLists, useUser } from '@/hooks'
-import { Pages } from '@/types'
-import { useSession } from 'next-auth/react'
-import Link from 'next/link'
-import { useMemo } from 'react'
+import { ErrorView, List, SignIn, Spacer, primaryBtnClass } from '@/components';
+import { useLists, useUser } from '@/hooks';
+import { Pages } from '@/types';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useMemo } from 'react';
 
 export default function Home() {
-    const { data: session } = useSession()
-    const { isLoading: userLoading, error: userError, data: user } = useUser()
+    const { data: session } = useSession();
+    const { isLoading: userLoading, error: userError, data: user } = useUser();
     const {
         fetchLists: { isLoading: listsLoading, error: listsError, data: lists },
-    } = useLists()
+    } = useLists();
 
     const userLists = useMemo(() => {
-        if (!lists) return []
-        return lists.filter((list) => list.userId === user?.id)
-    }, [lists, user?.id])
+        if (!lists) return [];
+        return lists.filter((list) => list.userId === user?.id);
+    }, [lists, user?.id]);
 
     const sharedLists = useMemo(() => {
-        if (!lists) return []
-        return lists.filter((list) => list.userId !== user?.id)
-    }, [lists, user?.id])
+        if (!lists) return [];
+        return lists.filter((list) => list.userId !== user?.id);
+    }, [lists, user?.id]);
 
     if (!session?.user) {
-        return <SignIn />
+        return <SignIn />;
     }
 
     if (userLoading || listsLoading) {
@@ -36,11 +36,11 @@ export default function Home() {
                     Loading...
                 </p>
             </div>
-        )
+        );
     }
 
     if (userError || !user || listsError || lists === undefined) {
-        return <ErrorView />
+        return <ErrorView />;
     }
 
     return (
@@ -98,5 +98,5 @@ export default function Home() {
                 )}
             </div>
         </div>
-    )
+    );
 }

@@ -39,6 +39,6 @@ const colorThemes = {
         error: '#EC2D2D',
         errorHover: '#D11F1F',
     },
-}
+};
 
-export default colorThemes
+export default colorThemes;

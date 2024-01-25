@@ -1,6 +1,6 @@
-import { useLists } from '@/hooks'
-import { inputStyles } from '@/styles/globalTailwind'
-import React, { useState } from 'react'
+import { useLists } from '@/hooks';
+import { inputStyles } from '@/styles/globalTailwind';
+import React, { useState } from 'react';
 import {
     Button,
     CircleX,
@@ -9,34 +9,35 @@ import {
     Share,
     ShareList,
     Spacer,
-} from '.'
-import { List as ListType } from '../types'
+} from '.';
+import { List as ListType } from '../types';
 
 interface ListProps {
-    list: ListType
-    isOwner: boolean
+    list: ListType;
+    isOwner: boolean;
 }
 
 export function List({ list, isOwner }: ListProps) {
-    const [isAdding, setIsAdding] = useState(false)
-    const [isEditing, setIsEditing] = useState(false)
-    const [listName, setListName] = useState(list.name)
+    const [isAdding, setIsAdding] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [listName, setListName] = useState(list.name);
     const [listDescription, setListDescription] = useState(
         list.description || ''
-    )
+    );
     const [itemFormError, setItemFormError] = useState<string | undefined>(
         undefined
-    )
-    const [isSharing, setIsSharing] = useState(false)
-    const [isRemoving, setIsRemoving] = useState(false)
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const { addListItem, deleteList, updateList, deleteSharedList } = useLists()
+    );
+    const [isSharing, setIsSharing] = useState(false);
+    const [isRemoving, setIsRemoving] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { addListItem, deleteList, updateList, deleteSharedList } =
+        useLists();
 
     // Functions:
     const addItem = async (data: {
-        name: string
-        link: string
-        note: string | null
+        name: string;
+        link: string;
+        note: string | null;
     }) => {
         await addListItem.mutate(
             {
@@ -48,16 +49,16 @@ export function List({ list, isOwner }: ListProps) {
             },
             {
                 onSuccess: () => {
-                    setIsAdding(false)
+                    setIsAdding(false);
                 },
                 onError: () => {
                     setItemFormError(
                         'Something went wrong creating your new list item!'
-                    )
+                    );
                 },
             }
-        )
-    }
+        );
+    };
 
     const onSaveChanges = () => {
         updateList.mutate(
@@ -69,31 +70,33 @@ export function List({ list, isOwner }: ListProps) {
             },
             {
                 onSuccess: () => {
-                    setIsEditing(false)
+                    setIsEditing(false);
                 },
             }
-        )
-        setIsEditing(false)
-    }
+        );
+        setIsEditing(false);
+    };
 
     const onDelete = () => {
         if (confirm('Are you sure you want to delete this list?')) {
             deleteList.mutate(list.id, {
                 onSuccess: () => {
-                    setIsEditing(false)
+                    setIsEditing(false);
                 },
                 onError: () => {
-                    setItemFormError('Something went wrong deleting your list!')
+                    setItemFormError(
+                        'Something went wrong deleting your list!'
+                    );
                 },
-            })
+            });
         }
-    }
+    };
 
     const shareList = async () => {
-        setIsSharing(true)
-        setIsModalOpen(true)
-        setIsSharing(false)
-    }
+        setIsSharing(true);
+        setIsModalOpen(true);
+        setIsSharing(false);
+    };
 
     const removeSharedList = () => {
         if (
@@ -101,19 +104,19 @@ export function List({ list, isOwner }: ListProps) {
                 "Are you sure you want to remove this shared list? Once you do, you won't have access to it unless the owner re-shares it with you."
             )
         ) {
-            setIsRemoving(true)
+            setIsRemoving(true);
             deleteSharedList.mutate(list.id, {
                 onSuccess: () => {
-                    alert('Shared list removed!')
-                    setIsRemoving(false)
+                    alert('Shared list removed!');
+                    setIsRemoving(false);
                 },
                 onError: () => {
-                    alert('Something went wrong removing your shared list!')
-                    setIsRemoving(false)
+                    alert('Something went wrong removing your shared list!');
+                    setIsRemoving(false);
                 },
-            })
+            });
         }
-    }
+    };
 
     // Refactored components for readability:
     const DefaultList = () => {
@@ -152,8 +155,8 @@ export function List({ list, isOwner }: ListProps) {
                     </button>
                 )}
             </div>
-        )
-    }
+        );
+    };
 
     const OwnerList = () => {
         return (
@@ -204,8 +207,8 @@ export function List({ list, isOwner }: ListProps) {
                     listId={list.id}
                 />
             </>
-        )
-    }
+        );
+    };
 
     return (
         <div className="flex flex-col gap-2 w-full p-4 border rounded-md border-black dark:border-white">
@@ -245,5 +248,5 @@ export function List({ list, isOwner }: ListProps) {
             ))}
             {isOwner && <OwnerList />}
         </div>
-    )
+    );
 }

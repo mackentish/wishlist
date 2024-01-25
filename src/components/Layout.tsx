@@ -1,13 +1,13 @@
-import colorThemes from '@/styles/colorThemes'
-import { signOut, useSession } from 'next-auth/react'
-import Image from 'next/image'
-import React, { useState } from 'react'
-import { Button } from '.'
+import colorThemes from '@/styles/colorThemes';
+import { signOut, useSession } from 'next-auth/react';
+import Image from 'next/image';
+import React, { useState } from 'react';
+import { Button } from '.';
 
 export function Layout({ children }: { children: React.ReactNode }) {
-    const { data: session } = useSession()
-    const [theme, setTheme] = useState<keyof typeof colorThemes>('orange')
-    const themeSize = 6
+    const { data: session } = useSession();
+    const [theme, setTheme] = useState<keyof typeof colorThemes>('orange');
+    const themeSize = 6;
 
     return (
         <main
@@ -55,5 +55,5 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 {children}
             </div>
         </main>
-    )
+    );
 }

@@ -1,29 +1,29 @@
-import { deleteItemById, getSessionUser } from '@/repo'
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { deleteItemById, getSessionUser } from '@/repo';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
     if (req.method !== 'DELETE') {
-        res.status(405).json({ error: 'Method not allowed' })
-        return
+        res.status(405).json({ error: 'Method not allowed' });
+        return;
     }
 
     // find user
-    const existingUser = await getSessionUser(req, res)
+    const existingUser = await getSessionUser(req, res);
     if (!existingUser) {
-        res.status(401).json({ error: 'User not found, unauthorized' })
-        return
+        res.status(401).json({ error: 'User not found, unauthorized' });
+        return;
     }
 
     // delete list item
-    const itemId = Number.parseInt(req.query.itemId as string)
-    const success = await deleteItemById(itemId, existingUser.id)
+    const itemId = Number.parseInt(req.query.itemId as string);
+    const success = await deleteItemById(itemId, existingUser.id);
     if (success) {
-        res.status(200).json({ message: 'Item deleted' })
+        res.status(200).json({ message: 'Item deleted' });
     } else {
-        res.status(404).json({ error: 'Item not found' })
+        res.status(404).json({ error: 'Item not found' });
     }
-    return
+    return;
 }

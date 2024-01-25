@@ -1,22 +1,22 @@
-import { CreateListItemRequest } from '@/types'
-import { prisma } from './_base'
+import { CreateListItemRequest } from '@/types';
+import { prisma } from './_base';
 
 export async function deleteItemById(
     itemId: number,
     userId: number
 ): Promise<boolean> {
-    const item = await prisma.listItem.findUnique({ where: { id: itemId } })
+    const item = await prisma.listItem.findUnique({ where: { id: itemId } });
     // verify user owns list item
     const list = await prisma.list.findUnique({
         where: { id: item?.listId, userId: userId },
-    })
+    });
     if (!item || !list) {
-        return false
+        return false;
     }
 
     // delete list item
-    await prisma.listItem.delete({ where: { id: item.id } })
-    return true
+    await prisma.listItem.delete({ where: { id: item.id } });
+    return true;
 }
 
 export async function createItem(
@@ -26,10 +26,10 @@ export async function createItem(
     // validate that list belongs to user
     const list = await prisma.list.findUnique({
         where: { id: data.listId, userId },
-    })
+    });
     // if not, throw 401
     if (!list) {
-        return false
+        return false;
     }
 
     // create list item
@@ -41,8 +41,8 @@ export async function createItem(
             isBought: data.isBought,
             list: { connect: { id: data.listId } },
         },
-    })
-    return true
+    });
+    return true;
 }
 
 export async function updateItemById(
@@ -53,9 +53,9 @@ export async function updateItemById(
     // validate that list belongs to user
     const list = await prisma.list.findUnique({
         where: { id: data.listId, userId },
-    })
+    });
     if (!list) {
-        return false
+        return false;
     }
 
     // update list item
@@ -67,12 +67,12 @@ export async function updateItemById(
             note: data.note,
             isBought: data.isBought,
         },
-    })
+    });
 
     if (updatedItem) {
-        return true
+        return true;
     } else {
-        return false
+        return false;
     }
 }
 
@@ -82,21 +82,21 @@ export async function toggleBought(
     isBought: boolean
 ): Promise<boolean> {
     // find list containing item
-    const item = await prisma.listItem.findUnique({ where: { id: itemId } })
+    const item = await prisma.listItem.findUnique({ where: { id: itemId } });
     if (!item) {
-        return false
+        return false;
     }
-    const list = await prisma.list.findUnique({ where: { id: item.listId } })
+    const list = await prisma.list.findUnique({ where: { id: item.listId } });
     if (!list) {
-        return false
+        return false;
     }
 
     // validate that list has been shared with user
     const sharedList = await prisma.sharedList.findFirst({
         where: { listId: list.id, sharedUserId: userId },
-    })
+    });
     if (!sharedList) {
-        return false
+        return false;
     }
 
     // update list item
@@ -105,11 +105,11 @@ export async function toggleBought(
         data: {
             isBought,
         },
-    })
+    });
 
     if (updatedItem) {
-        return true
+        return true;
     } else {
-        return false
+        return false;
     }
 }

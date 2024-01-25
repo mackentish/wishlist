@@ -1,6 +1,6 @@
-import { Button } from '@/components'
-import { signIn } from 'next-auth/react'
-import React from 'react'
+import { Button } from '@/components';
+import { signIn } from 'next-auth/react';
+import React from 'react';
 
 export function SignIn() {
     return (
@@ -13,5 +13,5 @@ export function SignIn() {
             </p>
             <Button onClick={() => signIn()}>Sign in</Button>
         </div>
-    )
+    );
 }

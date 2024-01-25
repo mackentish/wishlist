@@ -1,1 +1,1 @@
-export * from './mockUserResponse'
+export * from './mockUserResponse';

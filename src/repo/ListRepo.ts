@@ -1,9 +1,9 @@
-import { EmailTemplate } from '@/components'
-import { CreateListRequest, List } from '@/types'
-import { Resend } from 'resend'
-import { prisma } from './_base'
+import { EmailTemplate } from '@/components';
+import { CreateListRequest, List } from '@/types';
+import { Resend } from 'resend';
+import { prisma } from './_base';
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function deleteListById(
     listId: number,
@@ -12,16 +12,16 @@ export async function deleteListById(
     // verify list exists for user
     const list = await prisma.list.findUnique({
         where: { id: listId, userId: userId },
-    })
+    });
     if (!list) {
-        return false
+        return false;
     }
 
     // delete list items, the shared list entries, and the list itself
-    await prisma.listItem.deleteMany({ where: { listId: list.id } })
-    await prisma.sharedList.deleteMany({ where: { listId: list.id } })
-    await prisma.list.delete({ where: { id: list.id } })
-    return true
+    await prisma.listItem.deleteMany({ where: { listId: list.id } });
+    await prisma.sharedList.deleteMany({ where: { listId: list.id } });
+    await prisma.list.delete({ where: { id: list.id } });
+    return true;
 }
 
 export async function getListsForUser(userId: number): Promise<List[]> {
@@ -30,7 +30,7 @@ export async function getListsForUser(userId: number): Promise<List[]> {
     const userLists = await prisma.list.findMany({
         where: { userId: userId },
         include: { items: true },
-    })
+    });
     // next, get lists shared with user
     const sharedLists = await prisma.sharedList.findMany({
         where: { sharedUserId: userId },
@@ -44,10 +44,10 @@ export async function getListsForUser(userId: number): Promise<List[]> {
                 },
             },
         },
-    })
+    });
 
     // combine lists and return
-    return [...userLists, ...sharedLists.map((sl) => sl.list)]
+    return [...userLists, ...sharedLists.map((sl) => sl.list)];
 }
 
 export async function createList(
@@ -61,7 +61,7 @@ export async function createList(
             description: data.description,
             user: { connect: { id: userId } },
         },
-    })
+    });
 }
 
 export async function updateListById(
@@ -72,9 +72,9 @@ export async function updateListById(
     // verify list exists for user
     const list = await prisma.list.findUnique({
         where: { id: listId, userId: userId },
-    })
+    });
     if (!list) {
-        return false
+        return false;
     }
 
     // update list
@@ -84,8 +84,8 @@ export async function updateListById(
             name: data.name,
             description: data.description,
         },
-    })
-    return true
+    });
+    return true;
 }
 
 async function sendShareEmails(
@@ -102,12 +102,12 @@ async function sendShareEmails(
             userName: user.name,
             listName,
         }),
-    }))
-    const { error, data } = await resend.batch.send(objects)
+    }));
+    const { error, data } = await resend.batch.send(objects);
     if (error) {
-        console.error('Error sending emails', error)
+        console.error('Error sending emails', error);
     } else {
-        console.log('Emails sent', data)
+        console.log('Emails sent', data);
     }
 }
 
@@ -120,16 +120,16 @@ export async function shareList(
     const list = await prisma.list.findUnique({
         where: { id: listId, userId: userId },
         include: { user: { select: { name: true } } },
-    })
+    });
     if (!list) {
-        return false
+        return false;
     }
 
     // find user ids for emails
     const sharedUsers = await prisma.user.findMany({
         where: { email: { in: sharedUserEmails } },
         select: { id: true, email: true, name: true },
-    })
+    });
 
     // filter out any users that already have the list shared with them
     const existingSharedUsers = await prisma.sharedList.findMany({
@@ -138,10 +138,10 @@ export async function shareList(
             sharedUserId: { in: sharedUsers.map((u) => u.id) },
         },
         select: { sharedUserId: true },
-    })
+    });
     const netNewSharedUsers = sharedUsers.filter(
         (u) => !existingSharedUsers.map((eu) => eu.sharedUserId).includes(u.id)
-    )
+    );
 
     // create new shared list entries
     await prisma.sharedList.createMany({
@@ -149,12 +149,12 @@ export async function shareList(
             listId: list.id,
             sharedUserId: user.id,
         })),
-    })
+    });
 
     // send email to shared users
-    await sendShareEmails(netNewSharedUsers, list.name, list.user.name)
+    await sendShareEmails(netNewSharedUsers, list.name, list.user.name);
 
-    return true
+    return true;
 }
 
 export async function deleteSharedList(
@@ -165,5 +165,5 @@ export async function deleteSharedList(
     // that may have slipped through. This is a redundancy.
     await prisma.sharedList.deleteMany({
         where: { listId: listId, sharedUserId: userId },
-    })
+    });
 }

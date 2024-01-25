@@ -1,26 +1,26 @@
-import { GetUserResponse, ShareUser, User } from '@/types'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '../pages/api/auth/[...nextauth]'
-import { prisma } from './_base'
+import { GetUserResponse, ShareUser, User } from '@/types';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../pages/api/auth/[...nextauth]';
+import { prisma } from './_base';
 
 export async function getSessionUser(
     req: NextApiRequest,
     res: NextApiResponse
 ): Promise<Omit<User, 'lists'> | null> {
-    const session = await getServerSession(req, res, authOptions)
+    const session = await getServerSession(req, res, authOptions);
     if (!session?.user?.email) {
-        return null
+        return null;
     }
 
     // find user
     const existingUser = await prisma.user.findUnique({
         where: { email: session.user.email },
-    })
+    });
     if (!existingUser) {
-        return null
+        return null;
     }
-    return existingUser
+    return existingUser;
 }
 
 export async function findOrCreateUser(
@@ -31,9 +31,9 @@ export async function findOrCreateUser(
     const existingUser = await prisma.user.findUnique({
         where: { email },
         include: { lists: { include: { items: true } } },
-    })
+    });
     if (existingUser) {
-        return existingUser
+        return existingUser;
     } else {
         // create user
         const newUser = await prisma.user.create({
@@ -41,9 +41,9 @@ export async function findOrCreateUser(
                 email,
                 name,
             },
-        })
+        });
         // return it
-        return newUser
+        return newUser;
     }
 }
 
@@ -59,5 +59,5 @@ export async function getShareableUsers(email: string): Promise<ShareUser[]> {
                 not: email,
             },
         },
-    })
+    });
 }

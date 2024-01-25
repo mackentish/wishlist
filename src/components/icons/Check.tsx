@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 interface CheckProps {
-    style?: string
+    style?: string;
 }
 
 export function Check({ style = 'stroke-white' }: CheckProps) {
@@ -18,5 +18,5 @@ export function Check({ style = 'stroke-white' }: CheckProps) {
                 d="m4.5 12.75 6 6 9-13.5"
             />
         </svg>
-    )
+    );
 }

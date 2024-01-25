@@ -1,9 +1,9 @@
-import React from 'react'
-import { Check } from '.'
+import React from 'react';
+import { Check } from '.';
 
 interface CheckboxProps {
-    checked: boolean
-    onClick?: () => void
+    checked: boolean;
+    onClick?: () => void;
 }
 
 export function Checkbox({ checked, onClick }: CheckboxProps) {
@@ -11,9 +11,9 @@ export function Checkbox({ checked, onClick }: CheckboxProps) {
         <button
             onClick={(e) => {
                 if (onClick) {
-                    e.preventDefault()
-                    onClick()
-                    e.stopPropagation()
+                    e.preventDefault();
+                    onClick();
+                    e.stopPropagation();
                 }
             }}
             className={`p-1 border border-black dark:border-lightGrey rounded-full ${
@@ -30,5 +30,5 @@ export function Checkbox({ checked, onClick }: CheckboxProps) {
                 }
             />
         </button>
-    )
+    );
 }

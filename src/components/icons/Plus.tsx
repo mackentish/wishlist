@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 export function Plus() {
     return (
@@ -14,5 +14,5 @@ export function Plus() {
                 d="M12 4.5v15m7.5-7.5h-15"
             />
         </svg>
-    )
+    );
 }
