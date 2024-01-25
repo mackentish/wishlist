@@ -1,6 +1,6 @@
 {
     "name": "wishlist",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "private": true,
     "scripts": {
         "dev": "next dev",
@@ -36,6 +36,7 @@
         "prettier": "^3.1.0",
         "prisma": "^5.7.1",
         "tailwindcss": "^3.3.0",
+        "tw-colors": "^3.3.1",
         "typescript": "^5"
     }
 }

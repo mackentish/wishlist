@@ -86,7 +86,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                 <a
                     href={item.link}
                     target="_blank"
-                    className="flex flex-row items-center justify-between p-2 pl-4 border border-darkGrey dark:border-lightGrey dark:border-opacity-40 rounded"
+                    className="flex flex-row items-center justify-between p-2 pl-4 border border-darkGrey dark:border-lightGrey/40 rounded"
                 >
                     <div className="flex flex-row items-center gap-4">
                         {!isOwner && (
