@@ -62,9 +62,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                         <p className="font-mono font-bold text-sm text-black dark:text-white">
                             {session.user.email}
                         </p>
-                        <Button btnType="danger" onClick={() => signOut()}>
-                            Sign out
-                        </Button>
+                        <Button onClick={() => signOut()}>Sign out</Button>
                     </div>
                 )}
             </div>
