@@ -19,12 +19,7 @@ export default async function handler(
 
     // validate data
     const data = JSON.parse(req.body) as CreateListItemRequest;
-    if (
-        !data.listId ||
-        !data.name ||
-        !data.link ||
-        data.isBought === undefined
-    ) {
+    if (!data.listId || !data.name || data.isBought === undefined) {
         res.status(400).json({ message: 'Invalid data' });
         return;
     }

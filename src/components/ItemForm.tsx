@@ -4,16 +4,20 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button, InputError } from '.';
 
 interface ItemFormProps {
-    onDone: (data: { name: string; link: string; note: string | null }) => void;
+    onDone: (data: {
+        name: string;
+        link: string | null;
+        note: string | null;
+    }) => void;
     onCancel: () => void;
     errorMessage?: string;
-    defaults?: { name: string; link: string; note: string | null };
+    defaults?: { name: string; link: string | null; note: string | null };
     doneText?: string;
 }
 
 type Inputs = {
     name: string;
-    link: string;
+    link: string | null;
     note: string | null;
 };
 
@@ -57,15 +61,11 @@ export function ItemForm({
                 {/* Link Input */}
                 <span className="w-full">
                     <input
-                        defaultValue={defaults?.link}
-                        placeholder="Item Link"
-                        className={
-                            !!errors.link
-                                ? inputStyles.error
-                                : inputStyles.default
-                        }
+                        defaultValue={defaults?.link ?? undefined}
+                        placeholder="Item Link?"
+                        className={inputStyles.default}
                         type="url"
-                        {...register('link', { required: true })}
+                        {...register('link', { required: false })}
                     />
                     {errors.link && (
                         <InputError message="An item must have a link" />
