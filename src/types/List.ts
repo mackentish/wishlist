@@ -3,7 +3,7 @@ import { ListItem } from '.';
 export type List = {
     id: number;
     userId: number;
-    user: { name: string };
+    user?: { name: string };
     name: string;
     description: string | null;
     items: ListItem[];

@@ -127,7 +127,7 @@ export function List({ list, isOwner }: ListProps) {
                         <p className="font-mono font-bold text-md text-black dark:text-white">
                             {list.name}
                         </p>
-                        {!isOwner && (
+                        {!isOwner && list.user && (
                             <p className="font-mono text-xs text-darkGrey dark:text-lightGrey">
                                 {`(${list.user.name})`}
                             </p>
