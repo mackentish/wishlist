@@ -5,6 +5,26 @@ import React, { useState } from 'react';
 import { Checkbox, ItemForm, OpenTab, Pencil, Trash } from '.';
 import { ListItem as ListItemType } from '../types';
 
+const ItemWrapper = ({
+    link,
+    children,
+}: {
+    link: string | null;
+    children: React.ReactNode;
+}) => {
+    const style =
+        'flex flex-row items-center justify-between p-2 pl-4 border border-darkGrey dark:border-lightGrey/40 rounded';
+    if (!!link) {
+        return (
+            <a href={link} target="_blank" className={style}>
+                {children}
+            </a>
+        );
+    } else {
+        return <div className={style}>{children}</div>;
+    }
+};
+
 interface ListItemProps {
     item: ListItemType;
     isOwner: boolean;
@@ -37,7 +57,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
     };
     const submitEditing = async (data: {
         name: string;
-        link: string;
+        link: string | null;
         note: string | null;
     }) => {
         updateListItem.mutate(
@@ -83,11 +103,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                     />
                 </div>
             ) : (
-                <a
-                    href={item.link}
-                    target="_blank"
-                    className="flex flex-row items-center justify-between p-2 pl-4 border border-darkGrey dark:border-lightGrey/40 rounded"
-                >
+                <ItemWrapper link={item.link}>
                     <div className="flex flex-row items-center gap-4">
                         {!isOwner && (
                             <Checkbox
@@ -117,9 +133,9 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                             </button>
                         </div>
                     ) : (
-                        <OpenTab />
+                        <OpenTab disabled={!item.link} />
                     )}
-                </a>
+                </ItemWrapper>
             )}
         </>
     );

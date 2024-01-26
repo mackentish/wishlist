@@ -1,19 +1,23 @@
 import { inputStyles } from '@/styles/globalTailwind';
-import React from 'react';
+import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button, InputError } from '.';
 
 interface ItemFormProps {
-    onDone: (data: { name: string; link: string; note: string | null }) => void;
+    onDone: (data: {
+        name: string;
+        link: string | null;
+        note: string | null;
+    }) => void;
     onCancel: () => void;
     errorMessage?: string;
-    defaults?: { name: string; link: string; note: string | null };
+    defaults?: { name: string; link: string | null; note: string | null };
     doneText?: string;
 }
 
 type Inputs = {
     name: string;
-    link: string;
+    link: string | null;
     note: string | null;
 };
 
@@ -29,6 +33,7 @@ export function ItemForm({
         handleSubmit,
         formState: { errors },
     } = useForm<Inputs>();
+    const [itemNote, setItemNote] = useState<string | null>(null);
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         onDone(data);
@@ -57,15 +62,11 @@ export function ItemForm({
                 {/* Link Input */}
                 <span className="w-full">
                     <input
-                        defaultValue={defaults?.link}
-                        placeholder="Item Link"
-                        className={
-                            !!errors.link
-                                ? inputStyles.error
-                                : inputStyles.default
-                        }
+                        defaultValue={defaults?.link ?? undefined}
+                        placeholder="Item Link?"
+                        className={inputStyles.default}
                         type="url"
-                        {...register('link', { required: true })}
+                        {...register('link', { required: false })}
                     />
                     {errors.link && (
                         <InputError message="An item must have a link" />
@@ -73,12 +74,26 @@ export function ItemForm({
                 </span>
             </div>
             {/* Note Input */}
-            <input
-                defaultValue={defaults?.note ?? undefined}
-                placeholder="Item Note?"
-                className={inputStyles.default}
-                {...register('note', { required: false })}
-            />
+            <div className="flex flex-col md:flex-row md:items-center md:gap-2">
+                <input
+                    defaultValue={defaults?.note ?? undefined}
+                    placeholder="Item Note?"
+                    className={inputStyles.default}
+                    {...register('note', {
+                        required: false,
+                        onChange: (e) => {
+                            if (e.target.value.length <= 100) {
+                                setItemNote(e.target.value);
+                            }
+                        },
+                    })}
+                />
+                <p
+                    className={`font-mono text-xs ${(itemNote?.length || 0) >= 100 ? 'text-error' : 'text-lightGrey dark:text-darkGrey'}`}
+                >
+                    {itemNote?.length || 0}/100
+                </p>
+            </div>
 
             {/* Error Message */}
             {errorMessage && <InputError message={errorMessage} />}
