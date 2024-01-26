@@ -29,12 +29,12 @@ export async function getListsForUser(userId: number): Promise<List[]> {
     // first, get lists owned by user
     const userLists = await prisma.list.findMany({
         where: { userId: userId },
-        include: { items: true },
+        include: { items: true, user: { select: { name: true } } },
     });
     // next, get lists shared with user
     const sharedLists = await prisma.sharedList.findMany({
         where: { sharedUserId: userId },
-        include: {
+        select: {
             list: {
                 include: {
                     items: true,

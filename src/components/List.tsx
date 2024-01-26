@@ -123,9 +123,16 @@ export function List({ list, isOwner }: ListProps) {
         return (
             <div className="flex flex-row justify-between items-center">
                 <div className="flex flex-col items-start w-full">
-                    <p className="font-mono font-bold text-md text-black dark:text-white">
-                        {list.name}
-                    </p>
+                    <div className="flex flex-col-reverse md:flex-row md:gap-2 md:items-baseline">
+                        <p className="font-mono font-bold text-md text-black dark:text-white">
+                            {list.name}
+                        </p>
+                        {!isOwner && (
+                            <p className="font-mono text-xs text-darkGrey dark:text-lightGrey">
+                                {`(${list.user.name})`}
+                            </p>
+                        )}
+                    </div>
                     <p className="font-mono text-sm text-black dark:text-white">
                         {list.description}
                     </p>
