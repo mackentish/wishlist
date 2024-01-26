@@ -94,7 +94,7 @@ async function sendShareEmails(
     ownerName: string
 ) {
     const objects = users.map((user) => ({
-        from: 'wishlist <onboarding@resend.dev>',
+        from: 'wishlist <donotreply@wishlist.mackentish.com>',
         to: [user.email],
         subject: 'A new list has been shared with you!',
         react: EmailTemplate({
