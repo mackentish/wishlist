@@ -1,20 +1,13 @@
+import { useTheme } from '@/hooks';
 import colorThemes from '@/styles/colorThemes';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '.';
 
 export function Layout({ children }: { children: React.ReactNode }) {
     const { data: session } = useSession();
-    const [theme, setTheme] = useState<keyof typeof colorThemes>('orange');
-
-    useEffect(() => {
-        let value;
-        value = localStorage.getItem('theme') as keyof typeof colorThemes;
-        if (value) {
-            setTheme(value);
-        }
-    }, []);
+    const { theme, setTheme } = useTheme();
 
     const handleThemeChange = (theme: keyof typeof colorThemes) => {
         setTheme(theme);
