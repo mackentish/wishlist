@@ -1,4 +1,7 @@
+import { Pages } from '@/types';
+import Link from 'next/link';
 import React from 'react';
+import { primaryBtnClass } from '.';
 
 export function ErrorView() {
     return (
@@ -6,6 +9,9 @@ export function ErrorView() {
             <p className="font-mono text-xl text-black dark:text-white">
                 Something went wrong. Please try again later 😞
             </p>
+            <Link href={Pages.Home} className={primaryBtnClass}>
+                Go Home
+            </Link>
         </div>
     );
 }
