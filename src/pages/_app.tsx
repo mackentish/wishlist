@@ -3,6 +3,7 @@ import '@/styles/globals.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -21,6 +22,13 @@ export default function MyApp({
     return (
         <SessionProvider session={session} refetchOnWindowFocus={false}>
             <QueryClientProvider client={queryClient}>
+                <Head>
+                    <link
+                        rel="icon"
+                        href="/icon?<generated>"
+                        type="image/png"
+                    />
+                </Head>
                 <Layout>
                     <Component {...pageProps} />
                 </Layout>
