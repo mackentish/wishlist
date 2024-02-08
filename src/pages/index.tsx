@@ -44,7 +44,7 @@ export default function Home() {
     }
 
     return (
-        <div className="flex flex-col gap-8 items-center w-full max-w-3xl py-20">
+        <div className="flex flex-col gap-8 items-center w-full max-w-3xl py-10 md:py-20">
             <h1 className="font-mono font-bold text-3xl text-black dark:text-white">
                 wishlist
             </h1>

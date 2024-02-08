@@ -44,7 +44,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     />
                 </div>
                 {session?.user && (
-                    <div className="flex flex-row gap-2 items-center">
+                    <div className="flex flex-row flex-wrap justify-center gap-2 items-center md:flex-nowrap">
                         <Image
                             src={session.user.image!!}
                             alt="User Avatar"
