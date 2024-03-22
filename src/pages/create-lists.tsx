@@ -26,7 +26,6 @@ export default function CreateLists() {
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         await createList.mutate(data, {
             onSuccess: () => {
-                console.log('here');
                 router.back();
             },
             onError: (error) => {

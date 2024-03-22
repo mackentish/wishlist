@@ -116,7 +116,6 @@ export function ShareList({
                                 .map((u) => u.email)
                                 .includes(user.email)}
                             toggleUser={() => {
-                                console.log('toggle user', user);
                                 if (
                                     selectedUsers
                                         .map((u) => u.email)
