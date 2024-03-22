@@ -32,10 +32,22 @@ export async function findOrCreateUser(
         where: { email },
         include: { lists: { include: { items: true } } },
     });
+
+    // check for name change
+    if (existingUser && existingUser.name !== name) {
+        await prisma.user.update({
+            where: { email },
+            data: { name },
+        });
+        existingUser.name = name;
+    }
+
+    // return existing user
     if (existingUser) {
         return existingUser;
-    } else {
-        // create user
+    }
+    // create user
+    else {
         const newUser = await prisma.user.create({
             data: {
                 email,
