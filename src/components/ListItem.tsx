@@ -40,6 +40,11 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
     if (!user) return null;
 
     const markAsBought = () => {
+        if (!!item.boughtBy && item.boughtBy.email !== user.email) {
+            alert(`This item is already bought by ${item.boughtBy.name}!`);
+            return;
+        }
+
         const confirmed = confirm(
             `Are you sure you want to mark "${item.name}" as ${
                 !!item.boughtBy ? 'available for purchase' : 'purchased'
