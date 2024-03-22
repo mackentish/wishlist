@@ -120,20 +120,20 @@ export function List({ list, isOwner }: ListProps) {
             <div className="flex flex-row justify-between items-center">
                 <div className="flex flex-col items-start w-full">
                     <div className="flex flex-col-reverse md:flex-row md:gap-2 md:items-baseline">
-                        <p className="font-mono font-bold text-md text-black dark:text-white">
+                        <p className="font-bold text-md text-black dark:text-white">
                             {list.name}
                         </p>
                         {!isOwner && list.user && (
-                            <p className="font-mono text-xs text-darkGrey dark:text-lightGrey">
+                            <p className="text-xs text-darkGrey dark:text-lightGrey">
                                 {`(${list.user.name})`}
                             </p>
                         )}
                     </div>
-                    <p className="font-mono text-sm text-black dark:text-white">
+                    <p className="text-sm text-black dark:text-white">
                         {list.description}
                     </p>
                     {list.items.length === 0 && !isOwner && (
-                        <p className="mt-4 self-center font-mono text-sm italic text-darkGrey dark:text-lightGrey">
+                        <p className="mt-4 self-center text-sm italic text-darkGrey dark:text-lightGrey">
                             {
                                 "This list doesn't have any items yet! You'll see them here when they are added."
                             }
@@ -185,7 +185,7 @@ export function List({ list, isOwner }: ListProps) {
                 {!isAdding && !isEditing && (
                     <div className="flex flex-col gap-2 w-full">
                         {list.items.length === 0 && (
-                            <p className="font-mono text-sm italic self-center text-darkGrey dark:text-lightGrey">
+                            <p className="text-sm italic self-center text-darkGrey dark:text-lightGrey">
                                 {
                                     'No items yet! Click the "Add Item" button below to get started!'
                                 }

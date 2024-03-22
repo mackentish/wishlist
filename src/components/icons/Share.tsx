@@ -25,7 +25,7 @@ export function Share({ disabled }: ShareProps) {
                     clip-rule="evenodd"
                 />
             </svg>
-            <Tooltip id="share" className="font-mono" />
+            <Tooltip id="share" />
         </>
     );
 }

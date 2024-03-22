@@ -29,12 +29,10 @@ export default function Home() {
     if (userLoading || listsLoading) {
         return (
             <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
-                <h1 className="font-mono font-bold text-3xl text-black dark:text-white">
+                <h1 className="font-bold text-3xl text-black dark:text-white">
                     wishlist
                 </h1>
-                <p className="font-mono text-xl text-black dark:text-white">
-                    Loading...
-                </p>
+                <p className="text-xl text-black dark:text-white">Loading...</p>
             </div>
         );
     }
@@ -45,13 +43,13 @@ export default function Home() {
 
     return (
         <div className="flex flex-col gap-8 items-center w-full max-w-3xl py-10 md:py-20">
-            <h1 className="font-mono font-bold text-3xl text-black dark:text-white">
+            <h1 className="font-bold text-3xl text-black dark:text-white">
                 wishlist
             </h1>
 
             {/* My Lists */}
             <div className="flex flex-col w-full gap-2">
-                <h2 className="font-mono font-bold text-xl text-black dark:text-white">
+                <h2 className="font-bold text-xl text-black dark:text-white">
                     Your Lists:
                 </h2>
                 {userLists.length > 0 ? (
@@ -65,7 +63,7 @@ export default function Home() {
                             />
                         ))
                 ) : (
-                    <p className="font-mono text-sm italic text-darkGrey dark:text-lightGrey">
+                    <p className="text-sm italic text-darkGrey dark:text-lightGrey">
                         No lists yet! Click the button below to get started!
                     </p>
                 )}
@@ -77,7 +75,7 @@ export default function Home() {
 
             {/* Shared Lists */}
             <div className="flex flex-col w-full gap-2">
-                <h2 className="font-mono font-bold text-xl text-black dark:text-white">
+                <h2 className="font-bold text-xl text-black dark:text-white">
                     Shared Lists:
                 </h2>
                 {sharedLists.length > 0 ? (
@@ -91,7 +89,7 @@ export default function Home() {
                             />
                         ))
                 ) : (
-                    <p className="font-mono text-sm italic text-darkGrey dark:text-lightGrey">
+                    <p className="text-sm italic text-darkGrey dark:text-lightGrey">
                         No lists shared with you. Ask your friends to share
                         their lists with you!
                     </p>

@@ -7,7 +7,7 @@ interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
 }
 
 const sharedStyles =
-    'flex flex-row gap-2 justify-center font-bold py-2 px-4 rounded w-full font-mono transition-colors duration-200';
+    'flex flex-row gap-2 justify-center font-bold py-2 px-4 rounded w-full transition-colors duration-200';
 export const primaryBtnClass = `text-white bg-primary hover:bg-primaryHover disabled:bg-lightGrey ${sharedStyles}`;
 export const secondaryBtnClass = `text-primary border border-primary/40 hover:border-primaryHover hover:text-primaryHover disabled:text-lightGrey disabled:border-lightGrey ${sharedStyles}`;
 export const dangerBtnClass = `text-error border border-error/40 hover:text-errorHover hover:border-errorHover/40 disabled:border-lightGrey disabled:text-lightGrey ${sharedStyles}`;

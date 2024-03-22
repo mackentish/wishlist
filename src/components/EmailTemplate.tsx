@@ -14,10 +14,10 @@ export function EmailTemplate({
 }: EmailTemplateProps) {
     return (
         <div className="flex flex-col gap-4 p-4 rounded bg-white dark:bg-black">
-            <h1 className="font-mono font-bold text-3xl text-black dark:text-white">
+            <h1 className="font-bold text-3xl text-black dark:text-white">
                 Congrats, {userName}!
             </h1>
-            <p className="font-mono text-xl text-black dark:text-white">
+            <p className="text-xl text-black dark:text-white">
                 {ownerName} has shared their {listName} list with you! Go to
                 your{' '}
                 <Link href={process.env.NEXT_PUBLIC_SITE_URL as string}>

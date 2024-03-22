@@ -89,7 +89,7 @@ export function ItemForm({
                     })}
                 />
                 <p
-                    className={`font-mono text-xs ${(itemNote?.length || 0) >= 100 ? 'text-error' : 'text-lightGrey dark:text-darkGrey'}`}
+                    className={`text-xs ${(itemNote?.length || 0) >= 100 ? 'text-error' : 'text-lightGrey dark:text-darkGrey'}`}
                 >
                     {itemNote?.length || 0}/100
                 </p>

@@ -5,5 +5,5 @@ interface InputErrorProps {
 }
 
 export function InputError({ message }: InputErrorProps) {
-    return <span className="text-error text-xs font-mono">{message}</span>;
+    return <span className="text-error text-xs">{message}</span>;
 }

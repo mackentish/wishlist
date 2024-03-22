@@ -52,7 +52,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                             height={32}
                             style={{ borderRadius: '50%' }}
                         />
-                        <p className="font-mono font-bold text-sm text-black dark:text-white">
+                        <p className="font-bold text-sm text-black dark:text-white">
                             {session.user.email}
                         </p>
                         <Button onClick={() => signOut()}>Sign out</Button>

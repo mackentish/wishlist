@@ -123,7 +123,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                         <div className="flex flex-col">
                             <div className="flex flex-row gap-4 items-center h-full">
                                 <p
-                                    className={`font-mono text-sm text-black dark:text-white ${!isOwner && item.boughtBy ? 'line-through' : ''}`}
+                                    className={`text-sm text-black dark:text-white ${!isOwner && item.boughtBy ? 'line-through' : ''}`}
                                 >
                                     {item.name}
                                 </p>
@@ -134,7 +134,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                                 )}
                             </div>
                             {item.note && (
-                                <p className="text-xs text-darkGrey dark:text-lightGrey font-mono">
+                                <p className="text-xs text-darkGrey dark:text-lightGrey">
                                     {item.note}
                                 </p>
                             )}

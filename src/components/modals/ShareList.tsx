@@ -80,7 +80,7 @@ export function ShareList({
 
     const renderLoading = () => {
         return (
-            <p className="font-mono text-sm text-black dark:text-white">
+            <p className="text-sm text-black dark:text-white">
                 Loading users... 🧐
             </p>
         );
@@ -88,7 +88,7 @@ export function ShareList({
 
     const renderError = () => {
         return (
-            <p className="font-mono text-sm text-black dark:text-white">
+            <p className="text-sm text-black dark:text-white">
                 Error loading users, try again later. 😞
             </p>
         );
@@ -97,13 +97,13 @@ export function ShareList({
     const renderContent = () => {
         return (
             <div className="flex flex-col gap-4 w-full">
-                <p className="font-mono text-sm text-black dark:text-white">
+                <p className="text-sm text-black dark:text-white">
                     Share this list with others by searching for them below:
                 </p>
                 <input
                     type="text"
                     placeholder="Search users by name..."
-                    className="font-mono p-2 border border-black dark:border-white rounded bg-transparent"
+                    className="p-2 border border-black dark:border-white rounded bg-transparent"
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
                 />
@@ -129,14 +129,14 @@ export function ShareList({
                         />
                     ))}
                     {filteredUsers.length === 0 && (
-                        <p className="font-mono text-sm self-center text-darkGrey dark:text-lightGrey">
+                        <p className="text-sm self-center text-darkGrey dark:text-lightGrey">
                             No users found.
                         </p>
                     )}
 
                     {/* Share With */}
                     <div className="flex flex-col gap-2 mt-4 w-full">
-                        <p className="font-mono text-md font-bold text-black dark:text-white">
+                        <p className="text-md font-bold text-black dark:text-white">
                             Share With:
                         </p>
                         {selectedUsers.map((user, index) => (
@@ -149,13 +149,13 @@ export function ShareList({
                                 >
                                     <Trash />
                                 </button>
-                                <p className="font-mono text-sm text-black dark:text-white">
+                                <p className="text-sm text-black dark:text-white">
                                     {user.name}
                                 </p>
                             </div>
                         ))}
                         {selectedUsers.length === 0 && (
-                            <p className="font-mono text-sm self-center text-darkGrey dark:text-lightGrey">
+                            <p className="text-sm self-center text-darkGrey dark:text-lightGrey">
                                 Not shared with any users.
                             </p>
                         )}
@@ -182,7 +182,7 @@ export function ShareList({
 
     return (
         <BaseModal isOpen={isOpen} onRequestClose={close}>
-            <h1 className="font-mono font-bold text-3xl text-black dark:text-white">
+            <h1 className="font-bold text-3xl text-black dark:text-white">
                 Share List 🙏
             </h1>
             {isLoading && renderLoading()}
@@ -208,10 +208,10 @@ function UserRow({ user, isChecked, toggleUser }: UserRowProps) {
         >
             <Checkbox checked={isChecked} />
             <div className="flex flex-col gap-1 items-start">
-                <p className="font-mono text-sm text-black dark:text-white">
+                <p className="text-sm text-black dark:text-white">
                     {user.name}
                 </p>
-                <p className="font-mono text-xs text-darkGrey dark:text-lightGrey">
+                <p className="text-xs text-darkGrey dark:text-lightGrey">
                     {user.email}
                 </p>
             </div>
