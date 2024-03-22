@@ -27,7 +27,6 @@ export function List({ list, isOwner }: ListProps) {
     const [itemFormError, setItemFormError] = useState<string | undefined>(
         undefined
     );
-    const [isSharing, setIsSharing] = useState(false);
     const [isRemoving, setIsRemoving] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { addListItem, deleteList, updateList, deleteSharedList } =
@@ -93,9 +92,7 @@ export function List({ list, isOwner }: ListProps) {
     };
 
     const shareList = async () => {
-        setIsSharing(true);
         setIsModalOpen(true);
-        setIsSharing(false);
     };
 
     const removeSharedList = () => {
@@ -147,10 +144,10 @@ export function List({ list, isOwner }: ListProps) {
                 {isOwner ? (
                     <button
                         onClick={shareList}
-                        disabled={isSharing}
+                        disabled={isModalOpen}
                         className="self-start"
                     >
-                        <Share disabled={isSharing} />
+                        <Share disabled={isModalOpen} />
                     </button>
                 ) : (
                     <button
@@ -212,6 +209,7 @@ export function List({ list, isOwner }: ListProps) {
                     isOpen={isModalOpen}
                     close={() => setIsModalOpen(false)}
                     listId={list.id}
+                    sharedUsers={list.sharedUsers}
                 />
             </>
         );

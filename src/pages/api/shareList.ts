@@ -20,21 +20,18 @@ export default async function handler(
 
     // validate data
     const data = JSON.parse(req.body) as ShareListRequest;
-    if (!data.listId || !data.sharedUserEmails) {
+    if (!data.listId || !data.sharedUserEmails || !data.unsharedUserEmails) {
         res.status(400).json({ error: 'Invalid data' });
         return;
     }
     data.sharedUserEmails = data.sharedUserEmails.filter(
         (u) => u !== existingUser.email
     );
-    if (!data.sharedUserEmails.length) {
-        res.status(400).json({ error: 'No valid emails to share with' });
-        return;
-    }
 
     const success = await shareList(
         data.listId,
         data.sharedUserEmails,
+        data.unsharedUserEmails,
         existingUser.id
     );
     if (!success) {

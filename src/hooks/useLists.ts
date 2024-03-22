@@ -163,7 +163,7 @@ export function useLists() {
     });
 
     /**
-     * Shares a list with other users
+     * Shares and/or un-shares a list with other users
      */
     const shareList = useMutation({
         mutationFn: async (data: ShareListRequest) => {

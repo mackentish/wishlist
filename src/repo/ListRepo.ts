@@ -29,8 +29,15 @@ export async function getListsForUser(userId: number): Promise<List[]> {
     // first, get lists owned by user
     const userLists = await prisma.list.findMany({
         where: { userId: userId },
-        include: { items: true, user: { select: { name: true } } },
+        include: {
+            items: true,
+            user: { select: { name: true } },
+            shared: {
+                select: { sharedUser: { select: { name: true, email: true } } },
+            },
+        },
     });
+
     // next, get lists shared with user
     const sharedLists = await prisma.sharedList.findMany({
         where: { sharedUserId: userId },
@@ -46,8 +53,22 @@ export async function getListsForUser(userId: number): Promise<List[]> {
         },
     });
 
+    // populate sharedUsers for user lists
+    const newUserLists: List[] = [];
+    userLists.forEach((list) => {
+        newUserLists.push({
+            ...list,
+            sharedUsers: list.shared.map((sl) => sl.sharedUser),
+        });
+    });
+    // populate sharedUsers as blank for shared lists for privacy (we won't use it anyways)
+    const newSharedLists: List[] = sharedLists.map((sl) => ({
+        ...sl.list,
+        sharedUsers: [],
+    }));
+
     // combine lists and return
-    return [...userLists, ...sharedLists.map((sl) => sl.list)];
+    return [...newUserLists, ...newSharedLists];
 }
 
 export async function createList(
@@ -114,6 +135,7 @@ async function sendShareEmails(
 export async function shareList(
     listId: number,
     sharedUserEmails: string[],
+    unsharedUserEmails: string[],
     userId: number
 ): Promise<boolean> {
     // verify list exists for user

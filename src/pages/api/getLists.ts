@@ -19,6 +19,7 @@ export default async function handler(
     }
 
     const lists = await getListsForUser(existingUser.id);
+    console.log(lists);
     res.status(200).json(lists);
     return;
 }

@@ -1,29 +1,37 @@
 import { useAllUsers, useLists } from '@/hooks';
 import { ShareUser } from '@/types';
 import React, { useState } from 'react';
-import { Button, Checkbox } from '..';
+import { Button, Checkbox, Trash } from '..';
 import { BaseModal } from './BaseModal';
 
 interface ShareListProps {
     isOpen: boolean;
     close: () => void;
     listId: number;
+    sharedUsers: ShareUser[];
 }
 
-export function ShareList({ isOpen, close, listId }: ShareListProps) {
+export function ShareList({
+    isOpen,
+    close,
+    listId,
+    sharedUsers,
+}: ShareListProps) {
     const { data: users, isLoading, error } = useAllUsers();
     const { shareList } = useLists();
     const [filter, setFilter] = useState('');
-    const [selectedUsers, setSelectedUsers] = useState<ShareUser[]>([]);
+    const [selectedUsers, setSelectedUsers] =
+        useState<ShareUser[]>(sharedUsers);
+    const [unsharedUsers, setUnsharedUsers] = useState<ShareUser[]>([]);
     const [isSharing, setIsSharing] = useState(false);
 
-    const shareListWithUsers = () => {
-        console.log('Share with:', selectedUsers);
+    const updateSharedUsers = () => {
         setIsSharing(true);
         shareList.mutate(
             {
                 listId: listId,
                 sharedUserEmails: selectedUsers.map((user) => user.email),
+                unsharedUserEmails: unsharedUsers.map((user) => user.email),
             },
             {
                 onSuccess: () => {
@@ -37,6 +45,34 @@ export function ShareList({ isOpen, close, listId }: ShareListProps) {
                 },
             }
         );
+    };
+
+    const unshareWithUser = (email: string) => {
+        // Add user to unshare list if not already there
+        if (!unsharedUsers.some((u) => u.email === email)) {
+            setUnsharedUsers([
+                ...unsharedUsers,
+                selectedUsers.find((u) => u.email === email)!,
+            ]);
+        }
+        // Remove user from shared list if there
+        if (selectedUsers.some((u) => u.email === email)) {
+            setSelectedUsers(selectedUsers.filter((u) => u.email !== email));
+        }
+    };
+
+    const shareWithUser = (email: string) => {
+        // Add user to shared list if not already there
+        if (!selectedUsers.some((u) => u.email === email)) {
+            setSelectedUsers([
+                ...selectedUsers,
+                users!.find((u) => u.email === email)!,
+            ]);
+        }
+        // Remove user from unshare list if there
+        if (unsharedUsers.some((u) => u.email === email)) {
+            setUnsharedUsers(unsharedUsers.filter((u) => u.email !== email));
+        }
     };
 
     const filteredUsers =
@@ -81,13 +117,12 @@ export function ShareList({ isOpen, close, listId }: ShareListProps) {
                         <UserRow
                             key={user.name + index}
                             user={user}
+                            isChecked={selectedUsers.includes(user)}
                             toggleUser={() => {
                                 if (selectedUsers.includes(user)) {
-                                    setSelectedUsers(
-                                        selectedUsers.filter((u) => u !== user)
-                                    );
+                                    unshareWithUser(user.email);
                                 } else {
-                                    setSelectedUsers([...selectedUsers, user]);
+                                    shareWithUser(user.email);
                                 }
                             }}
                         />
@@ -98,18 +133,25 @@ export function ShareList({ isOpen, close, listId }: ShareListProps) {
                         </p>
                     )}
 
-                    {/* Selected Users */}
+                    {/* Share With */}
                     <div className="flex flex-col gap-2 mt-4 w-full">
-                        <p className="font-mono text-md text-black dark:text-white">
-                            Selected Users:
+                        <p className="font-mono text-md font-bold text-black dark:text-white">
+                            Share With:
                         </p>
                         {selectedUsers.map((user, index) => (
-                            <p
+                            <div
                                 key={user.name + index}
-                                className="font-mono text-sm text-black dark:text-white"
+                                className="flex flex-row gap-4 items-center w-full p-2 border rounded border-black dark:border-white"
                             >
-                                {user.name}
-                            </p>
+                                <button
+                                    onClick={() => unshareWithUser(user.email)}
+                                >
+                                    <Trash />
+                                </button>
+                                <p className="font-mono text-sm text-black dark:text-white">
+                                    {user.name}
+                                </p>
+                            </div>
                         ))}
                         {selectedUsers.length === 0 && (
                             <p className="font-mono text-sm self-center text-darkGrey dark:text-lightGrey">
@@ -120,10 +162,10 @@ export function ShareList({ isOpen, close, listId }: ShareListProps) {
                 </div>
                 <div className="flex flex-col gap-4 w-full">
                     <Button
-                        onClick={shareListWithUsers}
+                        onClick={updateSharedUsers}
                         disabled={isSharing || selectedUsers.length === 0}
                     >
-                        {isSharing ? 'Sharing...' : 'Share List'}
+                        {isSharing ? 'Updating...' : 'Update'}
                     </Button>
                     <Button btnType="secondary" onClick={close}>
                         Cancel
@@ -147,15 +189,14 @@ export function ShareList({ isOpen, close, listId }: ShareListProps) {
 
 interface UserRowProps {
     user: ShareUser;
+    isChecked: boolean;
     toggleUser: (user: ShareUser) => void;
 }
 
-function UserRow({ user, toggleUser }: UserRowProps) {
-    const [isChecked, setIsChecked] = useState(false);
+function UserRow({ user, isChecked, toggleUser }: UserRowProps) {
     return (
         <button
             onClick={() => {
-                setIsChecked(!isChecked);
                 toggleUser(user);
             }}
             className="flex flex-row gap-4 items-center w-full p-2 border rounded border-black dark:border-white"
