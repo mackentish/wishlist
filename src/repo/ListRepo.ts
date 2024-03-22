@@ -30,7 +30,7 @@ export async function getListsForUser(userId: number): Promise<List[]> {
     const userLists = await prisma.list.findMany({
         where: { userId: userId },
         include: {
-            items: true,
+            items: { include: { boughtBy: true } },
             user: { select: { name: true } },
             shared: {
                 select: { sharedUser: { select: { name: true, email: true } } },
@@ -44,7 +44,7 @@ export async function getListsForUser(userId: number): Promise<List[]> {
         select: {
             list: {
                 include: {
-                    items: true,
+                    items: { include: { boughtBy: true } },
                     user: {
                         select: { name: true },
                     },

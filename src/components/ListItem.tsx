@@ -1,6 +1,6 @@
 'use client';
 
-import { useLists } from '@/hooks';
+import { useLists, useUser } from '@/hooks';
 import React, { useState } from 'react';
 import { Checkbox, ItemForm, OpenTab, Pencil, Trash } from '.';
 import { ListItem as ListItemType } from '../types';
@@ -32,19 +32,23 @@ interface ListItemProps {
 }
 
 export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
+    const { data: user } = useUser();
     const [isEditing, setIsEditing] = useState(false);
     const { deleteListItem, updateListItem, toggleItemBought } = useLists();
+
+    // This should never happen but it validates that we have a user to use below
+    if (!user) return null;
 
     const markAsBought = () => {
         const confirmed = confirm(
             `Are you sure you want to mark "${item.name}" as ${
-                item.isBought ? 'available for purchase' : 'purchased'
+                !!item.boughtBy ? 'available for purchase' : 'purchased'
             }?`
         );
         if (confirmed) {
             toggleItemBought.mutate({
                 itemId: item.id,
-                isBought: !item.isBought,
+                boughtByEmail: !!item.boughtBy ? null : user.email,
             });
         }
     };
@@ -66,7 +70,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                 name: data.name,
                 link: data.link,
                 note: data.note,
-                isBought: item.isBought,
+                boughtBy: item.boughtBy,
                 listId: item.listId,
             },
             {
@@ -107,14 +111,23 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                     <div className="flex flex-row items-center gap-4">
                         {!isOwner && (
                             <Checkbox
-                                checked={item.isBought}
+                                checked={item.boughtBy ? true : false}
                                 onClick={markAsBought}
                             />
                         )}
                         <div className="flex flex-col">
-                            <p className="font-mono text-sm text-black dark:text-white">
-                                {item.name}
-                            </p>
+                            <div className="flex flex-row gap-4 items-center h-full">
+                                <p
+                                    className={`font-mono text-sm text-black dark:text-white ${!isOwner && item.boughtBy ? 'line-through' : ''}`}
+                                >
+                                    {item.name}
+                                </p>
+                                {!isOwner && item.boughtBy && (
+                                    <p className="text-xs text-darkGrey dark:text-lightGrey">
+                                        (Bought by {item.boughtBy.name})
+                                    </p>
+                                )}
+                            </div>
                             {item.note && (
                                 <p className="text-xs text-darkGrey dark:text-lightGrey font-mono">
                                     {item.note}

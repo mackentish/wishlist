@@ -1,4 +1,5 @@
 import { getSessionUser, toggleBought } from '@/repo';
+import { ToggleBoughtRequest } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -19,12 +20,8 @@ export default async function handler(
 
     // mark item as bought if it is shared with the user
     const itemId = Number.parseInt(req.query.itemId as string);
-    const { isBought } = JSON.parse(req.body) as { isBought: boolean };
-    if (typeof isBought !== 'boolean') {
-        res.status(400).json({ error: 'Invalid request body' });
-        return;
-    }
-    const success = await toggleBought(itemId, existingUser.id, isBought);
+    const { boughtByEmail } = JSON.parse(req.body) as ToggleBoughtRequest;
+    const success = await toggleBought(itemId, existingUser.id, boughtByEmail);
     if (success) {
         res.status(200).json({ message: 'Item bought' });
     } else {

@@ -129,7 +129,7 @@ export function useLists() {
         mutationFn: async (data: ToggleBoughtRequest) => {
             const res = await fetch(`/api/boughtItem/${data.itemId}`, {
                 method: 'PUT',
-                body: JSON.stringify({ isBought: data.isBought }),
+                body: JSON.stringify(data),
             });
 
             if (!res.ok) {

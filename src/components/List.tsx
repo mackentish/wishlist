@@ -44,7 +44,6 @@ export function List({ list, isOwner }: ListProps) {
                 name: data.name,
                 link: data.link,
                 note: data.note,
-                isBought: false,
             },
             {
                 onSuccess: () => {
