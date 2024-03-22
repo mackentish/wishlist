@@ -1,6 +1,6 @@
 import { useAllUsers, useLists } from '@/hooks';
 import { ShareUser } from '@/types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Trash } from '..';
 import { BaseModal } from './BaseModal';
 
@@ -55,9 +55,7 @@ export function ShareList({
             ]);
         }
         // Remove user from shared list if there
-        if (selectedUsers.some((u) => u.email === email)) {
-            setSelectedUsers(selectedUsers.filter((u) => u.email !== email));
-        }
+        setSelectedUsers(selectedUsers.filter((u) => u.email !== email));
     };
 
     const shareWithUser = (email: string) => {
@@ -69,9 +67,7 @@ export function ShareList({
             ]);
         }
         // Remove user from unshare list if there
-        if (unsharedUsers.some((u) => u.email === email)) {
-            setUnsharedUsers(unsharedUsers.filter((u) => u.email !== email));
-        }
+        setUnsharedUsers(unsharedUsers.filter((u) => u.email !== email));
     };
 
     const filteredUsers =
@@ -116,9 +112,16 @@ export function ShareList({
                         <UserRow
                             key={user.name + index}
                             user={user}
-                            isChecked={selectedUsers.includes(user)}
+                            isChecked={selectedUsers
+                                .map((u) => u.email)
+                                .includes(user.email)}
                             toggleUser={() => {
-                                if (selectedUsers.includes(user)) {
+                                console.log('toggle user', user);
+                                if (
+                                    selectedUsers
+                                        .map((u) => u.email)
+                                        .includes(user.email)
+                                ) {
                                     unshareWithUser(user.email);
                                 } else {
                                     shareWithUser(user.email);
@@ -154,7 +157,7 @@ export function ShareList({
                         ))}
                         {selectedUsers.length === 0 && (
                             <p className="font-mono text-sm self-center text-darkGrey dark:text-lightGrey">
-                                No users selected.
+                                Not shared with any users.
                             </p>
                         )}
                     </div>
@@ -162,7 +165,11 @@ export function ShareList({
                 <div className="flex flex-col gap-4 w-full">
                     <Button
                         onClick={updateSharedUsers}
-                        disabled={isSharing || selectedUsers.length === 0}
+                        disabled={
+                            isSharing ||
+                            (selectedUsers.length === 0 &&
+                                unsharedUsers.length === 0)
+                        }
                     >
                         {isSharing ? 'Updating...' : 'Update'}
                     </Button>
