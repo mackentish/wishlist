@@ -152,6 +152,10 @@ export async function shareList(
         where: { email: { in: sharedUserEmails } },
         select: { id: true, email: true, name: true },
     });
+    const unsharedUsers = await prisma.user.findMany({
+        where: { email: { in: unsharedUserEmails } },
+        select: { id: true, email: true, name: true },
+    });
 
     // filter out any users that already have the list shared with them
     const existingSharedUsers = await prisma.sharedList.findMany({
@@ -164,6 +168,13 @@ export async function shareList(
     const netNewSharedUsers = sharedUsers.filter(
         (u) => !existingSharedUsers.map((eu) => eu.sharedUserId).includes(u.id)
     );
+    // unshare any users
+    await prisma.sharedList.deleteMany({
+        where: {
+            listId: list.id,
+            sharedUserId: { in: unsharedUsers.map((u) => u.id) },
+        },
+    });
 
     // create new shared list entries
     await prisma.sharedList.createMany({

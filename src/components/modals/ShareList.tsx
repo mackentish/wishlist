@@ -36,7 +36,6 @@ export function ShareList({
             {
                 onSuccess: () => {
                     setIsSharing(false);
-                    alert('List shared successfully!');
                     close();
                 },
                 onError: () => {
