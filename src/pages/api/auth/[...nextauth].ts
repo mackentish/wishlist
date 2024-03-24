@@ -8,7 +8,8 @@ export const authOptions = {
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         }),
-        // ...add more providers here
+        // Defaulted to sign in with google directly.
+        // To add more providers, change the SignIn component
     ],
 };
 

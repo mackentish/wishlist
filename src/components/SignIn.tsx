@@ -9,7 +9,7 @@ export function SignIn() {
                 wishlist
             </h1>
             <p className="text-xl text-black dark:text-white">Not signed in</p>
-            <Button onClick={() => signIn()}>Sign in</Button>
+            <Button onClick={() => signIn('google')}>Sign in</Button>
         </div>
     );
 }
