@@ -11,3 +11,4 @@ export * from './Spacer';
 export * from './EmailTemplate';
 export * from './icons';
 export * from './modals';
+export * from './Header';

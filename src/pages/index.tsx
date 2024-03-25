@@ -1,4 +1,11 @@
-import { ErrorView, List, SignIn, Spacer, primaryBtnClass } from '@/components';
+import {
+    ErrorView,
+    Header,
+    List,
+    SignIn,
+    Spacer,
+    primaryBtnClass,
+} from '@/components';
 import { useLists, useUser } from '@/hooks';
 import { Pages } from '@/types';
 import { useSession } from 'next-auth/react';
@@ -29,9 +36,7 @@ export default function Home() {
     if (userLoading || listsLoading) {
         return (
             <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
-                <h1 className="font-bold text-3xl text-black dark:text-white">
-                    wishlist
-                </h1>
+                <Header />
                 <p className="text-xl text-black dark:text-white">Loading...</p>
             </div>
         );
@@ -43,9 +48,7 @@ export default function Home() {
 
     return (
         <div className="flex flex-col gap-8 items-center w-full max-w-3xl py-10 md:py-20">
-            <h1 className="font-bold text-3xl text-black dark:text-white">
-                wishlist
-            </h1>
+            <Header />
 
             {/* My Lists */}
             <div className="flex flex-col w-full gap-2">
