@@ -21,6 +21,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     // color theme used for react-tostify
     let windowColorTheme = 'light';
     if (
+        typeof window !== 'undefined' && // << do this check to avoid SSR error
         window.matchMedia &&
         window.matchMedia('(prefers-color-scheme: dark)').matches
     ) {
@@ -76,7 +77,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <ToastContainer
                 position="bottom-left"
                 theme={windowColorTheme}
-                progressClassName={`${localStorage.getItem('theme')}ToastProgress`}
+                progressClassName={
+                    typeof localStorage === 'undefined'
+                        ? ''
+                        : `${localStorage.getItem('theme')}ToastProgress`
+                }
                 bodyClassName="toastBody"
             />
         </main>
