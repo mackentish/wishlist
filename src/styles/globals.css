@@ -17,3 +17,20 @@ body {
         background-color: theme('colors.black', black);
     }
 }
+
+/* https://fkhadra.github.io/react-toastify/how-to-style/ */
+.toastBody {
+    font-family: 'figtree', sans-serif;
+}
+.orangeToastProgress {
+    background: #eb5e27 !important;
+}
+.purpleToastProgress {
+    background: #7b32a8 !important;
+}
+.maroonToastProgress {
+    background: #a8328f !important;
+}
+.turquoiseToastProgress {
+    background: #32a8a4 !important;
+}

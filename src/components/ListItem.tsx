@@ -2,6 +2,7 @@
 
 import { useLists, useUser } from '@/hooks';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { Checkbox, ItemForm, OpenTab, Pencil, Trash } from '.';
 import { ListItem as ListItemType } from '../types';
 
@@ -41,7 +42,9 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
 
     const markAsBought = () => {
         if (!!item.boughtBy && item.boughtBy.email !== user.email) {
-            alert(`This item is already bought by ${item.boughtBy.name}!`);
+            toast.error(
+                `This item is already bought by ${item.boughtBy.name} 🥴`
+            );
             return;
         }
 

@@ -1,6 +1,7 @@
 import { useLists } from '@/hooks';
 import { inputStyles } from '@/styles/globalTailwind';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import {
     Button,
     CircleX,
@@ -103,11 +104,13 @@ export function List({ list, isOwner }: ListProps) {
             setIsRemoving(true);
             deleteSharedList.mutate(list.id, {
                 onSuccess: () => {
-                    alert('Shared list removed!');
+                    toast('Shared list removed 🗑️');
                     setIsRemoving(false);
                 },
                 onError: () => {
-                    alert('Something went wrong removing your shared list!');
+                    toast.error(
+                        '🚨 Something went wrong removing your shared list'
+                    );
                     setIsRemoving(false);
                 },
             });

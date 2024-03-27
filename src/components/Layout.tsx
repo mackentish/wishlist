@@ -2,7 +2,9 @@ import { useTheme } from '@/hooks';
 import colorThemes from '@/styles/colorThemes';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import React, { useEffect } from 'react';
+import React from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Button } from '.';
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -15,6 +17,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
     };
 
     const selectedBorder = 'border-2 border-black dark:border-white';
+
+    // color theme used for react-tostify
+    let windowColorTheme = 'light';
+    if (
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) {
+        windowColorTheme = 'dark';
+    }
 
     return (
         <main
@@ -62,6 +73,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <div className="flex flex-row justify-center items-center w-full">
                 {children}
             </div>
+            <ToastContainer
+                position="bottom-left"
+                theme={windowColorTheme}
+                progressClassName={`${localStorage.getItem('theme')}ToastProgress`}
+                bodyClassName="toastBody"
+            />
         </main>
     );
 }

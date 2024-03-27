@@ -1,6 +1,7 @@
 import { useAllUsers, useLists } from '@/hooks';
 import { ShareUser } from '@/types';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { Button, Checkbox, Trash } from '..';
 import { BaseModal } from './BaseModal';
 
@@ -36,11 +37,12 @@ export function ShareList({
             {
                 onSuccess: () => {
                     setIsSharing(false);
+                    toast('List shared successfully 🥳');
                     close();
                 },
                 onError: () => {
                     setIsSharing(false);
-                    alert('Error sharing list, try again later.');
+                    toast.error('🚨 Error sharing list, try again later.');
                 },
             }
         );
