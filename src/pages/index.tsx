@@ -30,7 +30,11 @@ export default function Home() {
     }, [lists, user?.id]);
 
     if (!session?.user) {
-        return <SignIn />;
+        return (
+            <div className="flex flex-col gap-8 items-center w-full max-w-3xl py-10 md:py-20">
+                <SignIn />
+            </div>
+        );
     }
 
     if (userLoading || listsLoading) {
