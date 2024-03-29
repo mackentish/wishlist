@@ -199,6 +199,7 @@ export function List({ list, isOwner }: ListProps) {
                             onDone={addItem}
                             onCancel={() => setIsAdding(false)}
                             errorMessage={itemFormError}
+                            isLoading={loading === 'add'}
                         />
                     </div>
                 )}

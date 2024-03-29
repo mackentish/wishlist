@@ -34,7 +34,10 @@ interface ListItemProps {
 
 export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
     const { data: user } = useUser();
+    const [isBuying, setIsBuying] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const { deleteListItem, updateListItem, toggleItemBought } = useLists();
 
     // This should never happen but it validates that we have a user to use below
@@ -54,10 +57,24 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
             }?`
         );
         if (confirmed) {
-            toggleItemBought.mutate({
-                itemId: item.id,
-                boughtByEmail: !!item.boughtBy ? null : user.email,
-            });
+            setIsBuying(true);
+            toggleItemBought.mutate(
+                {
+                    itemId: item.id,
+                    boughtByEmail: !!item.boughtBy ? null : user.email,
+                },
+                {
+                    onSuccess: () => {
+                        setIsBuying(false);
+                    },
+                    onError: () => {
+                        setIsBuying(false);
+                        toast.error(
+                            'Something went wrong buying the item 😢. Refresh and try again.'
+                        );
+                    },
+                }
+            );
         }
     };
 
@@ -72,6 +89,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
         link: string | null;
         note: string | null;
     }) => {
+        setIsUpdating(true);
         updateListItem.mutate(
             {
                 id: item.id,
@@ -84,6 +102,13 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
             {
                 onSuccess: () => {
                     setIsEditing(false);
+                    setIsUpdating(false);
+                },
+                onError: () => {
+                    setIsUpdating(false);
+                    toast.error(
+                        'Something went wrong updating the item 😢. Refresh and try again.'
+                    );
                 },
             }
         );
@@ -94,7 +119,18 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
             `Are you sure you want to delete "${item.name}"?`
         );
         if (confirmed) {
-            deleteListItem.mutate(item.id);
+            setIsDeleting(true);
+            deleteListItem.mutate(item.id, {
+                onSuccess: () => {
+                    setIsDeleting(false);
+                },
+                onError: () => {
+                    setIsDeleting(false);
+                    toast.error(
+                        'Something went wrong deleting the item 😢. Refresh and try again.'
+                    );
+                },
+            });
         }
         e.preventDefault();
     };
@@ -111,7 +147,8 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                             link: item.link,
                             note: item.note,
                         }}
-                        doneText="Update"
+                        doneText={isUpdating ? 'Updating...' : 'Update'}
+                        isLoading={isUpdating}
                     />
                 </div>
             ) : (
@@ -123,7 +160,9 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                                 onClick={markAsBought}
                             />
                         )}
-                        <div className="flex flex-col">
+                        <div
+                            className={`flex flex-col ${isBuying && 'animate-pulse'}`}
+                        >
                             <div className="flex flex-row gap-4 items-center h-full">
                                 <p
                                     className={`text-sm text-black dark:text-white ${!isOwner && item.boughtBy ? 'line-through' : ''}`}
@@ -150,7 +189,13 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                             </button>
 
                             <button onClick={deleteItem}>
-                                <Trash />
+                                <Trash
+                                    className={
+                                        isDeleting
+                                            ? 'animate-pulse stroke-darkGrey dark:stroke-lightGrey'
+                                            : ''
+                                    }
+                                />
                             </button>
                         </div>
                     ) : (

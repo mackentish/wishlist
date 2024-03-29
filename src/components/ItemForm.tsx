@@ -13,6 +13,7 @@ interface ItemFormProps {
     errorMessage?: string;
     defaults?: { name: string; link: string | null; note: string | null };
     doneText?: string;
+    isLoading: boolean;
 }
 
 type Inputs = {
@@ -27,6 +28,7 @@ export function ItemForm({
     errorMessage = undefined,
     defaults = undefined,
     doneText = 'Done',
+    isLoading,
 }: ItemFormProps) {
     const {
         register,
@@ -68,9 +70,6 @@ export function ItemForm({
                         type="url"
                         {...register('link', { required: false })}
                     />
-                    {errors.link && (
-                        <InputError message="An item must have a link" />
-                    )}
                 </span>
             </div>
             {/* Note Input */}
@@ -100,7 +99,10 @@ export function ItemForm({
 
             {/* Buttons */}
             <div className="flex flex-row gap-4 w-full">
-                <Button onClick={() => handleSubmit(onSubmit)}>
+                <Button
+                    disabled={isLoading}
+                    onClick={() => handleSubmit(onSubmit)}
+                >
                     {doneText}
                 </Button>
                 <Button onClick={onCancel} btnType="secondary">
