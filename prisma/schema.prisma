@@ -42,6 +42,7 @@ model sharedList {
   id                Int     @id  @default(autoincrement())  @unique
   listId            Int   
   list              list    @relation(fields: [listId], references: [id])
-  sharedUserId      Int   
-  sharedUser        user    @relation(fields: [sharedUserId], references: [id])
+  sharedEmail       String? @db.VarChar(45) // used to invite new users to wishlist
+  sharedUserId      Int?   
+  sharedUser        user?    @relation(fields: [sharedUserId], references: [id])
 }

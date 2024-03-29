@@ -1,8 +1,11 @@
 import { useAllUsers, useLists } from '@/hooks';
+import { inputStyles } from '@/styles/globalTailwind';
 import { ShareUser } from '@/types';
+import { validateEmail } from '@/utils';
 import React, { useState } from 'react';
+import { set } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { Button, Checkbox, Trash } from '..';
+import { Button, Checkbox, CircleX } from '..';
 import { BaseModal } from './BaseModal';
 
 interface ShareListProps {
@@ -25,6 +28,7 @@ export function ShareList({
         useState<ShareUser[]>(sharedUsers);
     const [unsharedUsers, setUnsharedUsers] = useState<ShareUser[]>([]);
     const [isSharing, setIsSharing] = useState(false);
+    const [inviteEmail, setInviteEmail] = useState<string>('');
 
     const updateSharedUsers = () => {
         setIsSharing(true);
@@ -37,7 +41,7 @@ export function ShareList({
             {
                 onSuccess: () => {
                     setIsSharing(false);
-                    toast('List shared successfully 🥳');
+                    toast('List share settings updated successfully 🥳');
                     close();
                 },
                 onError: () => {
@@ -70,6 +74,25 @@ export function ShareList({
         }
         // Remove user from unshare list if there
         setUnsharedUsers(unsharedUsers.filter((u) => u.email !== email));
+    };
+
+    const inviteUser = () => {
+        // validate email
+        if (!validateEmail(inviteEmail)) {
+            toast.error('Invalid email address. 😕');
+            return;
+        }
+        // check that the user email is not already selected
+        if (selectedUsers.some((u) => u.email === inviteEmail)) {
+            toast.error('User already selected!');
+        } else {
+            setSelectedUsers([
+                ...selectedUsers,
+                { name: inviteEmail, email: inviteEmail },
+            ]);
+        }
+
+        setInviteEmail('');
     };
 
     const filteredUsers =
@@ -109,7 +132,7 @@ export function ShareList({
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
                 />
-                <div className="flex flex-col gap-4 w-full pr-4 h-96 overflow-auto">
+                <div className="flex flex-col gap-4 w-full h-96 overflow-auto">
                     {filteredUsers.map((user, index) => (
                         <UserRow
                             key={user.name + index}
@@ -131,9 +154,24 @@ export function ShareList({
                         />
                     ))}
                     {filteredUsers.length === 0 && (
-                        <p className="text-sm self-center text-darkGrey dark:text-lightGrey">
-                            No users found.
-                        </p>
+                        <div className="flex flex-col text-center gap-2 w-full">
+                            <p className="text-sm text-darkGrey dark:text-lightGrey">
+                                No users found. Invite someone by email:
+                            </p>
+                            <div className="grid grid-rows-1 grid-cols-12 gap-2">
+                                <input
+                                    placeholder="Invite by email"
+                                    className={`${inputStyles.default} col-span-8`}
+                                    value={inviteEmail}
+                                    onChange={(e) =>
+                                        setInviteEmail(e.target.value)
+                                    }
+                                />
+                                <div className="col-span-4">
+                                    <Button onClick={inviteUser}>Invite</Button>
+                                </div>
+                            </div>
+                        </div>
                     )}
 
                     {/* Share With */}
@@ -144,16 +182,23 @@ export function ShareList({
                         {selectedUsers.map((user, index) => (
                             <div
                                 key={user.name + index}
-                                className="flex flex-row gap-4 items-center w-full p-2 border rounded border-black dark:border-white"
+                                className="flex flex-row justify-between items-center w-full p-2 border rounded border-black dark:border-white"
                             >
+                                <div className="flex flex-row gap-0.5 items-baseline">
+                                    <p className="text-sm text-black dark:text-white">
+                                        {user.name}
+                                    </p>
+                                    {user.email === user.name && (
+                                        <p className="text-xs text-darkGrey dark:text-lightGrey">
+                                            {'(new)'}
+                                        </p>
+                                    )}
+                                </div>
                                 <button
                                     onClick={() => unshareWithUser(user.email)}
                                 >
-                                    <Trash />
+                                    <CircleX />
                                 </button>
-                                <p className="text-sm text-black dark:text-white">
-                                    {user.name}
-                                </p>
                             </div>
                         ))}
                         {selectedUsers.length === 0 && (

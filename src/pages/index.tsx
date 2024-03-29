@@ -39,7 +39,7 @@ export default function Home() {
 
     if (userLoading || listsLoading) {
         return (
-            <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
+            <div className="flex flex-col gap-8 items-center w-full max-w-3xl py-10 md:py-20">
                 <Header />
                 <p className="text-xl text-black dark:text-white">Loading...</p>
             </div>

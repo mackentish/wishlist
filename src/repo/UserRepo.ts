@@ -54,6 +54,11 @@ export async function findOrCreateUser(
                 name,
             },
         });
+        // update any shared lists with new user
+        await prisma.sharedList.updateMany({
+            where: { sharedEmail: email },
+            data: { sharedUserId: newUser.id, sharedEmail: null },
+        });
         // return it
         return newUser;
     }

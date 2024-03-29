@@ -1,5 +1,5 @@
 import { EmailTemplate } from '@/components';
-import { CreateListRequest, List } from '@/types';
+import { CreateListRequest, List, ShareUser } from '@/types';
 import { Resend } from 'resend';
 import { prisma } from './_base';
 
@@ -33,7 +33,11 @@ export async function getListsForUser(userId: number): Promise<List[]> {
             items: { include: { boughtBy: true } },
             user: { select: { name: true } },
             shared: {
-                select: { sharedUser: { select: { name: true, email: true } } },
+                // select who the list is shared with to display in the UI
+                select: {
+                    sharedUser: { select: { name: true, email: true } },
+                    sharedEmail: true,
+                },
             },
         },
     });
@@ -56,9 +60,23 @@ export async function getListsForUser(userId: number): Promise<List[]> {
     // populate sharedUsers for user lists
     const newUserLists: List[] = [];
     userLists.forEach((list) => {
+        // map shared users to a common format for the UI
+        const sharedUsers: ShareUser[] = list.shared.map((entry) => {
+            if (entry.sharedUser) {
+                // these are users that have an account
+                return entry.sharedUser;
+            } else {
+                // these are users that don't have an account, but have been invited
+                return {
+                    name: entry.sharedEmail,
+                    email: entry.sharedEmail,
+                } as ShareUser;
+            }
+        });
+
         newUserLists.push({
             ...list,
-            sharedUsers: list.shared.map((sl) => sl.sharedUser),
+            sharedUsers,
         });
     });
     // populate sharedUsers as blank for shared lists for privacy (we won't use it anyways)
@@ -109,6 +127,30 @@ export async function updateListById(
     return true;
 }
 
+// TODO: change this
+async function sendInviteEmails(
+    emails: string[],
+    listName: string,
+    ownerName: string
+) {
+    const objects = emails.map((email) => ({
+        from: 'wishlist <donotreply@wishlist.mackentish.com>',
+        to: email,
+        subject: "You've been invited to wishlist!",
+        react: EmailTemplate({
+            ownerName,
+            userName: email,
+            listName,
+        }),
+    }));
+    const { error, data } = await resend.batch.send(objects);
+    if (error) {
+        console.error('Error sending emails', error);
+    } else {
+        console.log('Emails sent', data);
+    }
+}
+
 async function sendShareEmails(
     users: { email: string; name: string }[],
     listName: string,
@@ -157,6 +199,11 @@ export async function shareList(
         select: { id: true, email: true, name: true },
     });
 
+    // find new users based on emails that don't exist in the database
+    const newUsers = sharedUserEmails.filter(
+        (email) => !sharedUsers.map((u) => u.email).includes(email)
+    );
+
     // filter out any users that already have the list shared with them
     const existingSharedUsers = await prisma.sharedList.findMany({
         where: {
@@ -168,11 +215,19 @@ export async function shareList(
     const netNewSharedUsers = sharedUsers.filter(
         (u) => !existingSharedUsers.map((eu) => eu.sharedUserId).includes(u.id)
     );
+
     // unshare any users
     await prisma.sharedList.deleteMany({
         where: {
             listId: list.id,
             sharedUserId: { in: unsharedUsers.map((u) => u.id) },
+        },
+    });
+    // including any users that were invited by email
+    await prisma.sharedList.deleteMany({
+        where: {
+            listId: list.id,
+            sharedEmail: { in: unsharedUserEmails },
         },
     });
 
@@ -183,9 +238,18 @@ export async function shareList(
             sharedUserId: user.id,
         })),
     });
+    // add invited users by email so the list can be shared with them later
+    await prisma.sharedList.createMany({
+        data: newUsers.map((email) => ({
+            listId: list.id,
+            sharedEmail: email,
+        })),
+    });
 
     // send email to shared users
     await sendShareEmails(netNewSharedUsers, list.name, list.user.name);
+    // invite new users by email
+    await sendInviteEmails(newUsers, list.name, list.user.name);
 
     return true;
 }
