@@ -1,4 +1,4 @@
-import { EmailTemplate } from '@/components';
+import { InviteTemplate, ShareTemplate } from '@/email-templates';
 import { CreateListRequest, List, ShareUser } from '@/types';
 import { Resend } from 'resend';
 import { prisma } from './_base';
@@ -137,9 +137,8 @@ async function sendInviteEmails(
         from: 'wishlist <donotreply@wishlist.mackentish.com>',
         to: email,
         subject: "You've been invited to wishlist!",
-        react: EmailTemplate({
+        react: InviteTemplate({
             ownerName,
-            userName: email,
             listName,
         }),
     }));
@@ -160,7 +159,7 @@ async function sendShareEmails(
         from: 'wishlist <donotreply@wishlist.mackentish.com>',
         to: [user.email],
         subject: 'A new list has been shared with you!',
-        react: EmailTemplate({
+        react: ShareTemplate({
             ownerName,
             userName: user.name,
             listName,

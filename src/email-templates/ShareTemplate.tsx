@@ -1,17 +1,17 @@
 import Link from 'next/link';
 import React from 'react';
 
-interface EmailTemplateProps {
+interface ShareTemplateProps {
     ownerName: string;
     userName: string;
     listName: string;
 }
 
-export function EmailTemplate({
+export function ShareTemplate({
     ownerName,
     userName,
     listName,
-}: EmailTemplateProps) {
+}: ShareTemplateProps) {
     return (
         <div className="flex flex-col gap-4 p-4 rounded bg-white dark:bg-black">
             <h1 className="font-bold text-3xl text-black dark:text-white">
