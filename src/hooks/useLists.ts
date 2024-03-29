@@ -129,7 +129,7 @@ export function useLists() {
         mutationFn: async (data: ToggleBoughtRequest) => {
             const res = await fetch(`/api/boughtItem/${data.itemId}`, {
                 method: 'PUT',
-                body: JSON.stringify({ isBought: data.isBought }),
+                body: JSON.stringify(data),
             });
 
             if (!res.ok) {
@@ -163,7 +163,7 @@ export function useLists() {
     });
 
     /**
-     * Shares a list with other users
+     * Shares and/or un-shares a list with other users
      */
     const shareList = useMutation({
         mutationFn: async (data: ShareListRequest) => {

@@ -1,4 +1,4 @@
-import { CreateListItemRequest } from '@/types';
+import { CreateListItemRequest, UpdateListItemRequest, User } from '@/types';
 import { prisma } from './_base';
 
 export async function deleteItemById(
@@ -38,7 +38,6 @@ export async function createItem(
             name: data.name,
             link: data.link,
             note: data.note,
-            isBought: data.isBought,
             list: { connect: { id: data.listId } },
         },
     });
@@ -47,7 +46,7 @@ export async function createItem(
 
 export async function updateItemById(
     itemId: number,
-    data: CreateListItemRequest,
+    data: UpdateListItemRequest,
     userId: number
 ): Promise<boolean> {
     // validate that list belongs to user
@@ -58,6 +57,15 @@ export async function updateItemById(
         return false;
     }
 
+    // get boughtBy user by email if not null
+    let boughtByUser = null;
+    if (data.boughtBy?.email) {
+        boughtByUser = await prisma.user.findUnique({
+            where: { email: data.boughtBy.email },
+            select: { id: true },
+        });
+    }
+
     // update list item
     const updatedItem = await prisma.listItem.update({
         where: { id: itemId },
@@ -65,7 +73,7 @@ export async function updateItemById(
             name: data.name,
             link: data.link,
             note: data.note,
-            isBought: data.isBought,
+            boughtById: boughtByUser?.id ?? null,
         },
     });
 
@@ -79,7 +87,7 @@ export async function updateItemById(
 export async function toggleBought(
     itemId: number,
     userId: number,
-    isBought: boolean
+    boughtByEmail: string | null
 ): Promise<boolean> {
     // find list containing item
     const item = await prisma.listItem.findUnique({ where: { id: itemId } });
@@ -99,11 +107,20 @@ export async function toggleBought(
         return false;
     }
 
+    // get boughtBy user by email if not null
+    let boughtByUser = null;
+    if (boughtByEmail) {
+        boughtByUser = await prisma.user.findUnique({
+            where: { email: boughtByEmail },
+            select: { id: true },
+        });
+    }
+
     // update list item
     const updatedItem = await prisma.listItem.update({
         where: { id: itemId },
         data: {
-            isBought,
+            boughtById: boughtByUser?.id ?? null,
         },
     });
 

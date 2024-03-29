@@ -8,6 +8,6 @@ export * from './ItemForm';
 export * from './ErrorView';
 export * from './SignIn';
 export * from './Spacer';
-export * from './EmailTemplate';
 export * from './icons';
 export * from './modals';
+export * from './Header';

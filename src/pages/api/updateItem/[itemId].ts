@@ -1,5 +1,5 @@
 import { getSessionUser, updateItemById } from '@/repo';
-import { CreateListItemRequest } from '@/types';
+import { UpdateListItemRequest } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -19,8 +19,8 @@ export default async function handler(
     }
 
     // validate data
-    const data = JSON.parse(req.body) as CreateListItemRequest;
-    if (!data.listId || !data.name || data.isBought === undefined) {
+    const data = JSON.parse(req.body) as UpdateListItemRequest;
+    if (!data.listId || !data.name) {
         res.status(400).json({ message: 'Invalid data' });
         return;
     }

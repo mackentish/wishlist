@@ -1,3 +1,4 @@
+// ATTN: if you change these colors, make sure to update the colors in the globals.css used for toast messages
 const colorThemes = {
     orange: {
         white: '#FEFCF2',

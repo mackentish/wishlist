@@ -6,7 +6,7 @@ import { inputStyles } from '@/styles/globalTailwind';
 import { Pages } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
@@ -22,14 +22,17 @@ export default function CreateLists() {
     } = useForm<Inputs>();
     const { createList } = useLists();
     const router = useRouter();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const onSubmit: SubmitHandler<Inputs> = async (data) => {
-        await createList.mutate(data, {
+    const onSubmit: SubmitHandler<Inputs> = (data) => {
+        setIsSubmitting(true);
+        createList.mutate(data, {
             onSuccess: () => {
-                console.log('here');
+                setIsSubmitting(false);
                 router.back();
             },
             onError: (error) => {
+                setIsSubmitting(false);
                 console.error('err', error);
             },
         });
@@ -37,7 +40,7 @@ export default function CreateLists() {
 
     return (
         <div className="h-full pt-20 flex flex-col gap-8 items-center align-top w-full max-w-3xl">
-            <h1 className="font-mono font-bold text-3xl text-black dark:text-white">
+            <h1 className="font-bold text-3xl text-black dark:text-white">
                 Create a New List!
             </h1>
             <form
@@ -68,7 +71,12 @@ export default function CreateLists() {
                 />
                 {/* Buttons */}
                 <div className="flex flex-row gap-4 w-full">
-                    <Button onClick={() => handleSubmit(onSubmit)}>Done</Button>
+                    <Button
+                        disabled={isSubmitting}
+                        onClick={() => handleSubmit(onSubmit)}
+                    >
+                        {isSubmitting ? 'Creating...' : 'Create'}
+                    </Button>
                     <Link href={Pages.Home} className={secondaryBtnClass}>
                         Cancel
                     </Link>

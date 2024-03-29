@@ -3,13 +3,15 @@ export type ListItem = {
     name: string;
     link: string | null;
     note: string | null;
-    isBought: boolean;
+    boughtBy: { name: string; email: string } | null;
     listId: number;
 };
 
-export type CreateListItemRequest = Omit<ListItem, 'id'>;
+export type CreateListItemRequest = Omit<ListItem, 'id' | 'boughtBy'>;
+
+export type UpdateListItemRequest = Omit<ListItem, 'id'>;
 
 export type ToggleBoughtRequest = {
     itemId: number;
-    isBought: boolean;
+    boughtByEmail: string | null;
 };

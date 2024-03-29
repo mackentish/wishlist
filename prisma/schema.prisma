@@ -14,6 +14,7 @@ model user {
   email       String @db.VarChar(45) @unique
   lists       list[]
   sharedLists sharedList[]
+  itemsBought listItem[]
 }
 
 model list {
@@ -30,8 +31,9 @@ model listItem {
   id          Int           @id  @default(autoincrement())  @unique
   name        String        @db.VarChar(45)
   note        String?       @db.VarChar(100)
-  link        String?        @db.Text
-  isBought    Boolean       @default(false)
+  link        String?       @db.Text
+  boughtById  Int?          
+  boughtBy    user?         @relation(fields: [boughtById], references: [id])
   listId      Int   
   list        list          @relation(fields: [listId], references: [id])
 }
@@ -40,6 +42,7 @@ model sharedList {
   id                Int     @id  @default(autoincrement())  @unique
   listId            Int   
   list              list    @relation(fields: [listId], references: [id])
-  sharedUserId      Int   
-  sharedUser        user    @relation(fields: [sharedUserId], references: [id])
+  sharedEmail       String? @db.VarChar(45) // used to invite new users to wishlist
+  sharedUserId      Int?   
+  sharedUser        user?    @relation(fields: [sharedUserId], references: [id])
 }
