@@ -244,7 +244,7 @@ export function List({ list, isOwner }: ListProps) {
     };
 
     return (
-        <div className="flex flex-col gap-2 w-full p-4 border rounded-md border-black dark:border-white">
+        <div className="flex flex-col gap-3 w-full p-4 border rounded-md border-black dark:border-white">
             {isEditing ? (
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col gap-2 w-full">
