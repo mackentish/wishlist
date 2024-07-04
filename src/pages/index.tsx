@@ -60,15 +60,17 @@ export default function Home() {
                     Your Lists:
                 </h2>
                 {userLists.length > 0 ? (
-                    lists
-                        .filter((list) => list.userId === user.id)
-                        .map((list, index) => (
-                            <List
-                                key={`${index}-${list.name}`}
-                                isOwner
-                                list={list}
-                            />
-                        ))
+                    <div className="flex flex-col gap-8">
+                        {lists
+                            .filter((list) => list.userId === user.id)
+                            .map((list, index) => (
+                                <List
+                                    key={`${index}-${list.name}`}
+                                    isOwner
+                                    list={list}
+                                />
+                            ))}
+                    </div>
                 ) : (
                     <p className="text-sm italic text-darkGrey dark:text-lightGrey">
                         No lists yet! Click the button below to get started!
@@ -86,15 +88,17 @@ export default function Home() {
                     Shared Lists:
                 </h2>
                 {sharedLists.length > 0 ? (
-                    lists
-                        .filter((list) => list.userId !== user.id)
-                        .map((list, index) => (
-                            <List
-                                key={`${index}-${list.name}`}
-                                list={list}
-                                isOwner={false}
-                            />
-                        ))
+                    <div className="flex flex-col gap-8">
+                        {lists
+                            .filter((list) => list.userId !== user.id)
+                            .map((list, index) => (
+                                <List
+                                    key={`${index}-${list.name}`}
+                                    list={list}
+                                    isOwner={false}
+                                />
+                            ))}
+                    </div>
                 ) : (
                     <p className="text-sm italic text-darkGrey dark:text-lightGrey">
                         No lists shared with you. Ask your friends to share
