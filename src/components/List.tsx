@@ -1,5 +1,6 @@
 import { useLists } from '@/hooks';
 import { inputStyles } from '@/styles/globalTailwind';
+import { AnimatePresence, Variants, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import {
@@ -19,6 +20,7 @@ interface ListProps {
 }
 
 export function List({ list, isOwner }: ListProps) {
+    const [isOpen, setIsOpen] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [listName, setListName] = useState(list.name);
@@ -35,6 +37,23 @@ export function List({ list, isOwner }: ListProps) {
     >(undefined);
     const { addListItem, deleteList, updateList, deleteSharedList } =
         useLists();
+
+    // Motion Variants:
+    const containerVariants: Variants = {
+        open: {
+            transition: {
+                staggerChildren: 0.05,
+            },
+        },
+    };
+    const itemVariants: Variants = {
+        open: {
+            opacity: 1,
+            y: 0,
+            transition: { type: 'spring', stiffness: 300, damping: 24 },
+        },
+        closed: { opacity: 0, y: 20, transition: { duration: 0.2 } },
+    };
 
     // Functions:
     const addItem = (data: {
@@ -137,7 +156,10 @@ export function List({ list, isOwner }: ListProps) {
     // Refactored components for readability:
     const DefaultList = () => {
         return (
-            <div className="flex flex-row justify-between items-center">
+            <div
+                className="flex flex-row justify-between items-center"
+                onClick={() => setIsOpen(!isOpen)}
+            >
                 <div className="flex flex-col items-start w-full">
                     <div className="flex flex-col-reverse w-full md:flex-row md:gap-2 md:items-baseline">
                         {loading === 'update' ? (
@@ -170,7 +192,10 @@ export function List({ list, isOwner }: ListProps) {
                 </div>
                 {isOwner ? (
                     <button
-                        onClick={shareList}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            shareList();
+                        }}
                         disabled={isModalOpen}
                         className="self-start"
                     >
@@ -178,7 +203,10 @@ export function List({ list, isOwner }: ListProps) {
                     </button>
                 ) : (
                     <button
-                        onClick={removeSharedList}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            removeSharedList();
+                        }}
                         disabled={isRemoving}
                         className="self-start"
                     >
@@ -244,7 +272,12 @@ export function List({ list, isOwner }: ListProps) {
     };
 
     return (
-        <div className="flex flex-col gap-3 w-full p-4 border rounded-md border-black dark:border-white">
+        <motion.div
+            className="flex flex-col gap-3 w-full p-4 border rounded-md border-black dark:border-white"
+            initial="closed"
+            animate={isOpen ? 'open' : 'closed'}
+            variants={containerVariants}
+        >
             {isEditing ? (
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col gap-2 w-full">
@@ -275,18 +308,43 @@ export function List({ list, isOwner }: ListProps) {
             ) : (
                 <DefaultList />
             )}
-            {list.items.map((item) => (
-                <ListItem
-                    key={item.id}
-                    item={item}
-                    isOwner={isOwner}
-                    isListEditing={isEditing}
-                />
-            ))}
-            {loading === 'add' && (
-                <div className="animate-pulse h-10 bg-neutral-300 dark:bg-neutral-600 rounded w-full" />
-            )}
-            {isOwner && <OwnerList />}
-        </div>
+            <AnimatePresence>
+                {isOpen && (
+                    <>
+                        {list.items.map((item) => (
+                            <motion.div
+                                key={item.id}
+                                className="child"
+                                variants={itemVariants}
+                            >
+                                <ListItem
+                                    item={item}
+                                    isOwner={isOwner}
+                                    isListEditing={isEditing}
+                                />
+                            </motion.div>
+                        ))}
+                        {loading === 'add' && (
+                            <motion.div
+                                key="loading-add-item"
+                                className="child"
+                                variants={itemVariants}
+                            >
+                                <div className="animate-pulse h-10 bg-neutral-300 dark:bg-neutral-600 rounded w-full" />
+                            </motion.div>
+                        )}
+                        {isOwner && (
+                            <motion.div
+                                key="owner-buttons"
+                                className="child"
+                                variants={itemVariants}
+                            >
+                                <OwnerList />
+                            </motion.div>
+                        )}
+                    </>
+                )}
+            </AnimatePresence>
+        </motion.div>
     );
 }
