@@ -4,6 +4,7 @@ import { AnimatePresence, Variants, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import {
+    AnimateChangeInHeight,
     Button,
     CircleX,
     ItemForm,
@@ -40,19 +41,25 @@ export function List({ list, isOwner }: ListProps) {
 
     // Motion Variants:
     const containerVariants: Variants = {
-        open: {
+        visible: {
             transition: {
                 staggerChildren: 0.05,
+                when: 'beforeChildren',
+            },
+        },
+        hidden: {
+            transition: {
+                staggerChildren: 0.05,
+                when: 'afterChildren',
             },
         },
     };
     const itemVariants: Variants = {
-        open: {
+        visible: {
             opacity: 1,
             y: 0,
-            transition: { type: 'spring', stiffness: 300, damping: 24 },
         },
-        closed: { opacity: 0, y: 20, transition: { duration: 0.2 } },
+        hidden: { opacity: 0, y: 20, transition: { duration: 0.2 } },
     };
 
     // Functions:
@@ -272,79 +279,98 @@ export function List({ list, isOwner }: ListProps) {
     };
 
     return (
-        <motion.div
-            className="flex flex-col gap-3 w-full p-4 border rounded-md border-black dark:border-white"
-            initial="closed"
-            animate={isOpen ? 'open' : 'closed'}
-            variants={containerVariants}
-        >
-            {isEditing ? (
-                <div className="flex flex-col gap-2">
-                    <div className="flex flex-col gap-2 w-full">
-                        <input
-                            className={inputStyles.editing}
-                            value={listName}
-                            onChange={(e) => setListName(e.target.value)}
-                            placeholder="List Name"
-                        />
-                        <input
-                            className={inputStyles.editing}
-                            value={listDescription}
-                            onChange={(e) => setListDescription(e.target.value)}
-                            placeholder="List Description?"
-                        />
+        <AnimateChangeInHeight>
+            <motion.div
+                className="flex flex-col gap-3 w-full p-4 border rounded-md border-black dark:border-white"
+                initial="hidden"
+                animate={isOpen ? 'visible' : 'hidden'}
+                variants={containerVariants}
+            >
+                {isEditing ? (
+                    <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 w-full">
+                            <input
+                                className={inputStyles.editing}
+                                value={listName}
+                                onChange={(e) => setListName(e.target.value)}
+                                placeholder="List Name"
+                            />
+                            <input
+                                className={inputStyles.editing}
+                                value={listDescription}
+                                onChange={(e) =>
+                                    setListDescription(e.target.value)
+                                }
+                                placeholder="List Description?"
+                            />
+                        </div>
+                        <div className="flex flex-row gap-4 w-full">
+                            <Button onClick={onSaveChanges}>
+                                Save Changes
+                            </Button>
+                            <Button
+                                btnType="danger"
+                                disabled={loading === 'delete'}
+                                onClick={onDelete}
+                            >
+                                Delete List
+                            </Button>
+                        </div>
                     </div>
-                    <div className="flex flex-row gap-4 w-full">
-                        <Button onClick={onSaveChanges}>Save Changes</Button>
-                        <Button
-                            btnType="danger"
-                            disabled={loading === 'delete'}
-                            onClick={onDelete}
-                        >
-                            Delete List
-                        </Button>
-                    </div>
-                </div>
-            ) : (
-                <DefaultList />
-            )}
-            <AnimatePresence>
-                {isOpen && (
-                    <>
-                        {list.items.map((item) => (
-                            <motion.div
-                                key={item.id}
-                                className="child"
-                                variants={itemVariants}
-                            >
-                                <ListItem
-                                    item={item}
-                                    isOwner={isOwner}
-                                    isListEditing={isEditing}
-                                />
-                            </motion.div>
-                        ))}
-                        {loading === 'add' && (
-                            <motion.div
-                                key="loading-add-item"
-                                className="child"
-                                variants={itemVariants}
-                            >
-                                <div className="animate-pulse h-10 bg-neutral-300 dark:bg-neutral-600 rounded w-full" />
-                            </motion.div>
-                        )}
-                        {isOwner && (
-                            <motion.div
-                                key="owner-buttons"
-                                className="child"
-                                variants={itemVariants}
-                            >
-                                <OwnerList />
-                            </motion.div>
-                        )}
-                    </>
+                ) : (
+                    <DefaultList />
                 )}
-            </AnimatePresence>
+                <AnimatePresence>
+                    {isOpen && (
+                        <>
+                            {list.items.map((item) => (
+                                <MotionWrapper
+                                    key={item.id.toString()}
+                                    variants={itemVariants}
+                                >
+                                    <ListItem
+                                        item={item}
+                                        isOwner={isOwner}
+                                        isListEditing={isEditing}
+                                    />
+                                </MotionWrapper>
+                            ))}
+                            {loading === 'add' && (
+                                <MotionWrapper
+                                    key="loading-add-item"
+                                    variants={itemVariants}
+                                >
+                                    <div className="animate-pulse h-10 bg-neutral-300 dark:bg-neutral-600 rounded w-full" />
+                                </MotionWrapper>
+                            )}
+                            {isOwner && (
+                                <MotionWrapper
+                                    key="owner-buttons"
+                                    variants={itemVariants}
+                                >
+                                    <OwnerList />
+                                </MotionWrapper>
+                            )}
+                        </>
+                    )}
+                </AnimatePresence>
+            </motion.div>
+        </AnimateChangeInHeight>
+    );
+}
+
+function MotionWrapper({
+    key,
+    variants,
+    children,
+}: {
+    key: string;
+    variants: Variants;
+    children: React.ReactNode;
+}) {
+    return (
+        <motion.div key={key} className="child" variants={variants}>
+            {children}
         </motion.div>
     );
 }

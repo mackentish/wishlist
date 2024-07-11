@@ -10,4 +10,5 @@ export * from './SignIn';
 export * from './Spacer';
 export * from './icons';
 export * from './modals';
+export * from './AnimateChangeInHeight';
 export * from './Header';
