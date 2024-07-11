@@ -1,8 +1,10 @@
 import { useLists } from '@/hooks';
 import { inputStyles } from '@/styles/globalTailwind';
+import { AnimatePresence, Variants, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import {
+    AnimateChangeInHeight,
     Button,
     CircleX,
     ItemForm,
@@ -19,6 +21,7 @@ interface ListProps {
 }
 
 export function List({ list, isOwner }: ListProps) {
+    const [isOpen, setIsOpen] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [listName, setListName] = useState(list.name);
@@ -35,6 +38,29 @@ export function List({ list, isOwner }: ListProps) {
     >(undefined);
     const { addListItem, deleteList, updateList, deleteSharedList } =
         useLists();
+
+    // Motion Variants:
+    const containerVariants: Variants = {
+        visible: {
+            transition: {
+                staggerChildren: 0.05,
+                when: 'beforeChildren',
+            },
+        },
+        hidden: {
+            transition: {
+                staggerChildren: 0.05,
+                when: 'afterChildren',
+            },
+        },
+    };
+    const itemVariants: Variants = {
+        visible: {
+            opacity: 1,
+            y: 0,
+        },
+        hidden: { opacity: 0, y: 20, transition: { duration: 0.2 } },
+    };
 
     // Functions:
     const addItem = (data: {
@@ -137,7 +163,10 @@ export function List({ list, isOwner }: ListProps) {
     // Refactored components for readability:
     const DefaultList = () => {
         return (
-            <div className="flex flex-row justify-between items-center">
+            <div
+                className="flex flex-row justify-between items-center"
+                onClick={() => setIsOpen(!isOpen)}
+            >
                 <div className="flex flex-col items-start w-full">
                     <div className="flex flex-col-reverse w-full md:flex-row md:gap-2 md:items-baseline">
                         {loading === 'update' ? (
@@ -170,7 +199,10 @@ export function List({ list, isOwner }: ListProps) {
                 </div>
                 {isOwner ? (
                     <button
-                        onClick={shareList}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            shareList();
+                        }}
                         disabled={isModalOpen}
                         className="self-start"
                     >
@@ -178,7 +210,10 @@ export function List({ list, isOwner }: ListProps) {
                     </button>
                 ) : (
                     <button
-                        onClick={removeSharedList}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            removeSharedList();
+                        }}
                         disabled={isRemoving}
                         className="self-start"
                     >
@@ -244,49 +279,98 @@ export function List({ list, isOwner }: ListProps) {
     };
 
     return (
-        <div className="flex flex-col gap-2 w-full p-4 border rounded-md border-black dark:border-white">
-            {isEditing ? (
-                <div className="flex flex-col gap-2">
-                    <div className="flex flex-col gap-2 w-full">
-                        <input
-                            className={inputStyles.editing}
-                            value={listName}
-                            onChange={(e) => setListName(e.target.value)}
-                            placeholder="List Name"
-                        />
-                        <input
-                            className={inputStyles.editing}
-                            value={listDescription}
-                            onChange={(e) => setListDescription(e.target.value)}
-                            placeholder="List Description?"
-                        />
+        <AnimateChangeInHeight>
+            <motion.div
+                className="flex flex-col gap-3 w-full p-4 border rounded-md border-black dark:border-white"
+                initial="hidden"
+                animate={isOpen ? 'visible' : 'hidden'}
+                variants={containerVariants}
+            >
+                {isEditing ? (
+                    <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 w-full">
+                            <input
+                                className={inputStyles.editing}
+                                value={listName}
+                                onChange={(e) => setListName(e.target.value)}
+                                placeholder="List Name"
+                            />
+                            <input
+                                className={inputStyles.editing}
+                                value={listDescription}
+                                onChange={(e) =>
+                                    setListDescription(e.target.value)
+                                }
+                                placeholder="List Description?"
+                            />
+                        </div>
+                        <div className="flex flex-row gap-4 w-full">
+                            <Button onClick={onSaveChanges}>
+                                Save Changes
+                            </Button>
+                            <Button
+                                btnType="danger"
+                                disabled={loading === 'delete'}
+                                onClick={onDelete}
+                            >
+                                Delete List
+                            </Button>
+                        </div>
                     </div>
-                    <div className="flex flex-row gap-4 w-full">
-                        <Button onClick={onSaveChanges}>Save Changes</Button>
-                        <Button
-                            btnType="danger"
-                            disabled={loading === 'delete'}
-                            onClick={onDelete}
-                        >
-                            Delete List
-                        </Button>
-                    </div>
-                </div>
-            ) : (
-                <DefaultList />
-            )}
-            {list.items.map((item) => (
-                <ListItem
-                    key={item.id}
-                    item={item}
-                    isOwner={isOwner}
-                    isListEditing={isEditing}
-                />
-            ))}
-            {loading === 'add' && (
-                <div className="animate-pulse h-10 bg-neutral-300 dark:bg-neutral-600 rounded w-full" />
-            )}
-            {isOwner && <OwnerList />}
-        </div>
+                ) : (
+                    <DefaultList />
+                )}
+                <AnimatePresence>
+                    {isOpen && (
+                        <>
+                            {list.items.map((item) => (
+                                <MotionWrapper
+                                    key={item.id.toString()}
+                                    variants={itemVariants}
+                                >
+                                    <ListItem
+                                        item={item}
+                                        isOwner={isOwner}
+                                        isListEditing={isEditing}
+                                    />
+                                </MotionWrapper>
+                            ))}
+                            {loading === 'add' && (
+                                <MotionWrapper
+                                    key="loading-add-item"
+                                    variants={itemVariants}
+                                >
+                                    <div className="animate-pulse h-10 bg-neutral-300 dark:bg-neutral-600 rounded w-full" />
+                                </MotionWrapper>
+                            )}
+                            {isOwner && (
+                                <MotionWrapper
+                                    key="owner-buttons"
+                                    variants={itemVariants}
+                                >
+                                    <OwnerList />
+                                </MotionWrapper>
+                            )}
+                        </>
+                    )}
+                </AnimatePresence>
+            </motion.div>
+        </AnimateChangeInHeight>
+    );
+}
+
+function MotionWrapper({
+    key,
+    variants,
+    children,
+}: {
+    key: string;
+    variants: Variants;
+    children: React.ReactNode;
+}) {
+    return (
+        <motion.div key={key} className="child" variants={variants}>
+            {children}
+        </motion.div>
     );
 }

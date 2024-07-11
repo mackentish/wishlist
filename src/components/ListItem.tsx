@@ -138,7 +138,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
     return (
         <>
             {isEditing ? (
-                <div className="p-2 border border-dashed border-gray-950 rounded">
+                <div className="p-2 border border-dashed border-gray-950 dark:border-lightGrey/40 rounded">
                     <ItemForm
                         onDone={submitEditing}
                         onCancel={() => setIsEditing(false)}
