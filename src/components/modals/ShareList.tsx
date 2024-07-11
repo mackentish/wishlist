@@ -155,7 +155,7 @@ export function ShareList({
                     ))}
                     {filteredUsers.length === 0 && (
                         <div className="flex flex-col text-center gap-2 w-full">
-                            <p className="text-sm text-darkGrey dark:text-lightGrey">
+                            <p className="text-sm text-gray700 dark:text-gray300">
                                 No users found. Invite someone by email:
                             </p>
                             <div className="grid grid-rows-1 grid-cols-12 gap-2">
@@ -189,7 +189,7 @@ export function ShareList({
                                         {user.name}
                                     </p>
                                     {user.email === user.name && (
-                                        <p className="text-xs text-darkGrey dark:text-lightGrey">
+                                        <p className="text-xs text-gray700 dark:text-gray300">
                                             {'(new)'}
                                         </p>
                                     )}
@@ -202,7 +202,7 @@ export function ShareList({
                             </div>
                         ))}
                         {selectedUsers.length === 0 && (
-                            <p className="text-sm self-center text-darkGrey dark:text-lightGrey">
+                            <p className="text-sm self-center text-gray700 dark:text-gray300">
                                 Not shared with any users.
                             </p>
                         )}
@@ -258,7 +258,7 @@ function UserRow({ user, isChecked, toggleUser }: UserRowProps) {
                 <p className="text-sm text-black dark:text-white">
                     {user.name}
                 </p>
-                <p className="text-xs text-darkGrey dark:text-lightGrey">
+                <p className="text-xs text-gray700 dark:text-gray300">
                     {user.email}
                 </p>
             </div>

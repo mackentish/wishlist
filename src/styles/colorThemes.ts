@@ -1,9 +1,11 @@
 // ATTN: if you change these colors, make sure to update the colors in the globals.css used for toast messages
 const colorThemes = {
     orange: {
-        white: '#FEFCF2',
-        lightGrey: '#CCC5B9',
-        darkGrey: '#3F3D39',
+        white: '#FEF8F6',
+        gray100: '#FAEFEA',
+        gray300: '#E5D0C7',
+        gray700: '#33211A',
+        gray900: '#26140D',
         black: '#252422',
         primary: '#EB5E27',
         primaryHover: '#C75521',
@@ -12,8 +14,10 @@ const colorThemes = {
     },
     purple: {
         white: '#F0EAF3',
-        lightGrey: '#C3BDC6',
-        darkGrey: '#423C46',
+        gray100: '#EAE1EF',
+        gray300: '#D6CBDC',
+        gray700: '#281E2E',
+        gray900: '#1C1122',
         black: '#0A050E',
         primary: '#7B32A8',
         primaryHover: '#611E8B',
@@ -22,8 +26,10 @@ const colorThemes = {
     },
     maroon: {
         white: '#F6EAF4',
-        lightGrey: '#C9BDC7',
-        darkGrey: '#493D46',
+        gray100: '#F1E4EE',
+        gray300: '#E2CFDE',
+        gray700: '#251822',
+        gray900: '#1B0E18',
         black: '#11050E',
         primary: '#A8328F',
         primaryHover: '#811169',
@@ -32,8 +38,10 @@ const colorThemes = {
     },
     turquoise: {
         white: '#EAF6F6',
-        lightGrey: '#BDC9C9',
-        darkGrey: '#3D4948',
+        gray100: '#F1F8F8',
+        gray300: '#DAE7E7',
+        gray700: '#1C2B2B',
+        gray900: '#0F1E1E',
         black: '#051110',
         primary: '#32A8A4',
         primaryHover: '#1D7572',

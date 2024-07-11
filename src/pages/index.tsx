@@ -72,7 +72,7 @@ export default function Home() {
                             ))}
                     </div>
                 ) : (
-                    <p className="text-sm italic text-darkGrey dark:text-lightGrey">
+                    <p className="text-sm italic text-gray700 dark:text-gray300">
                         No lists yet! Click the button below to get started!
                     </p>
                 )}
@@ -100,7 +100,7 @@ export default function Home() {
                             ))}
                     </div>
                 ) : (
-                    <p className="text-sm italic text-darkGrey dark:text-lightGrey">
+                    <p className="text-sm italic text-gray700 dark:text-gray300">
                         No lists shared with you. Ask your friends to share
                         their lists with you!
                     </p>

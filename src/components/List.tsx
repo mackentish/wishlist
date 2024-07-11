@@ -177,7 +177,7 @@ export function List({ list, isOwner }: ListProps) {
                             </p>
                         )}
                         {!isOwner && list.user && (
-                            <p className="text-xs text-darkGrey dark:text-lightGrey">
+                            <p className="text-xs text-gray700 dark:text-gray300">
                                 {`(${list.user.name})`}
                             </p>
                         )}
@@ -190,7 +190,7 @@ export function List({ list, isOwner }: ListProps) {
                         </p>
                     )}
                     {list.items.length === 0 && !isOwner && (
-                        <p className="mt-4 self-center text-sm italic text-darkGrey dark:text-lightGrey">
+                        <p className="mt-4 self-center text-sm italic text-gray700 dark:text-gray300">
                             {
                                 "This list doesn't have any items yet! You'll see them here when they are added."
                             }
@@ -249,7 +249,7 @@ export function List({ list, isOwner }: ListProps) {
                 {!isAdding && !isEditing && (
                     <div className="flex flex-col gap-2 w-full">
                         {list.items.length === 0 && (
-                            <p className="text-sm italic self-center text-darkGrey dark:text-lightGrey">
+                            <p className="text-sm italic self-center text-gray700 dark:text-gray300">
                                 {
                                     'No items yet! Click the "Add Item" button below to get started!'
                                 }
