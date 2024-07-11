@@ -83,6 +83,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                         : `${localStorage.getItem('theme')}ToastProgress`
                 }
                 bodyClassName="toastBody"
+                style={{ borderRadius: '12px' }}
             />
         </main>
     );
