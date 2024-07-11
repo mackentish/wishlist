@@ -177,7 +177,7 @@ export function List({ list, isOwner }: ListProps) {
                             </p>
                         )}
                         {!isOwner && list.user && (
-                            <p className="text-xs text-gray700 dark:text-gray300">
+                            <p className="text-xs text-black dark:text-white">
                                 {`(${list.user.name})`}
                             </p>
                         )}
@@ -190,7 +190,7 @@ export function List({ list, isOwner }: ListProps) {
                         </p>
                     )}
                     {list.items.length === 0 && !isOwner && (
-                        <p className="mt-4 self-center text-sm italic text-gray700 dark:text-gray300">
+                        <p className="mt-4 self-center text-sm italic text-black dark:text-white">
                             {
                                 "This list doesn't have any items yet! You'll see them here when they are added."
                             }
@@ -247,9 +247,9 @@ export function List({ list, isOwner }: ListProps) {
                     </Button>
                 )}
                 {!isAdding && !isEditing && (
-                    <div className="flex flex-col gap-2 w-full">
+                    <div className="flex flex-col gap-4 w-full">
                         {list.items.length === 0 && (
-                            <p className="text-sm italic self-center text-gray700 dark:text-gray300">
+                            <p className="text-sm italic self-center text-black dark:text-white">
                                 {
                                     'No items yet! Click the "Add Item" button below to get started!'
                                 }
@@ -281,13 +281,13 @@ export function List({ list, isOwner }: ListProps) {
     return (
         <AnimateChangeInHeight>
             <motion.div
-                className="flex flex-col gap-3 w-full p-4 border rounded-md border-black dark:border-white"
+                className="flex flex-col gap-5 w-full p-4 rounded-xl bg-gray100 dark:bg-gray900"
                 initial="hidden"
                 animate={isOpen ? 'visible' : 'hidden'}
                 variants={containerVariants}
             >
                 {isEditing ? (
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-4 py-2">
                         <div className="flex flex-col gap-2 w-full">
                             <input
                                 className={inputStyles.editing}
@@ -340,7 +340,7 @@ export function List({ list, isOwner }: ListProps) {
                                     key="loading-add-item"
                                     variants={itemVariants}
                                 >
-                                    <div className="animate-pulse h-10 bg-neutral-300 dark:bg-neutral-600 rounded w-full" />
+                                    <div className="animate-pulse h-10 bg-neutral-300 dark:bg-neutral-600 rounded-xl w-full" />
                                 </MotionWrapper>
                             )}
                             {isOwner && (
