@@ -164,7 +164,7 @@ export function List({ list, isOwner }: ListProps) {
     const DefaultList = () => {
         return (
             <div
-                className="flex flex-row justify-between items-center"
+                className="flex flex-row justify-between items-center cursor-pointer"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <div className="flex flex-col items-start w-full">
@@ -204,7 +204,6 @@ export function List({ list, isOwner }: ListProps) {
                             shareList();
                         }}
                         disabled={isModalOpen}
-                        className="self-start"
                     >
                         <Share disabled={isModalOpen} />
                     </button>
@@ -215,7 +214,6 @@ export function List({ list, isOwner }: ListProps) {
                             removeSharedList();
                         }}
                         disabled={isRemoving}
-                        className="self-start"
                     >
                         <CircleX disabled={isRemoving} />
                     </button>
@@ -340,7 +338,7 @@ export function List({ list, isOwner }: ListProps) {
                                     key="loading-add-item"
                                     variants={itemVariants}
                                 >
-                                    <div className="animate-pulse h-10 bg-neutral-300 dark:bg-neutral-600 rounded-xl w-full" />
+                                    <div className="animate-pulse h-14 bg-gray300 dark:bg-gray700 rounded-xl w-full" />
                                 </MotionWrapper>
                             )}
                             {isOwner && (
