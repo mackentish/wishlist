@@ -26,7 +26,7 @@ const colorThemes = {
     },
     maroon: {
         white: '#F9F1F8',
-        gray100: '#F1E4EE',
+        gray100: '#EEDDEA',
         gray300: '#E2CFDE',
         gray700: '#3E2839',
         gray900: '#251321',
@@ -38,8 +38,8 @@ const colorThemes = {
     },
     turquoise: {
         white: '#FBFEFE',
-        gray100: '#E0F0F0',
-        gray300: '#CEDFDF',
+        gray100: '#D6EBEB',
+        gray300: '#C8E5E5',
         gray700: '#1E2E2E',
         gray900: '#0F1F1F',
         black: '#020807',
