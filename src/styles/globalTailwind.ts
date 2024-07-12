@@ -1,7 +1,7 @@
 const input =
-    'border dark:bg-darkGrey text-black dark:text-white dark:placeholder:text-lightGrey rounded p-2 w-full';
+    'border dark:bg-gray700 text-black dark:text-white focus:outline-none rounded-xl p-4 w-full';
 export const inputStyles = {
-    default: `${input} border-lightGrey dark:border-primary/40`,
-    editing: `${input} border-dashed border-lightGrey dark:border-primary/40`,
+    default: `${input} border-gray300 dark:border-primary/40`,
+    editing: `${input} border-2 border-dashed border-gray700 dark:border-gray300 focus:border-primary`,
     error: `${input} border-error dark:border-opacity-40`,
 };

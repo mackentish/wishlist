@@ -3,7 +3,6 @@ import { inputStyles } from '@/styles/globalTailwind';
 import { ShareUser } from '@/types';
 import { validateEmail } from '@/utils';
 import React, { useState } from 'react';
-import { set } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { Button, Checkbox, CircleX } from '..';
 import { BaseModal } from './BaseModal';
@@ -128,7 +127,7 @@ export function ShareList({
                 <input
                     type="text"
                     placeholder="Search users by name..."
-                    className="p-2 border border-black dark:border-white rounded bg-transparent"
+                    className="p-4 border border-black dark:border-white rounded-xl bg-transparent"
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
                 />
@@ -155,7 +154,7 @@ export function ShareList({
                     ))}
                     {filteredUsers.length === 0 && (
                         <div className="flex flex-col text-center gap-2 w-full">
-                            <p className="text-sm text-darkGrey dark:text-lightGrey">
+                            <p className="text-sm text-black dark:text-white">
                                 No users found. Invite someone by email:
                             </p>
                             <div className="grid grid-rows-1 grid-cols-12 gap-2">
@@ -167,9 +166,12 @@ export function ShareList({
                                         setInviteEmail(e.target.value)
                                     }
                                 />
-                                <div className="col-span-4">
-                                    <Button onClick={inviteUser}>Invite</Button>
-                                </div>
+                                <Button
+                                    onClick={inviteUser}
+                                    styles="col-span-4 self-center h-full items-center"
+                                >
+                                    Invite
+                                </Button>
                             </div>
                         </div>
                     )}
@@ -182,14 +184,14 @@ export function ShareList({
                         {selectedUsers.map((user, index) => (
                             <div
                                 key={user.name + index}
-                                className="flex flex-row justify-between items-center w-full p-2 border rounded border-black dark:border-white"
+                                className="flex flex-row justify-between items-center w-full p-4 border rounded-xl border-black dark:border-white"
                             >
                                 <div className="flex flex-row gap-0.5 items-baseline">
                                     <p className="text-sm text-black dark:text-white">
                                         {user.name}
                                     </p>
                                     {user.email === user.name && (
-                                        <p className="text-xs text-darkGrey dark:text-lightGrey">
+                                        <p className="text-xs text-black dark:text-white">
                                             {'(new)'}
                                         </p>
                                     )}
@@ -202,7 +204,7 @@ export function ShareList({
                             </div>
                         ))}
                         {selectedUsers.length === 0 && (
-                            <p className="text-sm self-center text-darkGrey dark:text-lightGrey">
+                            <p className="text-sm self-center text-black dark:text-white">
                                 Not shared with any users.
                             </p>
                         )}
@@ -251,14 +253,14 @@ function UserRow({ user, isChecked, toggleUser }: UserRowProps) {
             onClick={() => {
                 toggleUser(user);
             }}
-            className="flex flex-row gap-4 items-center w-full p-2 border rounded border-black dark:border-white"
+            className="flex flex-row gap-4 items-center w-full p-4 border rounded-xl border-black dark:border-white"
         >
             <Checkbox checked={isChecked} />
-            <div className="flex flex-col gap-1 items-start">
+            <div className="flex flex-col items-start">
                 <p className="text-sm text-black dark:text-white">
                     {user.name}
                 </p>
-                <p className="text-xs text-darkGrey dark:text-lightGrey">
+                <p className="text-xs text-black dark:text-white">
                     {user.email}
                 </p>
             </div>

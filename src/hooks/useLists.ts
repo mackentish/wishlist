@@ -8,7 +8,7 @@ import {
 } from '@/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-export function useLists() {
+export function useLists(enabled = true) {
     /**
      * Fetches all lists both belonging to the user and shared with the user
      */
@@ -22,6 +22,7 @@ export function useLists() {
             }
             return res.json();
         },
+        enabled: enabled,
     });
 
     /**

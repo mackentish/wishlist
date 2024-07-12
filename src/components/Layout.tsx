@@ -40,7 +40,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     wouldn't work. Therefore, I'm unable to supply the colors dynamically and instead have to paste them in. */}
                     <button
                         onClick={() => handleThemeChange('orange')}
-                        className={`w-8 h-8 bg-[#EB5E27] rounded-l ${theme === 'orange' && selectedBorder}`}
+                        className={`w-8 h-8 bg-[#EB5E27] rounded-l-xl ${theme === 'orange' && selectedBorder}`}
                     />
                     <button
                         onClick={() => handleThemeChange('maroon')}
@@ -52,7 +52,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     />
                     <button
                         onClick={() => handleThemeChange('turquoise')}
-                        className={`w-8 h-8 bg-[#32A8A4] rounded-r ${theme === 'turquoise' && selectedBorder}`}
+                        className={`w-8 h-8 bg-[#32A8A4] rounded-r-xl ${theme === 'turquoise' && selectedBorder}`}
                     />
                 </div>
                 {session?.user && (
@@ -83,6 +83,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                         : `${localStorage.getItem('theme')}ToastProgress`
                 }
                 bodyClassName="toastBody"
+                style={{ borderRadius: '12px' }}
             />
         </main>
     );

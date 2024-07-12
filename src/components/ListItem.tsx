@@ -14,7 +14,7 @@ const ItemWrapper = ({
     children: React.ReactNode;
 }) => {
     const style =
-        'flex flex-row items-center justify-between p-2 pl-4 border border-darkGrey dark:border-lightGrey/40 rounded';
+        'flex flex-row items-center justify-between p-4 pl-4 bg-gray300 dark:bg-gray700 rounded-xl';
     if (!!link) {
         return (
             <a href={link} target="_blank" className={style}>
@@ -138,7 +138,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
     return (
         <>
             {isEditing ? (
-                <div className="p-2 border border-dashed border-gray-950 rounded">
+                <div className="p-4 bg-white dark:bg-black rounded-xl">
                     <ItemForm
                         onDone={submitEditing}
                         onCancel={() => setIsEditing(false)}
@@ -170,13 +170,13 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                                     {item.name}
                                 </p>
                                 {!isOwner && item.boughtBy && (
-                                    <p className="text-xs text-darkGrey dark:text-lightGrey">
+                                    <p className="text-xs text-black dark:text-white">
                                         (Bought by {item.boughtBy.name})
                                     </p>
                                 )}
                             </div>
                             {item.note && (
-                                <p className="text-xs text-darkGrey dark:text-lightGrey">
+                                <p className="text-xs text-black dark:text-white">
                                     {item.note}
                                 </p>
                             )}
@@ -192,7 +192,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                                 <Trash
                                     className={
                                         isDeleting
-                                            ? 'animate-pulse stroke-darkGrey dark:stroke-lightGrey'
+                                            ? 'animate-pulse stroke-gray700 dark:stroke-gray300'
                                             : ''
                                     }
                                 />
