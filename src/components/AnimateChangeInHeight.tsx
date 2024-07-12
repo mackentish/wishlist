@@ -36,7 +36,7 @@ export function AnimateChangeInHeight({
             className={classNames(className, 'overflow-hidden')}
             style={{ height }}
             animate={{ height }}
-            transition={{ duration: 0.1 }}
+            transition={{ duration: 0.2 }}
         >
             <div ref={containerRef}>{children}</div>
         </motion.div>

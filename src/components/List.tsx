@@ -43,13 +43,15 @@ export function List({ list, isOwner }: ListProps) {
     const containerVariants: Variants = {
         visible: {
             transition: {
-                staggerChildren: 0.05,
+                staggerChildren: 0.08,
+                delayChildren: 0.18,
                 when: 'beforeChildren',
             },
         },
         hidden: {
             transition: {
-                staggerChildren: 0.05,
+                staggerChildren: 0.08,
+                delayChildren: 0.18,
                 when: 'afterChildren',
             },
         },
