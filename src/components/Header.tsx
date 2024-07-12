@@ -6,9 +6,7 @@ export function Header() {
             <h1 className="font-bold text-5xl text-black dark:text-white">
                 wishlist
             </h1>
-            <p className="text-xs text-darkGrey dark:text-lightGrey ">
-                by @mackentish
-            </p>
+            <p className="text-xs text-black dark:text-white">by @mackentish</p>
         </header>
     );
 }

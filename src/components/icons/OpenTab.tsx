@@ -12,7 +12,7 @@ export function OpenTab({ disabled = false }: OpenTabProps) {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                className={`w-6 h-6 ${disabled ? 'stroke-darkGrey dark:stroke-lightGrey' : 'stroke-primary'}`}
+                className={`w-6 h-6 ${disabled ? 'stroke-gray700 dark:stroke-gray300' : 'stroke-primary'}`}
                 data-tooltip-id="open-tab"
                 data-tooltip-content={
                     disabled ? 'No link available' : 'Open link in new tab'

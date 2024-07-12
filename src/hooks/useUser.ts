@@ -1,7 +1,7 @@
 import { GetUserResponse } from '@/types';
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
 
-export function useUser(): UseQueryResult<GetUserResponse> {
+export function useUser(enabled = true): UseQueryResult<GetUserResponse> {
     return useQuery({
         queryKey: ['user'],
         queryFn: async () => {
@@ -11,5 +11,6 @@ export function useUser(): UseQueryResult<GetUserResponse> {
             }
             return res.json();
         },
+        enabled: enabled,
     });
 }

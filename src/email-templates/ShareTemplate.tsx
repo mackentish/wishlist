@@ -22,7 +22,7 @@ export function ShareTemplate({
     return (
         <Tailwind>
             <Head>
-                <Container className="flex flex-col gap-4 p-4 rounded bg-white dark:bg-black">
+                <Container className="flex flex-col gap-4 p-4 rounded-xl bg-white dark:bg-black">
                     <Heading
                         as="h1"
                         className="font-bold text-3xl text-black dark:text-white"

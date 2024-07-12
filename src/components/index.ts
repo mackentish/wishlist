@@ -12,3 +12,5 @@ export * from './icons';
 export * from './modals';
 export * from './AnimateChangeInHeight';
 export * from './Header';
+export * from './FadeIn';
+export * from './loaders';

@@ -1,4 +1,4 @@
-import { Button, Header } from '@/components';
+import { Button, CircularSpinner, FadeIn, Header } from '@/components';
 import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
 
@@ -11,12 +11,22 @@ export function SignIn() {
     };
 
     return (
-        <div className="flex flex-col gap-8 items-center w-full max-w-3xl">
-            <Header />
-            <p className="text-xl text-black dark:text-white">Not signed in</p>
+        <FadeIn className="flex flex-col gap-8 items-center w-full">
+            {isLoading ? (
+                <div className="flex flex-row gap-4">
+                    <p className="text-xl text-black dark:text-white">
+                        Signing you in...
+                    </p>
+                    <CircularSpinner />
+                </div>
+            ) : (
+                <p className="text-xl text-black dark:text-white">
+                    Not signed in
+                </p>
+            )}
             <Button disabled={isLoading} onClick={signUserIn}>
                 Sign in
             </Button>
-        </div>
+        </FadeIn>
     );
 }
