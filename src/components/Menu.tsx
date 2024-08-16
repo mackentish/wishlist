@@ -1,6 +1,6 @@
-import { useTheme } from '@/hooks';
 import colorThemes from '@/styles/colorThemes';
 import { Pages } from '@/types';
+import { AnimatePresence, motion } from 'framer-motion';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -32,11 +32,16 @@ export function Menu({
     // TODO: use motion to animate the menu (open/close, selecting page, selecting color theme, etc.)
     // TODO: menu is always open on desktop? (and not absolute)
     return (
-        <div
-            className={`absolute z-50 ${isOpen ? 'top-0 left-0' : 'top-4 left-4'}`}
-        >
+        <AnimatePresence>
             {isOpen ? (
-                <div className="flex flex-col gap-7 h-[100vh] px-6 py-8 bg-gray100 dark:bg-gray900">
+                <motion.div
+                    key="menu"
+                    initial={{ x: '-100%', opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: '-100%', opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute z-50 top-0 left-0 flex flex-col gap-7 h-[100vh] px-6 py-8 bg-gray100 dark:bg-gray900"
+                >
                     {/* User */}
                     <div className="flex flex-row w-full justify-between gap-4 items-center">
                         <div className="flex flex-row gap-2 items-center">
@@ -124,10 +129,14 @@ export function Menu({
                     <Button btnType="danger" onClick={() => signOut()}>
                         Sign out
                     </Button>
-                </div>
+                </motion.div>
             ) : (
-                <button
-                    className="flex flex-col gap-[6px] w-8 cursor-pointer"
+                <motion.button
+                    key="menu-button"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute z-50 top-4 left-4 flex flex-col gap-[6px] w-8 cursor-pointer"
                     onClick={() => setIsOpen(true)}
                 >
                     {Array.from({ length: 3 }).map((_, index) => (
@@ -136,8 +145,8 @@ export function Menu({
                             className="w-full h-1 rounded-full bg-primary"
                         />
                     ))}
-                </button>
+                </motion.button>
             )}
-        </div>
+        </AnimatePresence>
     );
 }
