@@ -14,3 +14,4 @@ export * from './AnimateChangeInHeight';
 export * from './Header';
 export * from './FadeIn';
 export * from './loaders';
+export * from './Menu';
