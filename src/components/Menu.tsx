@@ -9,18 +9,17 @@ import React, { useState } from 'react';
 import { Button } from './Button';
 import { X } from './icons';
 
-// TODO: Implement onClose function with three dashes
-export function Menu() {
+export function Menu({
+    handleThemeChange,
+    activeTheme,
+}: {
+    handleThemeChange: (theme: keyof typeof colorThemes) => void;
+    activeTheme: keyof typeof colorThemes;
+}) {
     const { data: session } = useSession();
-    const { theme, setTheme } = useTheme();
     const router = useRouter();
     const currentPath = router.pathname;
     const [isOpen, setIsOpen] = useState(false);
-
-    const handleThemeChange = (theme: keyof typeof colorThemes) => {
-        setTheme(theme);
-        localStorage.setItem('theme', theme);
-    };
 
     const styles = {
         selectedBorder: 'border-2 border-black dark:border-white',
@@ -31,7 +30,7 @@ export function Menu() {
     };
 
     // TODO: use motion to animate the menu (open/close, selecting page, selecting color theme, etc.)
-    // TODO: color picker not working
+    // TODO: menu is always open on desktop? (and not absolute)
     return (
         <div
             className={`absolute z-50 ${isOpen ? 'top-0 left-0' : 'top-4 left-4'}`}
@@ -105,19 +104,19 @@ export function Menu() {
                     wouldn't work. Therefore, I'm unable to supply the colors dynamically and instead have to paste them in. */}
                         <button
                             onClick={() => handleThemeChange('orange')}
-                            className={`w-full h-8 bg-[#EB5E27] rounded-l-xl ${theme === 'orange' && styles.selectedBorder}`}
+                            className={`w-full h-8 bg-[#EB5E27] rounded-l-xl ${activeTheme === 'orange' && styles.selectedBorder}`}
                         />
                         <button
                             onClick={() => handleThemeChange('maroon')}
-                            className={`w-full h-8 bg-[#A8328F] ${theme === 'maroon' && styles.selectedBorder}`}
+                            className={`w-full h-8 bg-[#A8328F] ${activeTheme === 'maroon' && styles.selectedBorder}`}
                         />
                         <button
                             onClick={() => handleThemeChange('purple')}
-                            className={`w-full h-8 bg-[#7B32A8] ${theme === 'purple' && styles.selectedBorder}`}
+                            className={`w-full h-8 bg-[#7B32A8] ${activeTheme === 'purple' && styles.selectedBorder}`}
                         />
                         <button
                             onClick={() => handleThemeChange('turquoise')}
-                            className={`w-full h-8 bg-[#32A8A4] rounded-r-xl ${theme === 'turquoise' && styles.selectedBorder}`}
+                            className={`w-full h-8 bg-[#32A8A4] rounded-r-xl ${activeTheme === 'turquoise' && styles.selectedBorder}`}
                         />
                     </div>
 

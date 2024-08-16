@@ -16,8 +16,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         localStorage.setItem('theme', theme);
     };
 
-    const selectedBorder = 'border-2 border-black dark:border-white';
-
     // color theme used for react-tostify
     let windowColorTheme = 'light';
     if (
@@ -33,7 +31,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
             data-theme={theme}
             className="min-h-screen min-w-screen bg-white dark:bg-black"
         >
-            {session?.user && <Menu />}
+            {session?.user && (
+                <Menu
+                    handleThemeChange={handleThemeChange}
+                    activeTheme={theme}
+                />
+            )}
             <div className="flex flex-col w-full h-full p-4">
                 <div className="flex flex-row justify-center items-center w-full">
                     {children}
