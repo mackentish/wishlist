@@ -21,15 +21,27 @@ export function Menu({
     const currentPath = router.pathname;
     const [isOpen, setIsOpen] = useState(false);
 
-    const styles = {
-        selectedBorder: 'border-2 border-black dark:border-white',
-        page: {
-            base: 'flex flex-row gap-4 p-4 rounded-xl text-black dark:text-white',
-            selected: 'bg-gray300 dark:bg-gray700',
-        },
+    // TODO: find better approach?
+    const getPosition = () => {
+        switch (currentPath) {
+            // Adjust the value based on the height (56px) and gap (8px) of each link
+            case Pages.Home:
+                return 0;
+            case Pages.Friends:
+                return 64;
+            case Pages.ShareGroups:
+                return 128;
+            default:
+                return 0;
+        }
     };
 
-    // TODO: use motion to animate the menu (open/close, selecting page, selecting color theme, etc.)
+    const styles = {
+        selectedBorder: 'border-2 border-black dark:border-white',
+        page: 'flex flex-row gap-4 p-4 text-black dark:text-white',
+    };
+
+    // TODO: use motion to animate the menu (selecting color theme)
     // TODO: menu is always open on desktop? (and not absolute)
     return (
         <AnimatePresence>
@@ -66,38 +78,26 @@ export function Menu({
                     </div>
 
                     {/* Pages */}
-                    <div className="flex flex-col gap-2">
-                        <Link
-                            href={Pages.Home}
-                            className={[
-                                styles.page.base,
-                                currentPath === Pages.Home
-                                    ? styles.page.selected
-                                    : '',
-                            ].join(' ')}
-                        >
+                    <div className="relative flex flex-col gap-2">
+                        <motion.div
+                            className="z-[-1] w-full h-[56px] bg-gray300 dark:bg-gray700 rounded-xl absolute"
+                            animate={{ y: getPosition() }}
+                            transition={{
+                                type: 'spring',
+                                stiffness: 300,
+                                damping: 30,
+                            }}
+                        />
+
+                        <Link href={Pages.Home} className={styles.page}>
                             Home
                         </Link>
-                        <Link
-                            href={Pages.Friends}
-                            className={[
-                                styles.page.base,
-                                currentPath === Pages.Friends
-                                    ? styles.page.selected
-                                    : '',
-                            ].join(' ')}
-                        >
+
+                        <Link href={Pages.Friends} className={styles.page}>
                             Friends
                         </Link>
-                        <Link
-                            href={Pages.ShareGroups}
-                            className={[
-                                styles.page.base,
-                                currentPath === Pages.ShareGroups
-                                    ? styles.page.selected
-                                    : '',
-                            ].join(' ')}
-                        >
+
+                        <Link href={Pages.ShareGroups} className={styles.page}>
                             Share Groups
                         </Link>
                     </div>
