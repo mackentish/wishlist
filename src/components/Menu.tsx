@@ -31,6 +31,7 @@ export function Menu() {
     };
 
     // TODO: use motion to animate the menu (open/close, selecting page, selecting color theme, etc.)
+    // TODO: color picker not working
     return (
         <div
             className={`absolute z-50 ${isOpen ? 'top-0 left-0' : 'top-4 left-4'}`}
