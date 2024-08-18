@@ -3,21 +3,29 @@ import { Tooltip } from 'react-tooltip';
 
 interface ShareProps {
     disabled?: boolean;
+    tooltip?: boolean;
+    classOverride?: string;
 }
 
-export function Share({ disabled }: ShareProps) {
+export function Share({
+    disabled,
+    tooltip = true,
+    classOverride = '',
+}: ShareProps) {
     return (
         <>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
-                className={`w-6 h-6 ${
+                className={[
+                    'w-6 h-6',
                     disabled
                         ? 'fill-slate-600'
-                        : 'fill-primary hover:fill-primaryHover transition-colors duration-200'
-                }`}
-                data-tooltip-id="share"
-                data-tooltip-content="Share this list"
+                        : 'fill-primary hover:fill-primaryHover transition-colors duration-200',
+                    classOverride,
+                ].join(' ')}
+                data-tooltip-id={tooltip ? 'share' : undefined}
+                data-tooltip-content={tooltip ? 'Share this list' : undefined}
             >
                 <path
                     fill-rule="evenodd"
@@ -25,7 +33,7 @@ export function Share({ disabled }: ShareProps) {
                     clip-rule="evenodd"
                 />
             </svg>
-            <Tooltip id="share" />
+            {tooltip && <Tooltip id="share" />}
         </>
     );
 }

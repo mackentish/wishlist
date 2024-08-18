@@ -1,5 +1,4 @@
 export * from './OpenTab';
-export * from './Bars';
 export * from './Sparkle';
 export * from './Plus';
 export * from './People';
@@ -11,3 +10,5 @@ export * from './Share';
 export * from './Check';
 export * from './CircleX';
 export * from './X';
+export * from './Home';
+export * from './Friends';

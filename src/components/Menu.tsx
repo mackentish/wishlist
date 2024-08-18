@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useMemo, useState } from 'react';
 import { Button } from './Button';
-import { X } from './icons';
+import { Friends, Home, Share, X } from './icons';
 
 export function Menu({
     handleThemeChange,
@@ -23,9 +23,18 @@ export function Menu({
 
     const pages = useMemo(
         () => [
-            { route: Pages.Home, name: 'Home' },
-            { route: Pages.Friends, name: 'Friends' },
-            { route: Pages.ShareGroups, name: 'Share Groups' },
+            { route: Pages.Home, name: 'Home', icon: <Home /> },
+            { route: Pages.Friends, name: 'Friends', icon: <Friends /> },
+            {
+                route: Pages.ShareGroups,
+                name: 'Share Groups',
+                icon: (
+                    <Share
+                        tooltip={false}
+                        classOverride="fill-black dark:fill-white"
+                    />
+                ),
+            },
         ],
         []
     );
@@ -78,17 +87,14 @@ export function Menu({
                         />
 
                         {/* Links */}
-                        {pages.map(({ route, name }) => (
-                            <Link
-                                key={name}
-                                href={route}
-                                className="flex flex-row gap-4 p-4 text-black dark:text-white"
-                            >
+                        {pages.map(({ route, name, icon }) => (
+                            <Link key={name} href={route}>
                                 <motion.div
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 1 }}
-                                    className="h-full w-full"
+                                    className="flex flex-row gap-4 p-4 text-black dark:text-white h-full w-full"
                                 >
+                                    {icon}
                                     {name}
                                 </motion.div>
                             </Link>
@@ -133,7 +139,7 @@ function ColorTheme({
     handleThemeChange: (theme: keyof typeof colorThemes) => void;
     activeTheme: keyof typeof colorThemes;
 }) {
-    // TODO: animated selected border
+    // TODO: animated selected border?
     const selectedBorder = 'border-2 border-black dark:border-white';
 
     return (
