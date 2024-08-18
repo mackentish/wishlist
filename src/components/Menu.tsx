@@ -5,7 +5,7 @@ import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Button } from './Button';
 import { X } from './icons';
 
@@ -21,27 +21,15 @@ export function Menu({
     const currentPath = router.pathname;
     const [isOpen, setIsOpen] = useState(false);
 
-    // TODO: find better approach?
-    const getPosition = () => {
-        switch (currentPath) {
-            // Adjust the value based on the height (56px) and gap (8px) of each link
-            case Pages.Home:
-                return 0;
-            case Pages.Friends:
-                return 64;
-            case Pages.ShareGroups:
-                return 128;
-            default:
-                return 0;
-        }
-    };
+    const pages = useMemo(
+        () => [
+            { route: Pages.Home, name: 'Home' },
+            { route: Pages.Friends, name: 'Friends' },
+            { route: Pages.ShareGroups, name: 'Share Groups' },
+        ],
+        []
+    );
 
-    const styles = {
-        selectedBorder: 'border-2 border-black dark:border-white',
-        page: 'flex flex-row gap-4 p-4 text-black dark:text-white',
-    };
-
-    // TODO: use motion to animate the menu (selecting color theme)
     // TODO: menu is always open on desktop? (and not absolute)
     return (
         <AnimatePresence>
@@ -78,52 +66,39 @@ export function Menu({
                     </div>
 
                     {/* Pages */}
-                    <div className="relative flex flex-col gap-2">
+                    <div className="relative flex flex-col">
+                        {/* Animated Selector */}
                         <motion.div
-                            className="z-[-1] w-full h-[56px] bg-gray300 dark:bg-gray700 rounded-xl absolute"
-                            animate={{ y: getPosition() }}
-                            transition={{
-                                type: 'spring',
-                                stiffness: 300,
-                                damping: 30,
+                            className="absolute z-[-1] w-full bg-gray300 dark:bg-gray700 rounded-xl"
+                            style={{ height: `${100 / pages.length}%` }}
+                            animate={{
+                                y: `${pages.findIndex((p) => p.route === currentPath) * 100}%`,
+                                transition: { duration: 0.3 },
                             }}
                         />
 
-                        <Link href={Pages.Home} className={styles.page}>
-                            Home
-                        </Link>
-
-                        <Link href={Pages.Friends} className={styles.page}>
-                            Friends
-                        </Link>
-
-                        <Link href={Pages.ShareGroups} className={styles.page}>
-                            Share Groups
-                        </Link>
+                        {/* Links */}
+                        {pages.map(({ route, name }) => (
+                            <Link
+                                key={name}
+                                href={route}
+                                className="flex flex-row gap-4 p-4 text-black dark:text-white"
+                            >
+                                <motion.div
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 1 }}
+                                    className="h-full w-full"
+                                >
+                                    {name}
+                                </motion.div>
+                            </Link>
+                        ))}
                     </div>
 
-                    {/* Color Theme */}
-                    <div className="flex flex-row w-full">
-                        {/* According to the tailwind docs (https://tailwindcss.com/docs/content-configuration#class-detection-in-depth), 
-                    you can't break up the class name by using dynamic style. So something like `w-${size}` or `bg-[${colorThemes.orange.primary}]`
-                    wouldn't work. Therefore, I'm unable to supply the colors dynamically and instead have to paste them in. */}
-                        <button
-                            onClick={() => handleThemeChange('orange')}
-                            className={`w-full h-8 bg-[#EB5E27] rounded-l-xl ${activeTheme === 'orange' && styles.selectedBorder}`}
-                        />
-                        <button
-                            onClick={() => handleThemeChange('maroon')}
-                            className={`w-full h-8 bg-[#A8328F] ${activeTheme === 'maroon' && styles.selectedBorder}`}
-                        />
-                        <button
-                            onClick={() => handleThemeChange('purple')}
-                            className={`w-full h-8 bg-[#7B32A8] ${activeTheme === 'purple' && styles.selectedBorder}`}
-                        />
-                        <button
-                            onClick={() => handleThemeChange('turquoise')}
-                            className={`w-full h-8 bg-[#32A8A4] rounded-r-xl ${activeTheme === 'turquoise' && styles.selectedBorder}`}
-                        />
-                    </div>
+                    <ColorTheme
+                        handleThemeChange={handleThemeChange}
+                        activeTheme={activeTheme}
+                    />
 
                     {/* Sign Out */}
                     <Button btnType="danger" onClick={() => signOut()}>
@@ -148,5 +123,42 @@ export function Menu({
                 </motion.button>
             )}
         </AnimatePresence>
+    );
+}
+
+function ColorTheme({
+    handleThemeChange,
+    activeTheme,
+}: {
+    handleThemeChange: (theme: keyof typeof colorThemes) => void;
+    activeTheme: keyof typeof colorThemes;
+}) {
+    // TODO: animated selected border
+    const selectedBorder = 'border-2 border-black dark:border-white';
+
+    return (
+        <div className="flex flex-row w-full">
+            {/* 
+            According to the tailwind docs (https://tailwindcss.com/docs/content-configuration#class-detection-in-depth), 
+            you can't break up the class name by using dynamic style. So something like `w-${size}` or `bg-[${colorThemes.orange.primary}]`
+            wouldn't work. Therefore, I'm unable to supply the colors dynamically and instead have to paste them in. 
+            */}
+            <button
+                onClick={() => handleThemeChange('orange')}
+                className={`w-full h-8 bg-[#EB5E27] rounded-l-xl ${activeTheme === 'orange' && selectedBorder}`}
+            />
+            <button
+                onClick={() => handleThemeChange('maroon')}
+                className={`w-full h-8 bg-[#A8328F] ${activeTheme === 'maroon' && selectedBorder}`}
+            />
+            <button
+                onClick={() => handleThemeChange('purple')}
+                className={`w-full h-8 bg-[#7B32A8] ${activeTheme === 'purple' && selectedBorder}`}
+            />
+            <button
+                onClick={() => handleThemeChange('turquoise')}
+                className={`w-full h-8 bg-[#32A8A4] rounded-r-xl ${activeTheme === 'turquoise' && selectedBorder}`}
+            />
+        </div>
     );
 }
