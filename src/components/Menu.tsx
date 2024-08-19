@@ -1,4 +1,5 @@
 import { useTheme } from '@/hooks';
+import colorThemes from '@/styles/colorThemes';
 import { Pages } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
 import { signOut, useSession } from 'next-auth/react';
@@ -124,8 +125,8 @@ export function Menu() {
 
 function ColorTheme() {
     const { theme, setTheme, isDarkMode, setIsDarkMode } = useTheme();
-    // NOTE: hardcoded colors to keep track of the order
-    const colors = ['orange', 'maroon', 'purple', 'turquoise'];
+    // NOTE: to keep track of the order
+    const colors = Object.keys(colorThemes);
 
     /* 
         According to the tailwind docs (https://tailwindcss.com/docs/content-configuration#class-detection-in-depth), 
@@ -158,12 +159,6 @@ function ColorTheme() {
                 <motion.div
                     className={[
                         'absolute h-full border-2 border-black dark:border-white',
-                        /*
-                    colors.findIndex((c) => c === activeTheme) === 0 &&
-                        'rounded-l-xl',
-                    colors.findIndex((c) => c === activeTheme) ===
-                        colors.length - 1 && 'rounded-r-xl',
-                        */
                     ].join(' ')}
                     style={{ width: `${100 / colors.length}%` }}
                     animate={{
