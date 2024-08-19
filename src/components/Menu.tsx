@@ -1,5 +1,4 @@
 import { useTheme } from '@/hooks';
-import colorThemes from '@/styles/colorThemes';
 import { Pages } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
 import { signOut, useSession } from 'next-auth/react';
@@ -7,8 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useMemo, useState } from 'react';
-import { Button } from './Button';
-import { Friends, Home, Moon, Share, Sun, X } from './icons';
+import { Button, Friends, Home, Moon, Share, Sun, X } from '.';
 
 export function Menu() {
     const { data: session } = useSession();

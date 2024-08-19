@@ -8,7 +8,7 @@ interface ShareProps {
 }
 
 export function Share({
-    disabled,
+    disabled = false,
     tooltip = true,
     classOverride = '',
 }: ShareProps) {
@@ -19,10 +19,11 @@ export function Share({
                 viewBox="0 0 24 24"
                 className={[
                     'w-6 h-6',
-                    disabled
-                        ? 'fill-slate-600'
-                        : 'fill-primary hover:fill-primaryHover transition-colors duration-200',
-                    classOverride,
+                    classOverride
+                        ? classOverride
+                        : disabled
+                          ? 'fill-slate-600'
+                          : 'fill-primary hover:fill-primaryHover transition-colors duration-200',
                 ].join(' ')}
                 data-tooltip-id={tooltip ? 'share' : undefined}
                 data-tooltip-content={tooltip ? 'Share this list' : undefined}
