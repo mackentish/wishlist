@@ -1,4 +1,5 @@
 import { Layout } from '@/components';
+import { ThemeProvider } from '@/hooks';
 import '@/styles/globals.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SessionProvider } from 'next-auth/react';
@@ -22,16 +23,18 @@ export default function MyApp({
     return (
         <SessionProvider session={session} refetchOnWindowFocus={false}>
             <QueryClientProvider client={queryClient}>
-                <Head>
-                    <link
-                        rel="icon"
-                        href="/icon?<generated>"
-                        type="image/png"
-                    />
-                </Head>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
+                <ThemeProvider>
+                    <Head>
+                        <link
+                            rel="icon"
+                            href="/icon?<generated>"
+                            type="image/png"
+                        />
+                    </Head>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                </ThemeProvider>
             </QueryClientProvider>
         </SessionProvider>
     );

@@ -12,3 +12,5 @@ export * from './CircleX';
 export * from './X';
 export * from './Home';
 export * from './Friends';
+export * from './Moon';
+export * from './Sun';

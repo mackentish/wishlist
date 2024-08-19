@@ -1,3 +1,4 @@
+import { useTheme } from '@/hooks';
 import colorThemes from '@/styles/colorThemes';
 import { Pages } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -7,15 +8,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useMemo, useState } from 'react';
 import { Button } from './Button';
-import { Friends, Home, Share, X } from './icons';
+import { Friends, Home, Moon, Share, Sun, X } from './icons';
 
-export function Menu({
-    handleThemeChange,
-    activeTheme,
-}: {
-    handleThemeChange: (theme: keyof typeof colorThemes) => void;
-    activeTheme: keyof typeof colorThemes;
-}) {
+export function Menu() {
     const { data: session } = useSession();
     const router = useRouter();
     const currentPath = router.pathname;
@@ -101,10 +96,7 @@ export function Menu({
                         ))}
                     </div>
 
-                    <ColorTheme
-                        handleThemeChange={handleThemeChange}
-                        activeTheme={activeTheme}
-                    />
+                    <ColorTheme />
 
                     {/* Sign Out */}
                     <Button btnType="danger" onClick={() => signOut()}>
@@ -132,13 +124,8 @@ export function Menu({
     );
 }
 
-function ColorTheme({
-    handleThemeChange,
-    activeTheme,
-}: {
-    handleThemeChange: (theme: keyof typeof colorThemes) => void;
-    activeTheme: keyof typeof colorThemes;
-}) {
+function ColorTheme() {
+    const { theme, setTheme, isDarkMode, setIsDarkMode } = useTheme();
     // NOTE: hardcoded colors to keep track of the order
     const colors = ['orange', 'maroon', 'purple', 'turquoise'];
 
@@ -148,53 +135,65 @@ function ColorTheme({
         wouldn't work. Therefore, I'm unable to supply the colors dynamically and instead have to hardcode them in. 
     */
     return (
-        <div className="relative flex flex-row w-full">
-            <button
-                onClick={() => handleThemeChange('orange')}
-                className="w-full h-8 bg-[#EB5E27] rounded-l-xl"
-            />
+        <div className="flex flex-row w-full gap-7">
+            <div className="relative flex flex-row w-full">
+                <button
+                    onClick={() => setTheme('orange')}
+                    className="w-full h-8 bg-[#EB5E27] rounded-l-xl"
+                />
 
-            <button
-                onClick={() => handleThemeChange('maroon')}
-                className="w-full h-8 bg-[#A8328F]"
-            />
+                <button
+                    onClick={() => setTheme('maroon')}
+                    className="w-full h-8 bg-[#A8328F]"
+                />
 
-            <button
-                onClick={() => handleThemeChange('purple')}
-                className="w-full h-8 bg-[#7B32A8]"
-            />
+                <button
+                    onClick={() => setTheme('purple')}
+                    className="w-full h-8 bg-[#7B32A8]"
+                />
 
-            <button
-                onClick={() => handleThemeChange('turquoise')}
-                className="w-full h-8 bg-[#32A8A4] rounded-r-xl"
-            />
+                <button
+                    onClick={() => setTheme('turquoise')}
+                    className="w-full h-8 bg-[#32A8A4] rounded-r-xl"
+                />
 
-            <motion.div
-                className={[
-                    'absolute h-full border-2 border-black dark:border-white',
-                    /*
+                <motion.div
+                    className={[
+                        'absolute h-full border-2 border-black dark:border-white',
+                        /*
                     colors.findIndex((c) => c === activeTheme) === 0 &&
                         'rounded-l-xl',
                     colors.findIndex((c) => c === activeTheme) ===
                         colors.length - 1 && 'rounded-r-xl',
                         */
-                ].join(' ')}
-                style={{ width: `${100 / colors.length}%` }}
-                animate={{
-                    x: `${colors.findIndex((c) => c === activeTheme) * 100}%`,
-                    transition: { duration: 0.3 },
+                    ].join(' ')}
+                    style={{ width: `${100 / colors.length}%` }}
+                    animate={{
+                        x: `${colors.findIndex((c) => c === theme) * 100}%`,
+                        transition: { duration: 0.3 },
 
-                    // NOTE: hardcoded border radius for far right
-                    borderTopRightRadius:
-                        activeTheme === colors[colors.length - 1] ? 12 : 0,
-                    borderBottomRightRadius:
-                        activeTheme === colors[colors.length - 1] ? 12 : 0,
+                        // NOTE: hardcoded border radius for far right
+                        borderTopRightRadius:
+                            theme === colors[colors.length - 1] ? 12 : 0,
+                        borderBottomRightRadius:
+                            theme === colors[colors.length - 1] ? 12 : 0,
 
-                    // NOTE: hardcoded border radius for far left
-                    borderTopLeftRadius: activeTheme === colors[0] ? 12 : 0,
-                    borderBottomLeftRadius: activeTheme === colors[0] ? 12 : 0,
-                }}
-            />
+                        // NOTE: hardcoded border radius for far left
+                        borderTopLeftRadius: theme === colors[0] ? 12 : 0,
+                        borderBottomLeftRadius: theme === colors[0] ? 12 : 0,
+                    }}
+                />
+            </div>
+
+            <div className="flex flex-row gap-2">
+                <button onClick={() => setIsDarkMode(false)}>
+                    <Sun isActive={!isDarkMode} />
+                </button>
+
+                <button onClick={() => setIsDarkMode(true)}>
+                    <Moon isActive={isDarkMode} />
+                </button>
+            </div>
         </div>
     );
 }
