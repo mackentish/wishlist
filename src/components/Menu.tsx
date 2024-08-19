@@ -139,31 +139,61 @@ function ColorTheme({
     handleThemeChange: (theme: keyof typeof colorThemes) => void;
     activeTheme: keyof typeof colorThemes;
 }) {
-    // TODO: animated selected border?
-    const selectedBorder = 'border-2 border-black dark:border-white';
+    // NOTE: hardcoded colors to keep track of the order
+    const colors = ['orange', 'maroon', 'purple', 'turquoise'];
 
+    /* 
+        According to the tailwind docs (https://tailwindcss.com/docs/content-configuration#class-detection-in-depth), 
+        you can't break up the class name by using dynamic style. So something like `w-${size}` or `bg-[${colorThemes.orange.primary}]`
+        wouldn't work. Therefore, I'm unable to supply the colors dynamically and instead have to hardcode them in. 
+    */
     return (
-        <div className="flex flex-row w-full">
-            {/* 
-            According to the tailwind docs (https://tailwindcss.com/docs/content-configuration#class-detection-in-depth), 
-            you can't break up the class name by using dynamic style. So something like `w-${size}` or `bg-[${colorThemes.orange.primary}]`
-            wouldn't work. Therefore, I'm unable to supply the colors dynamically and instead have to paste them in. 
-            */}
+        <div className="relative flex flex-row w-full">
             <button
                 onClick={() => handleThemeChange('orange')}
-                className={`w-full h-8 bg-[#EB5E27] rounded-l-xl ${activeTheme === 'orange' && selectedBorder}`}
+                className="w-full h-8 bg-[#EB5E27] rounded-l-xl"
             />
+
             <button
                 onClick={() => handleThemeChange('maroon')}
-                className={`w-full h-8 bg-[#A8328F] ${activeTheme === 'maroon' && selectedBorder}`}
+                className="w-full h-8 bg-[#A8328F]"
             />
+
             <button
                 onClick={() => handleThemeChange('purple')}
-                className={`w-full h-8 bg-[#7B32A8] ${activeTheme === 'purple' && selectedBorder}`}
+                className="w-full h-8 bg-[#7B32A8]"
             />
+
             <button
                 onClick={() => handleThemeChange('turquoise')}
-                className={`w-full h-8 bg-[#32A8A4] rounded-r-xl ${activeTheme === 'turquoise' && selectedBorder}`}
+                className="w-full h-8 bg-[#32A8A4] rounded-r-xl"
+            />
+
+            <motion.div
+                className={[
+                    'absolute h-full border-2 border-black dark:border-white',
+                    /*
+                    colors.findIndex((c) => c === activeTheme) === 0 &&
+                        'rounded-l-xl',
+                    colors.findIndex((c) => c === activeTheme) ===
+                        colors.length - 1 && 'rounded-r-xl',
+                        */
+                ].join(' ')}
+                style={{ width: `${100 / colors.length}%` }}
+                animate={{
+                    x: `${colors.findIndex((c) => c === activeTheme) * 100}%`,
+                    transition: { duration: 0.3 },
+
+                    // NOTE: hardcoded border radius for far right
+                    borderTopRightRadius:
+                        activeTheme === colors[colors.length - 1] ? 12 : 0,
+                    borderBottomRightRadius:
+                        activeTheme === colors[colors.length - 1] ? 12 : 0,
+
+                    // NOTE: hardcoded border radius for far left
+                    borderTopLeftRadius: activeTheme === colors[0] ? 12 : 0,
+                    borderBottomLeftRadius: activeTheme === colors[0] ? 12 : 0,
+                }}
             />
         </div>
     );
