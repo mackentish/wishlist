@@ -16,3 +16,5 @@ export * from './FadeIn';
 export * from './loaders';
 export * from './Menu';
 export * from './Typography';
+export * from './FriendRequest';
+export * from './Friend';
