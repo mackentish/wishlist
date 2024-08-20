@@ -6,7 +6,7 @@ import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Friends, Home, Moon, Share, Sun, X } from '.';
 
 export function Menu() {
@@ -14,6 +14,7 @@ export function Menu() {
     const router = useRouter();
     const currentPath = router.pathname;
     const [isOpen, setIsOpen] = useState(false);
+    const [staticSidebar, setStaticSidebar] = useState(false);
 
     const pages = useMemo(
         () => [
@@ -33,17 +34,36 @@ export function Menu() {
         []
     );
 
-    // TODO: menu is always open on desktop? (and not absolute)
+    useEffect(() => {
+        // set listener for window resize
+        window.addEventListener('resize', () => {
+            setStaticSidebar(window.innerWidth > 1000);
+        });
+
+        // cleanup
+        return () => {
+            window.removeEventListener('resize', () => {
+                setStaticSidebar(window.innerWidth > 1000);
+            });
+        };
+    }, []);
+
+    // TODO: menu is only collapsible on mobile (window.innerWidth < 1000), not desktop
     return (
         <AnimatePresence>
-            {isOpen ? (
+            {isOpen || staticSidebar ? (
                 <motion.div
                     key="menu"
                     initial={{ x: '-100%', opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: '-100%', opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute z-50 top-0 left-0 flex flex-col gap-7 h-[100vh] px-6 py-8 bg-gray100 dark:bg-gray900"
+                    className={[
+                        'flex flex-col gap-7 h-[100vh] px-6 py-8 bg-gray100 dark:bg-gray900',
+                        staticSidebar
+                            ? 'min-w-fit w-96'
+                            : 'absolute z-50 top-0 left-0',
+                    ].join(' ')}
                 >
                     {/* User */}
                     <div className="flex flex-row w-full justify-between gap-4 items-center">
@@ -60,12 +80,15 @@ export function Menu() {
                             </p>
                         </div>
 
-                        <button
-                            className="cursor-pointer"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            <X />
-                        </button>
+                        {/* Only allow close button on mobile */}
+                        {!staticSidebar && (
+                            <button
+                                className="cursor-pointer"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <X />
+                            </button>
+                        )}
                     </div>
 
                     {/* Pages */}
