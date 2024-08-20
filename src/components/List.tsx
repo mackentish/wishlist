@@ -281,7 +281,7 @@ export function List({ list, isOwner }: ListProps) {
     return (
         <AnimateChangeInHeight>
             <motion.div
-                className="flex flex-col gap-5 w-full p-4 rounded-xl bg-gray100 dark:bg-gray900"
+                className="flex flex-col gap-5 w-full p-6 rounded-xl bg-gray100 dark:bg-gray900"
                 initial="hidden"
                 animate={isOpen ? 'visible' : 'hidden'}
                 variants={containerVariants}
