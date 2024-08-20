@@ -1,6 +1,12 @@
 'use client';
 
-import { Button, FadeIn, InputError, secondaryBtnClass } from '@/components';
+import {
+    Button,
+    FadeIn,
+    InputError,
+    Typography,
+    secondaryBtnClass,
+} from '@/components';
 import { useLists } from '@/hooks';
 import { inputStyles } from '@/styles/globalTailwind';
 import { Pages } from '@/types';
@@ -40,9 +46,7 @@ export default function CreateLists() {
 
     return (
         <FadeIn className="h-full pt-20 flex flex-col gap-8 items-center align-top w-full max-w-3xl">
-            <h1 className="font-bold text-3xl text-black dark:text-white">
-                Create a New List!
-            </h1>
+            <Typography type="h3">Create a New List!</Typography>
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col gap-4 w-full h-full pb-4"

@@ -4,6 +4,7 @@ import {
     List,
     SignIn,
     Spacer,
+    Typography,
     primaryBtnClass,
 } from '@/components';
 import { useLists, useUser } from '@/hooks';
@@ -57,14 +58,10 @@ export default function Home() {
             {/* Loading State */}
             {!fullyLoaded && !!session?.user && (
                 <FadeIn className="flex flex-col gap-8 items-center w-full">
-                    <p className="text-black dark:text-white">
-                        Loading lists...
-                    </p>
-                    <div className={pulseStyle} />
-                    <div className={pulseStyle} />
-                    <div className={pulseStyle} />
-                    <div className={pulseStyle} />
-                    <div className={pulseStyle} />
+                    <Typography type="p">Loading lists...</Typography>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                        <div key={index} className={pulseStyle} />
+                    ))}
                 </FadeIn>
             )}
 
@@ -73,9 +70,7 @@ export default function Home() {
                 <FadeIn className="flex flex-col gap-8 items-center w-full">
                     {/* My Lists */}
                     <div className="flex flex-col w-full gap-2">
-                        <h2 className="font-bold text-xl text-black dark:text-white">
-                            Your Lists:
-                        </h2>
+                        <Typography type="h5">Your Lists:</Typography>
                         {userLists.length > 0 ? (
                             <div className="flex flex-col gap-8">
                                 {lists!
@@ -89,10 +84,10 @@ export default function Home() {
                                     ))}
                             </div>
                         ) : (
-                            <p className="text-sm italic text-black dark:text-white">
+                            <Typography type="p" classOverride="text-sm italic">
                                 No lists yet! Click the button below to get
                                 started!
-                            </p>
+                            </Typography>
                         )}
                         <Spacer />
                         <Link
@@ -105,9 +100,7 @@ export default function Home() {
 
                     {/* Shared Lists */}
                     <div className="flex flex-col w-full gap-2">
-                        <h2 className="font-bold text-xl text-black dark:text-white">
-                            Shared Lists:
-                        </h2>
+                        <Typography type="h5">Shared Lists:</Typography>
                         {sharedLists.length > 0 ? (
                             <div className="flex flex-col gap-8">
                                 {lists!
@@ -121,10 +114,10 @@ export default function Home() {
                                     ))}
                             </div>
                         ) : (
-                            <p className="text-sm italic text-black dark:text-white">
+                            <Typography type="p" classOverride="text-sm italic">
                                 No lists shared with you. Ask your friends to
                                 share their lists with you!
-                            </p>
+                            </Typography>
                         )}
                     </div>
                 </FadeIn>

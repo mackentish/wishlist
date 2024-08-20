@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Friends, Home, Moon, Share, Sun, X } from '.';
+import { Button, Friends, Home, Moon, Share, Sun, Typography, X } from '.';
 
 export function Menu() {
     const { data: session } = useSession();
@@ -75,9 +75,12 @@ export function Menu() {
                                 height={32}
                                 style={{ borderRadius: '50%' }}
                             />
-                            <p className="font-bold text-sm text-black dark:text-white">
+                            <Typography
+                                type="p"
+                                classOverride="font-bold text-sm"
+                            >
                                 {session!.user!.email}
-                            </p>
+                            </Typography>
                         </div>
 
                         {/* Only allow close button on mobile */}

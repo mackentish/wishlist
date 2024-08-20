@@ -3,7 +3,7 @@
 import { useLists, useUser } from '@/hooks';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Checkbox, ItemForm, OpenTab, Pencil, Trash } from '.';
+import { Checkbox, ItemForm, OpenTab, Pencil, Trash, Typography } from '.';
 import { ListItem as ListItemType } from '../types';
 
 const ItemWrapper = ({
@@ -164,21 +164,25 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                             className={`flex flex-col ${isBuying && 'animate-pulse'}`}
                         >
                             <div className="flex flex-row gap-4 items-center h-full">
-                                <p
-                                    className={`text-sm text-black dark:text-white ${!isOwner && item.boughtBy ? 'line-through' : ''}`}
+                                <Typography
+                                    type="p"
+                                    classOverride={`text-sm ${!isOwner && item.boughtBy ? 'line-through' : ''}`}
                                 >
                                     {item.name}
-                                </p>
+                                </Typography>
                                 {!isOwner && item.boughtBy && (
-                                    <p className="text-xs text-black dark:text-white">
+                                    <Typography
+                                        type="p"
+                                        classOverride="text-xs"
+                                    >
                                         (Bought by {item.boughtBy.name})
-                                    </p>
+                                    </Typography>
                                 )}
                             </div>
                             {item.note && (
-                                <p className="text-xs text-black dark:text-white">
+                                <Typography type="p" classOverride="text-xs">
                                     {item.note}
-                                </p>
+                                </Typography>
                             )}
                         </div>
                     </div>

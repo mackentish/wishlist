@@ -12,6 +12,7 @@ import {
     Share,
     ShareList,
     Spacer,
+    Typography,
 } from '.';
 import { List as ListType } from '../types';
 
@@ -174,29 +175,32 @@ export function List({ list, isOwner }: ListProps) {
                         {loading === 'update' ? (
                             <div className="animate-pulse h-4 bg-neutral-300 dark:bg-neutral-600 rounded-full w-1/2 mb-2" />
                         ) : (
-                            <p className="font-bold text-md text-black dark:text-white">
+                            <Typography type="p" classOverride="font-bold">
                                 {list.name}
-                            </p>
+                            </Typography>
                         )}
                         {!isOwner && list.user && (
-                            <p className="text-xs text-black dark:text-white">
+                            <Typography type="p" classOverride="text-xs">
                                 {`(${list.user.name})`}
-                            </p>
+                            </Typography>
                         )}
                     </div>
                     {loading === 'update' ? (
                         <div className="animate-pulse h-3 bg-neutral-300 dark:bg-neutral-600 rounded-full w-1/2" />
                     ) : (
-                        <p className="text-sm text-black dark:text-white">
+                        <Typography type="p" classOverride="text-sm">
                             {list.description}
-                        </p>
+                        </Typography>
                     )}
                     {list.items.length === 0 && !isOwner && (
-                        <p className="mt-4 self-center text-sm italic text-black dark:text-white">
+                        <Typography
+                            type="p"
+                            classOverride="mt-4 self-center text-sm italic"
+                        >
                             {
                                 "This list doesn't have any items yet! You'll see them here when they are added."
                             }
-                        </p>
+                        </Typography>
                     )}
                 </div>
                 {isOwner ? (
@@ -249,11 +253,14 @@ export function List({ list, isOwner }: ListProps) {
                 {!isAdding && !isEditing && (
                     <div className="flex flex-col gap-4 w-full">
                         {list.items.length === 0 && (
-                            <p className="text-sm italic self-center text-black dark:text-white">
+                            <Typography
+                                type="p"
+                                classOverride="text-sm italic self-center"
+                            >
                                 {
                                     'No items yet! Click the "Add Item" button below to get started!'
                                 }
-                            </p>
+                            </Typography>
                         )}
                         <div className="flex flex-row gap-4 w-full">
                             <Button onClick={() => setIsAdding(true)}>

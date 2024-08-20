@@ -1,7 +1,7 @@
 import { inputStyles } from '@/styles/globalTailwind';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Button, InputError } from '.';
+import { Button, InputError, Typography } from '.';
 
 interface ItemFormProps {
     onDone: (data: {
@@ -87,11 +87,12 @@ export function ItemForm({
                         },
                     })}
                 />
-                <p
-                    className={`text-xs ${(itemNote?.length || 0) >= 100 ? 'text-error' : 'text-black dark:text-white'}`}
+                <Typography
+                    type="p"
+                    classOverride={`text-xs ${(itemNote?.length || 0) >= 100 ? 'text-error' : ''}`}
                 >
                     {itemNote?.length || 0}/100
-                </p>
+                </Typography>
             </div>
 
             {/* Error Message */}

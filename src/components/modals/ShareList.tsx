@@ -4,7 +4,7 @@ import { ShareUser } from '@/types';
 import { validateEmail } from '@/utils';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, Checkbox, CircleX } from '..';
+import { Button, Checkbox, CircleX, Typography } from '..';
 import { BaseModal } from './BaseModal';
 
 interface ShareListProps {
@@ -104,26 +104,26 @@ export function ShareList({
 
     const renderLoading = () => {
         return (
-            <p className="text-sm text-black dark:text-white">
-                Loading users... 🧐
-            </p>
+            <Typography type="p" classOverride="text-sm">
+                Loading users...
+            </Typography>
         );
     };
 
     const renderError = () => {
         return (
-            <p className="text-sm text-black dark:text-white">
-                Error loading users, try again later. 😞
-            </p>
+            <Typography type="p" classOverride="text-sm">
+                Error loading users, try again later.
+            </Typography>
         );
     };
 
     const renderContent = () => {
         return (
             <div className="flex flex-col gap-4 w-full">
-                <p className="text-sm text-black dark:text-white">
+                <Typography type="p" classOverride="text-sm">
                     Share this list with others by searching for them below:
-                </p>
+                </Typography>
                 <input
                     type="text"
                     placeholder="Search users by name..."
@@ -154,9 +154,9 @@ export function ShareList({
                     ))}
                     {filteredUsers.length === 0 && (
                         <div className="flex flex-col text-center gap-2 w-full">
-                            <p className="text-sm text-black dark:text-white">
+                            <Typography type="p" classOverride="text-sm">
                                 No users found. Invite someone by email:
-                            </p>
+                            </Typography>
                             <div className="grid grid-rows-1 grid-cols-12 gap-2">
                                 <input
                                     placeholder="Invite by email"
@@ -178,22 +178,28 @@ export function ShareList({
 
                     {/* Share With */}
                     <div className="flex flex-col gap-2 mt-4 w-full">
-                        <p className="text-md font-bold text-black dark:text-white">
+                        <Typography type="p" classOverride="font-bold">
                             Share With:
-                        </p>
+                        </Typography>
                         {selectedUsers.map((user, index) => (
                             <div
                                 key={user.name + index}
                                 className="flex flex-row justify-between items-center w-full p-4 border rounded-xl border-black dark:border-white"
                             >
                                 <div className="flex flex-row gap-0.5 items-baseline">
-                                    <p className="text-sm text-black dark:text-white">
+                                    <Typography
+                                        type="p"
+                                        classOverride="text-sm"
+                                    >
                                         {user.name}
-                                    </p>
+                                    </Typography>
                                     {user.email === user.name && (
-                                        <p className="text-xs text-black dark:text-white">
+                                        <Typography
+                                            type="p"
+                                            classOverride="text-xs"
+                                        >
                                             {'(new)'}
-                                        </p>
+                                        </Typography>
                                     )}
                                 </div>
                                 <button
@@ -204,9 +210,12 @@ export function ShareList({
                             </div>
                         ))}
                         {selectedUsers.length === 0 && (
-                            <p className="text-sm self-center text-black dark:text-white">
+                            <Typography
+                                type="p"
+                                classOverride="text-sm self-center"
+                            >
                                 Not shared with any users.
-                            </p>
+                            </Typography>
                         )}
                     </div>
                 </div>
@@ -231,9 +240,7 @@ export function ShareList({
 
     return (
         <BaseModal isOpen={isOpen} onRequestClose={close}>
-            <h1 className="font-bold text-3xl text-black dark:text-white">
-                Share List 🙏
-            </h1>
+            <Typography type="h3">Share List</Typography>
             {isLoading && renderLoading()}
             {(error || !users) && renderError()}
             {!isLoading && !error && renderContent()}
@@ -257,12 +264,12 @@ function UserRow({ user, isChecked, toggleUser }: UserRowProps) {
         >
             <Checkbox checked={isChecked} />
             <div className="flex flex-col items-start">
-                <p className="text-sm text-black dark:text-white">
+                <Typography type="p" classOverride="text-sm">
                     {user.name}
-                </p>
-                <p className="text-xs text-black dark:text-white">
+                </Typography>
+                <Typography type="p" classOverride="text-xs">
                     {user.email}
-                </p>
+                </Typography>
             </div>
         </button>
     );

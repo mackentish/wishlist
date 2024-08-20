@@ -1,14 +1,14 @@
 import { Pages } from '@/types';
 import Link from 'next/link';
 import React from 'react';
-import { FadeIn, primaryBtnClass } from '.';
+import { FadeIn, Typography, primaryBtnClass } from '.';
 
 export function ErrorView() {
     return (
         <FadeIn className="flex flex-col gap-8 items-center w-full max-w-3xl">
-            <p className="text-xl text-black dark:text-white">
+            <Typography type="h5">
                 Something went wrong. Please try again later 😞
-            </p>
+            </Typography>
             <Link href={Pages.Home} className={primaryBtnClass}>
                 Go Home
             </Link>
