@@ -37,13 +37,13 @@ export function Menu() {
     useEffect(() => {
         // set listener for window resize
         window.addEventListener('resize', () => {
-            setStaticSidebar(window.innerWidth > 1000);
+            setStaticSidebar(window.innerWidth > 1100);
         });
 
         // cleanup
         return () => {
             window.removeEventListener('resize', () => {
-                setStaticSidebar(window.innerWidth > 1000);
+                setStaticSidebar(window.innerWidth > 1100);
             });
         };
     }, []);

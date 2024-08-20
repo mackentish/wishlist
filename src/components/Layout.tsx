@@ -12,10 +12,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
     return (
         <main
             data-theme={theme}
-            className="flex flex-row min-h-screen min-w-screen bg-white dark:bg-black"
+            className="flex flex-row bg-white dark:bg-black"
         >
             {session?.user && <Menu />}
-            <div className="flex flex-col w-full h-full p-4">
+            <div className="flex flex-col w-screen h-screen overflow-y-auto p-4">
                 <div className="flex flex-row justify-center items-center w-full">
                     {children}
                 </div>
