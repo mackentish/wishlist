@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Menu } from '.';
+import { Header, Menu } from '.';
 
 export function Layout({ children }: { children: React.ReactNode }) {
     const { data: session } = useSession();
@@ -17,7 +17,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
             {session?.user && <Menu />}
             <div className="flex flex-col w-screen h-screen overflow-y-auto p-4">
                 <div className="flex flex-row justify-center items-center w-full">
-                    {children}
+                    <div className="flex flex-col items-center w-full max-w-3xl py-10 md:py-20">
+                        <Header />
+                        {children}
+                    </div>
                 </div>
                 <ToastContainer
                     position="bottom-left"

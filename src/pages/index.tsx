@@ -1,8 +1,6 @@
 import {
-    Button,
     ErrorView,
     FadeIn,
-    Header,
     List,
     SignIn,
     Spacer,
@@ -10,7 +8,6 @@ import {
 } from '@/components';
 import { useLists, useUser } from '@/hooks';
 import { Pages } from '@/types';
-import { signIn } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -53,9 +50,7 @@ export default function Home() {
         'animate-pulse bg-gray300 dark:bg-gray700 rounded-xl h-16 w-full';
 
     return (
-        <FadeIn className="flex flex-col gap-8 items-center w-full max-w-3xl py-10 md:py-20">
-            <Header />
-
+        <FadeIn className="flex flex-col gap-8 items-center w-full">
             {/* Sign In */}
             {!session?.user && <SignIn />}
 
