@@ -228,7 +228,7 @@ function FriendRequestIndicator() {
 
     return (
         <div className="absolute right-4 flex items-center justify-center w-6 h-6 font-bold bg-primary text-white rounded-full">
-            3
+            {mockFriendRequests.length}
         </div>
     );
 }
