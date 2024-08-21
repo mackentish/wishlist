@@ -1,4 +1,4 @@
-import { useTheme } from '@/hooks';
+import { useTheme, useUser } from '@/hooks';
 import colorThemes from '@/styles/colorThemes';
 import { Pages } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -223,12 +223,15 @@ function ColorTheme() {
 }
 
 function FriendRequestIndicator() {
-    // TODO: get these from BE
-    const mockFriendRequests = [1, 2, 3];
+    const { data: user } = useUser();
 
     return (
-        <div className="absolute right-4 flex items-center justify-center w-6 h-6 font-bold bg-primary text-white rounded-full">
-            {mockFriendRequests.length}
-        </div>
+        <>
+            {(user?.receivedRequests.length ?? 0) > 0 && (
+                <div className="absolute right-4 flex items-center justify-center w-6 h-6 font-bold bg-primary text-white rounded-full">
+                    {user?.receivedRequests.length}
+                </div>
+            )}
+        </>
     );
 }

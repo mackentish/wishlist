@@ -6,9 +6,11 @@ import {
     ShareListRequest,
     ToggleBoughtRequest,
 } from '@/types';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useLists(enabled = true) {
+    const queryClient = useQueryClient();
+
     /**
      * Fetches all lists both belonging to the user and shared with the user
      */
@@ -41,7 +43,7 @@ export function useLists(enabled = true) {
             return res.json();
         },
         onSuccess: () => {
-            fetchLists.refetch();
+            queryClient.invalidateQueries({ queryKey: ['lists'] });
         },
     });
 
@@ -61,7 +63,9 @@ export function useLists(enabled = true) {
             return res.json();
         },
         onSuccess: () => {
-            fetchLists.refetch();
+            console.log('test 1');
+            queryClient.invalidateQueries({ queryKey: ['lists'] });
+            console.log('test 2');
         },
     });
 
@@ -80,7 +84,7 @@ export function useLists(enabled = true) {
             return res.json();
         },
         onSuccess: () => {
-            fetchLists.refetch();
+            queryClient.invalidateQueries({ queryKey: ['lists'] });
         },
     });
 
@@ -99,7 +103,7 @@ export function useLists(enabled = true) {
             return res.json();
         },
         onSuccess: () => {
-            fetchLists.refetch();
+            queryClient.invalidateQueries({ queryKey: ['lists'] });
         },
     });
 
@@ -119,7 +123,7 @@ export function useLists(enabled = true) {
             return res.json();
         },
         onSuccess: () => {
-            fetchLists.refetch();
+            queryClient.invalidateQueries({ queryKey: ['lists'] });
         },
     });
 
@@ -139,7 +143,7 @@ export function useLists(enabled = true) {
             return res.json();
         },
         onSuccess: () => {
-            fetchLists.refetch();
+            queryClient.invalidateQueries({ queryKey: ['lists'] });
         },
     });
 
@@ -159,7 +163,7 @@ export function useLists(enabled = true) {
             return res.json();
         },
         onSuccess: () => {
-            fetchLists.refetch();
+            queryClient.invalidateQueries({ queryKey: ['lists'] });
         },
     });
 
@@ -179,7 +183,7 @@ export function useLists(enabled = true) {
             return res.json();
         },
         onSuccess: () => {
-            fetchLists.refetch();
+            queryClient.invalidateQueries({ queryKey: ['lists'] });
         },
     });
 
@@ -199,7 +203,7 @@ export function useLists(enabled = true) {
             return res.json();
         },
         onSuccess: () => {
-            fetchLists.refetch();
+            queryClient.invalidateQueries({ queryKey: ['lists'] });
         },
     });
 

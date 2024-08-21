@@ -58,7 +58,7 @@ export default function Friends() {
                 <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
                     <Typography type="h5">Your Friends:</Typography>
 
-                    {mockFriends.map((request, index) => (
+                    {user?.friends.map((request, index) => (
                         <Friend
                             key={`friend-request-${index}`}
                             name={request.name}
