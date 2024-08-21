@@ -1,4 +1,4 @@
-import { CreateListItemRequest, UpdateListItemRequest, User } from '@/types';
+import { CreateListItemRequest, UpdateListItemRequest } from '@/types';
 import { prisma } from './_base';
 
 export async function deleteItemById(

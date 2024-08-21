@@ -6,9 +6,11 @@ import {
     FriendRequest,
     Typography,
 } from '@/components';
+import { useUser } from '@/hooks';
 import React, { useState } from 'react';
 
 export default function Friends() {
+    const { data: user } = useUser();
     const [isOpen, setIsOpen] = useState(false);
 
     // TODO: get these from BE
@@ -29,35 +31,47 @@ export default function Friends() {
     return (
         <FadeIn className="flex flex-col gap-8 w-full justify-center items-center">
             {/* Friend Requests */}
-            <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
-                <Typography type="h5">Friend Requests:</Typography>
+            {(user?.receivedRequests.length ?? 0) > 0 && (
+                <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
+                    <Typography type="h5">Friend Requests:</Typography>
 
-                {mockFriendRequests.map((request, index) => (
-                    <FriendRequest
-                        key={`friend-request-${index}`}
-                        name={request.name}
-                        email={request.email}
-                        onAccept={() => alert('TODO: accept friend request')}
-                        onDecline={() => alert('TODO: decline friend request')}
-                    />
-                ))}
-            </div>
+                    {user?.receivedRequests.map((request, index) => (
+                        <FriendRequest
+                            key={`friend-request-${index}`}
+                            name={request.name}
+                            email={request.email}
+                            onAccept={() =>
+                                alert('TODO: accept friend request')
+                            }
+                            onDecline={() =>
+                                alert('TODO: decline friend request')
+                            }
+                        />
+                    ))}
+                </div>
+            )}
 
             <Button onClick={() => setIsOpen(true)}>Add Friends</Button>
 
             {/* Current Friends */}
-            <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
-                <Typography type="h5">Your Friends:</Typography>
+            {(user?.friends.length ?? 0) > 0 ? (
+                <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
+                    <Typography type="h5">Your Friends:</Typography>
 
-                {mockFriends.map((request, index) => (
-                    <Friend
-                        key={`friend-request-${index}`}
-                        name={request.name}
-                        email={request.email}
-                        onRemove={() => alert('TODO: remove friend')}
-                    />
-                ))}
-            </div>
+                    {mockFriends.map((request, index) => (
+                        <Friend
+                            key={`friend-request-${index}`}
+                            name={request.name}
+                            email={request.email}
+                            onRemove={() => alert('TODO: remove friend')}
+                        />
+                    ))}
+                </div>
+            ) : (
+                <Typography type="p" classOverride="italic">
+                    You have no friends yet! Add some now!
+                </Typography>
+            )}
 
             <AddFriends isOpen={isOpen} close={() => setIsOpen(false)} />
         </FadeIn>

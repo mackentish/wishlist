@@ -7,7 +7,7 @@ import { prisma } from './_base';
 export async function getSessionUser(
     req: NextApiRequest,
     res: NextApiResponse
-): Promise<Omit<User, 'lists'> | null> {
+): Promise<Omit<User, 'lists' | 'receivedRequests' | 'friends'> | null> {
     const session = await getServerSession(req, res, authOptions);
     if (!session?.user?.email) {
         return null;
@@ -30,7 +30,25 @@ export async function findOrCreateUser(
     // find or create user
     const existingUser = await prisma.user.findUnique({
         where: { email },
-        include: { lists: { include: { items: true } } },
+        include: {
+            lists: { include: { items: true } },
+            friends: {
+                select: {
+                    friend: { select: { id: true, name: true, email: true } },
+                },
+            },
+            friendOf: {
+                select: {
+                    user: { select: { id: true, name: true, email: true } },
+                },
+            },
+            receivedRequests: {
+                select: {
+                    id: true,
+                    sender: { select: { name: true, email: true } },
+                },
+            },
+        },
     });
 
     // check for name change
@@ -44,7 +62,18 @@ export async function findOrCreateUser(
 
     // return existing user
     if (existingUser) {
-        return existingUser;
+        // combine friend and friendOf and map receivedRequests
+        const response = {
+            ...existingUser,
+            friends: existingUser.friends.map((f) => f.friend),
+            receivedRequests: existingUser.receivedRequests.map((r) => ({
+                id: r.id,
+                name: r.sender.name,
+                email: r.sender.email,
+            })),
+        };
+        response.friends.push(...existingUser.friendOf.map((f) => f.user));
+        return response;
     }
     // create user
     else {
@@ -54,13 +83,61 @@ export async function findOrCreateUser(
                 name,
             },
         });
+
         // update any shared lists with new user
         await prisma.sharedList.updateMany({
             where: { sharedEmail: email },
             data: { sharedUserId: newUser.id, sharedEmail: null },
         });
-        // return it
-        return newUser;
+
+        // update any friend requests with new user email
+        await prisma.friendRequest.updateMany({
+            where: { email },
+            data: { receiverId: newUser.id },
+        });
+
+        // find user again
+        const updatedUser = await prisma.user.findUnique({
+            where: { email, id: newUser.id },
+            include: {
+                lists: { include: { items: true } },
+                friends: {
+                    select: {
+                        friend: {
+                            select: { id: true, name: true, email: true },
+                        },
+                    },
+                },
+                friendOf: {
+                    select: {
+                        user: { select: { id: true, name: true, email: true } },
+                    },
+                },
+                receivedRequests: {
+                    select: {
+                        id: true,
+                        sender: { select: { name: true, email: true } },
+                    },
+                },
+            },
+        });
+
+        if (!updatedUser) {
+            throw new Error('Failed to create user');
+        }
+
+        // combine friend and friendOf and map receivedRequests
+        const response = {
+            ...updatedUser,
+            friends: updatedUser.friends.map((f) => f.friend),
+            receivedRequests: updatedUser.receivedRequests.map((r) => ({
+                id: r.id,
+                name: r.sender.name,
+                email: r.sender.email,
+            })),
+        };
+        response.friends.push(...updatedUser.friendOf.map((f) => f.user));
+        return response;
     }
 }
 

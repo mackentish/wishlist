@@ -15,6 +15,10 @@ model user {
   lists       list[]
   sharedLists sharedList[]
   itemsBought listItem[]
+  friends     Friend[]  @relation("userFriends")
+  friendOf    Friend[]  @relation("friendOfUser")
+  sentRequests    FriendRequest[]  @relation("sentRequests")
+  receivedRequests FriendRequest[] @relation("receivedRequests")
 }
 
 model list {
@@ -45,4 +49,34 @@ model sharedList {
   sharedEmail       String? @db.VarChar(45) // used to invite new users to wishlist
   sharedUserId      Int?   
   sharedUser        user?    @relation(fields: [sharedUserId], references: [id])
+}
+
+// NOTE: I track friends and requests separately to allow for requests to be sent to non-registered users
+model Friend {
+  userId       Int
+  friendId     Int
+  user         user @relation("userFriends", fields: [userId], references: [id])
+  friend       user @relation("friendOfUser", fields: [friendId], references: [id])
+
+  @@id([userId, friendId]) // Composite primary key
+}
+
+model FriendRequest {
+  id          Int           @id @default(autoincrement())
+  email       String        // The email address of the recipient (may or may not be registered)
+  senderId    Int
+  receiverId  Int?          // Nullable; only set if the user is already registered
+  sender      user          @relation("sentRequests", fields: [senderId], references: [id])
+  receiver    user?         @relation("receivedRequests", fields: [receiverId], references: [id])
+
+  status      RequestStatus @default(PENDING) // Status of the friend request
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
