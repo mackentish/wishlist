@@ -14,7 +14,9 @@ export function Menu() {
     const router = useRouter();
     const currentPath = router.pathname;
     const [isOpen, setIsOpen] = useState(false);
-    const [staticSidebar, setStaticSidebar] = useState(false);
+    const [staticSidebar, setStaticSidebar] = useState(
+        window.innerWidth > 1100
+    );
 
     const pages = useMemo(
         () => [

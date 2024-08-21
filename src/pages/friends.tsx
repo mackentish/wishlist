@@ -1,13 +1,16 @@
 import {
+    AddFriends,
     Button,
     FadeIn,
     Friend,
     FriendRequest,
     Typography,
 } from '@/components';
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function Friends() {
+    const [isOpen, setIsOpen] = useState(false);
+
     // TODO: get these from BE
     const mockFriendRequests = [
         { name: 'John Doe', email: 'john.doe@mail.com' },
@@ -39,9 +42,7 @@ export default function Friends() {
                 ))}
             </div>
 
-            <Button onClick={() => alert('TODO: open modal')}>
-                Add Friends
-            </Button>
+            <Button onClick={() => setIsOpen(true)}>Add Friends</Button>
 
             {/* Current Friends */}
             <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
@@ -56,6 +57,8 @@ export default function Friends() {
                     />
                 ))}
             </div>
+
+            <AddFriends isOpen={isOpen} close={() => setIsOpen(false)} />
         </FadeIn>
     );
 }

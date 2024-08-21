@@ -18,3 +18,4 @@ export * from './Menu';
 export * from './Typography';
 export * from './FriendRequest';
 export * from './Friend';
+export * from './Input';
