@@ -114,10 +114,13 @@ export function Menu() {
                                 <motion.div
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 1 }}
-                                    className="flex flex-row gap-4 p-4 text-black dark:text-white h-full w-full"
+                                    className="relative flex flex-row gap-4 p-4 text-black dark:text-white h-full w-full"
                                 >
                                     {icon}
                                     {name}
+                                    {name === 'Friends' && (
+                                        <FriendRequestIndicator />
+                                    )}
                                 </motion.div>
                             </Link>
                         ))}
@@ -215,6 +218,17 @@ function ColorTheme() {
                     <Moon isActive={isDarkMode} />
                 </button>
             </div>
+        </div>
+    );
+}
+
+function FriendRequestIndicator() {
+    // TODO: get these from BE
+    const mockFriendRequests = [1, 2, 3];
+
+    return (
+        <div className="absolute right-4 flex items-center justify-center w-6 h-6 font-bold bg-primary text-white rounded-full">
+            3
         </div>
     );
 }

@@ -12,6 +12,7 @@ export default function Friends() {
     const [isOpen, setIsOpen] = useState(false);
 
     // TODO: get these from BE
+    // TODO: once BE is implemented, use it in Menu to show number of friend requests
     const mockFriendRequests = [
         { name: 'John Doe', email: 'john.doe@mail.com' },
         { name: 'Jane Doe', email: 'jane.doe@mail.com' },
