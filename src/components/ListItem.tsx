@@ -46,7 +46,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
     const markAsBought = () => {
         if (!!item.boughtBy && item.boughtBy.email !== user.email) {
             toast.error(
-                `This item is already bought by ${item.boughtBy.name} 🥴`
+                `This item is already bought by ${item.boughtBy.name}`
             );
             return;
         }
@@ -70,7 +70,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                     onError: () => {
                         setIsBuying(false);
                         toast.error(
-                            'Something went wrong buying the item 😢. Refresh and try again.'
+                            'Something went wrong buying the item. Refresh and try again.'
                         );
                     },
                 }
@@ -107,7 +107,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                 onError: () => {
                     setIsUpdating(false);
                     toast.error(
-                        'Something went wrong updating the item 😢. Refresh and try again.'
+                        'Something went wrong updating the item. Refresh and try again.'
                     );
                 },
             }
@@ -127,7 +127,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                 onError: () => {
                     setIsDeleting(false);
                     toast.error(
-                        'Something went wrong deleting the item 😢. Refresh and try again.'
+                        'Something went wrong deleting the item. Refresh and try again.'
                     );
                 },
             });

@@ -1,4 +1,4 @@
-import { useTheme, useUser } from '@/hooks';
+import { useFriends, useTheme, useUser } from '@/hooks';
 import colorThemes from '@/styles/colorThemes';
 import { Pages } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -50,7 +50,6 @@ export function Menu() {
         };
     }, []);
 
-    // TODO: menu is only collapsible on mobile (window.innerWidth < 1000), not desktop
     return (
         <AnimatePresence>
             {isOpen || staticSidebar ? (
@@ -223,13 +222,15 @@ function ColorTheme() {
 }
 
 function FriendRequestIndicator() {
-    const { data: user } = useUser();
+    const {
+        fetchFriendRequests: { data: friendRequests },
+    } = useFriends();
 
     return (
         <>
-            {(user?.receivedRequests.length ?? 0) > 0 && (
+            {!!friendRequests && friendRequests.length > 0 && (
                 <div className="absolute right-4 flex items-center justify-center w-6 h-6 font-bold bg-primary text-white rounded-full">
-                    {user?.receivedRequests.length}
+                    {friendRequests.length}
                 </div>
             )}
         </>

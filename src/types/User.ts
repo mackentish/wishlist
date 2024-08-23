@@ -5,8 +5,6 @@ export type User = {
     name: string;
     email: string;
     lists: List[];
-    friends: Friend[];
-    receivedRequests: FriendRequest[];
 };
 
 export type ShareUser = Omit<

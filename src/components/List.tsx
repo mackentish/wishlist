@@ -150,12 +150,12 @@ export function List({ list, isOwner }: ListProps) {
             setIsRemoving(true);
             deleteSharedList.mutate(list.id, {
                 onSuccess: () => {
-                    toast('Shared list removed 🗑️');
+                    toast('Shared list removed');
                     setIsRemoving(false);
                 },
                 onError: () => {
                     toast.error(
-                        '🚨 Something went wrong removing your shared list'
+                        'Something went wrong removing your shared list'
                     );
                     setIsRemoving(false);
                 },

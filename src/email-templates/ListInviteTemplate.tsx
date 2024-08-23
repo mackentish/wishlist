@@ -8,12 +8,15 @@ import {
 } from '@react-email/components';
 import React from 'react';
 
-interface InviteTemplateProps {
+interface ListInviteTemplateProps {
     ownerName: string;
     listName: string;
 }
 
-export function InviteTemplate({ ownerName, listName }: InviteTemplateProps) {
+export function ListInviteTemplate({
+    ownerName,
+    listName,
+}: ListInviteTemplateProps) {
     return (
         <Tailwind>
             <Head>

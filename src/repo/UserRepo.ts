@@ -32,22 +32,6 @@ export async function findOrCreateUser(
         where: { email },
         include: {
             lists: { include: { items: true } },
-            friends: {
-                select: {
-                    friend: { select: { id: true, name: true, email: true } },
-                },
-            },
-            friendOf: {
-                select: {
-                    user: { select: { id: true, name: true, email: true } },
-                },
-            },
-            receivedRequests: {
-                select: {
-                    id: true,
-                    sender: { select: { name: true, email: true } },
-                },
-            },
         },
     });
 
@@ -62,18 +46,7 @@ export async function findOrCreateUser(
 
     // return existing user
     if (existingUser) {
-        // combine friend and friendOf and map receivedRequests
-        const response = {
-            ...existingUser,
-            friends: existingUser.friends.map((f) => f.friend),
-            receivedRequests: existingUser.receivedRequests.map((r) => ({
-                id: r.id,
-                name: r.sender.name,
-                email: r.sender.email,
-            })),
-        };
-        response.friends.push(...existingUser.friendOf.map((f) => f.user));
-        return response;
+        return existingUser;
     }
     // create user
     else {
@@ -96,48 +69,7 @@ export async function findOrCreateUser(
             data: { receiverId: newUser.id },
         });
 
-        // find user again
-        const updatedUser = await prisma.user.findUnique({
-            where: { email, id: newUser.id },
-            include: {
-                lists: { include: { items: true } },
-                friends: {
-                    select: {
-                        friend: {
-                            select: { id: true, name: true, email: true },
-                        },
-                    },
-                },
-                friendOf: {
-                    select: {
-                        user: { select: { id: true, name: true, email: true } },
-                    },
-                },
-                receivedRequests: {
-                    select: {
-                        id: true,
-                        sender: { select: { name: true, email: true } },
-                    },
-                },
-            },
-        });
-
-        if (!updatedUser) {
-            throw new Error('Failed to create user');
-        }
-
-        // combine friend and friendOf and map receivedRequests
-        const response = {
-            ...updatedUser,
-            friends: updatedUser.friends.map((f) => f.friend),
-            receivedRequests: updatedUser.receivedRequests.map((r) => ({
-                id: r.id,
-                name: r.sender.name,
-                email: r.sender.email,
-            })),
-        };
-        response.friends.push(...updatedUser.friendOf.map((f) => f.user));
-        return response;
+        return newUser;
     }
 }
 

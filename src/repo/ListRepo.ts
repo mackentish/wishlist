@@ -1,4 +1,4 @@
-import { InviteTemplate, ShareTemplate } from '@/email-templates';
+import { ListInviteTemplate, ShareTemplate } from '@/email-templates';
 import { CreateListRequest, List, ShareUser } from '@/types';
 import { Resend } from 'resend';
 import { prisma } from './_base';
@@ -127,7 +127,6 @@ export async function updateListById(
     return true;
 }
 
-// TODO: change this
 async function sendInviteEmails(
     emails: string[],
     listName: string,
@@ -137,7 +136,7 @@ async function sendInviteEmails(
         from: 'wishlist <donotreply@wishlist.mackentish.com>',
         to: email,
         subject: "You've been invited to wishlist!",
-        react: InviteTemplate({
+        react: ListInviteTemplate({
             ownerName,
             listName,
         }),

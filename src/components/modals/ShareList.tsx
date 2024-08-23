@@ -40,12 +40,12 @@ export function ShareList({
             {
                 onSuccess: () => {
                     setIsSharing(false);
-                    toast('List share settings updated successfully 🥳');
+                    toast('List share settings updated successfully');
                     close();
                 },
                 onError: () => {
                     setIsSharing(false);
-                    toast.error('🚨 Error sharing list, try again later.');
+                    toast.error('Error sharing list, try again later.');
                 },
             }
         );
@@ -78,7 +78,7 @@ export function ShareList({
     const inviteUser = () => {
         // validate email
         if (!validateEmail(inviteEmail)) {
-            toast.error('Invalid email address. 😕');
+            toast.error('Invalid email address.');
             return;
         }
         // check that the user email is not already selected
