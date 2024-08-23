@@ -13,6 +13,9 @@ export function Menu() {
     const { data: session } = useSession();
     const router = useRouter();
     const currentPath = router.pathname;
+    const {
+        fetchFriendRequests: { data: friendRequests },
+    } = useFriends();
     const [isOpen, setIsOpen] = useState(false);
     const [staticSidebar, setStaticSidebar] = useState(
         window.innerWidth > 1100
@@ -115,11 +118,18 @@ export function Menu() {
                                     whileTap={{ scale: 1 }}
                                     className="relative flex flex-row gap-4 p-4 text-black dark:text-white h-full w-full"
                                 >
+                                    {/* Page Info */}
                                     {icon}
                                     {name}
-                                    {name === 'Friends' && (
-                                        <FriendRequestIndicator />
-                                    )}
+
+                                    {/* Friend Request Indicator */}
+                                    {name === 'Friends' &&
+                                        !!friendRequests &&
+                                        friendRequests.length > 0 && (
+                                            <div className="absolute right-4 flex items-center justify-center w-6 h-6 font-bold bg-primary text-white rounded-full">
+                                                {friendRequests.length}
+                                            </div>
+                                        )}
                                 </motion.div>
                             </Link>
                         ))}
@@ -138,15 +148,22 @@ export function Menu() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="absolute z-50 top-4 left-4 flex flex-col gap-[6px] w-8 cursor-pointer"
+                    className="absolute z-50 top-4 left-4"
                     onClick={() => setIsOpen(true)}
                 >
-                    {Array.from({ length: 3 }).map((_, index) => (
-                        <div
-                            key={index}
-                            className="w-full h-1 rounded-full bg-primary"
-                        />
-                    ))}
+                    <div className="relative flex flex-col gap-[6px] w-8 cursor-pointer">
+                        {Array.from({ length: 3 }).map((_, index) => (
+                            <div
+                                key={index}
+                                className="w-full h-1 rounded-full bg-primary"
+                            />
+                        ))}
+
+                        {/* Friend Request Indicator */}
+                        {!!friendRequests && friendRequests.length > 0 && (
+                            <div className="absolute right-[-6px] top-[-6px] w-4 h-4 border border-black dark:border-white bg-primary rounded-full" />
+                        )}
+                    </div>
                 </motion.button>
             )}
         </AnimatePresence>
@@ -218,21 +235,5 @@ function ColorTheme() {
                 </button>
             </div>
         </div>
-    );
-}
-
-function FriendRequestIndicator() {
-    const {
-        fetchFriendRequests: { data: friendRequests },
-    } = useFriends();
-
-    return (
-        <>
-            {!!friendRequests && friendRequests.length > 0 && (
-                <div className="absolute right-4 flex items-center justify-center w-6 h-6 font-bold bg-primary text-white rounded-full">
-                    {friendRequests.length}
-                </div>
-            )}
-        </>
     );
 }
