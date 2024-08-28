@@ -1,6 +1,6 @@
 import { useTheme } from '@/hooks';
 import { useSession } from 'next-auth/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Header, Menu } from '.';
@@ -8,14 +8,20 @@ import { Header, Menu } from '.';
 export function Layout({ children }: { children: React.ReactNode }) {
     const { data: session } = useSession();
     const { theme, isDarkMode } = useTheme();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
         <main
             data-theme={theme}
             className="flex flex-row bg-white dark:bg-black"
         >
-            {session?.user && <Menu />}
-            <div className="flex flex-col w-screen h-screen overflow-y-auto p-4">
+            {session?.user && (
+                <Menu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
+            )}
+            <div
+                onClick={() => setIsMenuOpen(false)}
+                className="flex flex-col w-screen h-screen overflow-y-auto p-4"
+            >
                 <div className="flex flex-row justify-center items-center w-full">
                     <div className="flex flex-col items-center w-full max-w-3xl py-10 md:py-20">
                         <Header />

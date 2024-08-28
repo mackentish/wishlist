@@ -9,14 +9,18 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Friends, Home, Moon, Share, Sun, Typography, X } from '.';
 
-export function Menu() {
+interface MenuProps {
+    isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
+}
+
+export function Menu({ isOpen, setIsOpen }: MenuProps) {
     const { data: session } = useSession();
     const router = useRouter();
     const currentPath = router.pathname;
     const {
         fetchFriendRequests: { data: friendRequests },
     } = useFriends();
-    const [isOpen, setIsOpen] = useState(false);
     const [staticSidebar, setStaticSidebar] = useState(
         window.innerWidth > 1100
     );
