@@ -1,21 +1,46 @@
-import React from 'react';
+import { useFriends } from '@/hooks';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { CircleCheck, CircleX, Typography } from '.';
 
 interface FriendRequestProps {
+    id: number;
     name: string;
     email: string;
-    onAccept: () => void;
-    onDecline: () => void;
 }
 
-export function FriendRequest({
-    name,
-    email,
-    onAccept,
-    onDecline,
-}: FriendRequestProps) {
+export function FriendRequest({ id, name, email }: FriendRequestProps) {
+    const { updateFriendRequest } = useFriends();
+    const [isUpdating, setIsUpdating] = useState(false);
+
+    const handleFriendRequest = async (accept: boolean) => {
+        setIsUpdating(true);
+        updateFriendRequest.mutate(
+            { requestId: id, accept },
+            {
+                onSuccess: () => {
+                    setIsUpdating(false);
+                    toast.success(
+                        `Friend request ${accept ? 'accepted' : 'declined'}`
+                    );
+                },
+                onError: () => {
+                    setIsUpdating(false);
+                    toast.error(
+                        `Failed to ${accept ? 'accept' : 'decline'} friend request`
+                    );
+                },
+            }
+        );
+    };
+
     return (
-        <div className="flex flex-row w-full items-center justify-between p-4 bg-gray300 dark:bg-gray700 rounded-xl">
+        <div
+            className={[
+                'flex flex-row w-full items-center justify-between p-4 bg-gray300 dark:bg-gray700 rounded-xl',
+                isUpdating ? 'animate-pulse' : '',
+            ].join(' ')}
+        >
             {/* Personal Info */}
             <div className="flex flex-row items-center gap-3">
                 <Typography type="p" classOverride="font-bold">
@@ -27,15 +52,21 @@ export function FriendRequest({
             </div>
 
             {/* Accept/Decline */}
-            <div className="flex flex-row gap-4">
-                <button onClick={onDecline}>
-                    <CircleX classOverride="fill-error hover:fill-errorHover transition-colors duration-200" />
-                </button>
+            {isUpdating ? (
+                <Typography type="p" classOverride="font-bold">
+                    Updating...
+                </Typography>
+            ) : (
+                <div className="flex flex-row gap-4">
+                    <button onClick={() => handleFriendRequest(false)}>
+                        <CircleX classOverride="fill-error hover:fill-errorHover transition-colors duration-200" />
+                    </button>
 
-                <button onClick={onAccept}>
-                    <CircleCheck />
-                </button>
-            </div>
+                    <button onClick={() => handleFriendRequest(true)}>
+                        <CircleCheck />
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

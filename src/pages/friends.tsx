@@ -24,7 +24,6 @@ export default function Friends() {
     } = useFriends();
     const [isOpen, setIsOpen] = useState(false);
 
-    // TODO: once BE is implemented, use it in Menu to show number of friend requests
     // TODO: loading and error states - the below are placeholders
     if (friendsLoading || friendRequestsLoading) {
         return <Typography type="h3">Loading...</Typography>;
@@ -43,14 +42,9 @@ export default function Friends() {
                     {friendRequests.map((request, index) => (
                         <FriendRequest
                             key={`friend-request-${index}`}
+                            id={request.id}
                             name={request.name}
                             email={request.email}
-                            onAccept={() =>
-                                alert('TODO: accept friend request')
-                            }
-                            onDecline={() =>
-                                alert('TODO: decline friend request')
-                            }
                         />
                     ))}
                 </div>

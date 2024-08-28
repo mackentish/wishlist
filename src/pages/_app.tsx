@@ -6,15 +6,7 @@ import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            refetchOnWindowFocus: false,
-            retry: 1,
-            staleTime: 1000 * 60 * 5,
-        },
-    },
-});
+const queryClient = new QueryClient();
 
 export default function MyApp({
     Component,

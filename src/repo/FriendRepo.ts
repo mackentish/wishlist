@@ -114,15 +114,25 @@ export async function updateFriendRequest(
 
     // update friends table if accepted - setting the user as the person who sent the request
     if (accept) {
-        await Promise.all([
-            prisma.friend.create({
-                data: {
-                    friendId: userId,
-                    userId: request.senderId,
-                },
-            }),
-            sendAcceptedEmail(request.sender.email, request.sender.name),
-        ]);
+        // check if friend already exists
+        const existingFriend = await prisma.friend.findFirst({
+            where: {
+                userId: userId,
+                friendId: request.senderId,
+            },
+        });
+
+        if (!existingFriend) {
+            await Promise.all([
+                prisma.friend.create({
+                    data: {
+                        friendId: userId,
+                        userId: request.senderId,
+                    },
+                }),
+                sendAcceptedEmail(request.sender.email, request.sender.name),
+            ]);
+        }
     }
 }
 

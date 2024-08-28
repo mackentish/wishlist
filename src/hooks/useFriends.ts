@@ -59,9 +59,13 @@ export function useFriends() {
             }
             return res.json();
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ['friends', 'friendRequests'],
+        onSuccess: async () => {
+            // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
+            await queryClient.invalidateQueries({
+                queryKey: ['friends'],
+            });
+            await queryClient.invalidateQueries({
+                queryKey: ['friendRequests'],
             });
         },
     });
