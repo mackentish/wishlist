@@ -63,9 +63,11 @@ export function useFriends() {
             // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
             await queryClient.invalidateQueries({
                 queryKey: ['friends'],
+                exact: true,
             });
             await queryClient.invalidateQueries({
                 queryKey: ['friendRequests'],
+                exact: true,
             });
         },
     });
@@ -86,6 +88,7 @@ export function useFriends() {
             // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
             await queryClient.invalidateQueries({
                 queryKey: ['friends'],
+                exact: true,
             });
         },
     });

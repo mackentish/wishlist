@@ -367,16 +367,14 @@ export function List({ list, isOwner }: ListProps) {
 }
 
 function MotionWrapper({
-    key,
     variants,
     children,
 }: {
-    key: string;
     variants: Variants;
     children: React.ReactNode;
 }) {
     return (
-        <motion.div key={key} className="child" variants={variants}>
+        <motion.div className="child" variants={variants}>
             {children}
         </motion.div>
     );

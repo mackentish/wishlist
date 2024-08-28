@@ -32,7 +32,7 @@ export function useLists(enabled = true) {
      */
     const createList = useMutation({
         mutationFn: async (newList: CreateListRequest) => {
-            const res = await fetch('/api/list', {
+            const res = await fetch('/api/lists', {
                 method: 'POST',
                 body: JSON.stringify(newList),
             });
@@ -42,8 +42,12 @@ export function useLists(enabled = true) {
             }
             return res.json();
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['lists'] });
+        onSuccess: async () => {
+            // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
+            await queryClient.invalidateQueries({
+                queryKey: ['lists'],
+                exact: true,
+            });
         },
     });
 
@@ -62,10 +66,12 @@ export function useLists(enabled = true) {
             }
             return res.json();
         },
-        onSuccess: () => {
-            console.log('test 1');
-            queryClient.invalidateQueries({ queryKey: ['lists'] });
-            console.log('test 2');
+        onSuccess: async () => {
+            // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
+            await queryClient.invalidateQueries({
+                queryKey: ['lists'],
+                exact: true,
+            });
         },
     });
 
@@ -83,8 +89,12 @@ export function useLists(enabled = true) {
             }
             return res.json();
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['lists'] });
+        onSuccess: async () => {
+            // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
+            await queryClient.invalidateQueries({
+                queryKey: ['lists'],
+                exact: true,
+            });
         },
     });
 
@@ -102,8 +112,12 @@ export function useLists(enabled = true) {
             }
             return res.json();
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['lists'] });
+        onSuccess: async () => {
+            // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
+            await queryClient.invalidateQueries({
+                queryKey: ['lists'],
+                exact: true,
+            });
         },
     });
 
@@ -122,8 +136,12 @@ export function useLists(enabled = true) {
             }
             return res.json();
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['lists'] });
+        onSuccess: async () => {
+            // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
+            await queryClient.invalidateQueries({
+                queryKey: ['lists'],
+                exact: true,
+            });
         },
     });
 
@@ -142,8 +160,12 @@ export function useLists(enabled = true) {
             }
             return res.json();
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['lists'] });
+        onSuccess: async () => {
+            // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
+            await queryClient.invalidateQueries({
+                queryKey: ['lists'],
+                exact: true,
+            });
         },
     });
 
@@ -162,8 +184,12 @@ export function useLists(enabled = true) {
             }
             return res.json();
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['lists'] });
+        onSuccess: async () => {
+            // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
+            await queryClient.invalidateQueries({
+                queryKey: ['lists'],
+                exact: true,
+            });
         },
     });
 
@@ -182,8 +208,12 @@ export function useLists(enabled = true) {
             }
             return res.json();
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['lists'] });
+        onSuccess: async () => {
+            // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
+            await queryClient.invalidateQueries({
+                queryKey: ['lists'],
+                exact: true,
+            });
         },
     });
 
@@ -202,8 +232,12 @@ export function useLists(enabled = true) {
             }
             return res.json();
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['lists'] });
+        onSuccess: async () => {
+            // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
+            await queryClient.invalidateQueries({
+                queryKey: ['lists'],
+                exact: true,
+            });
         },
     });
 
