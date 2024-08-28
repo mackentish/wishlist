@@ -1,4 +1,4 @@
-import { useAllUsers, useLists } from '@/hooks';
+import { useFriends, useLists } from '@/hooks';
 import { inputStyles } from '@/styles/globalTailwind';
 import { ShareUser } from '@/types';
 import { validateEmail } from '@/utils';
@@ -20,7 +20,13 @@ export function ShareList({
     listId,
     sharedUsers,
 }: ShareListProps) {
-    const { data: users, isLoading, error } = useAllUsers();
+    const {
+        fetchFriends: {
+            data: friends,
+            isLoading: friendsLoading,
+            error: friendsError,
+        },
+    } = useFriends();
     const { shareList } = useLists();
     const [filter, setFilter] = useState('');
     const [selectedUsers, setSelectedUsers] =
@@ -68,7 +74,7 @@ export function ShareList({
         if (!selectedUsers.some((u) => u.email === email)) {
             setSelectedUsers([
                 ...selectedUsers,
-                users!.find((u) => u.email === email)!,
+                friends!.find((f) => f.email === email)!,
             ]);
         }
         // Remove user from unshare list if there
@@ -95,11 +101,14 @@ export function ShareList({
     };
 
     const filteredUsers =
-        users?.filter((user) => {
+        friends?.filter((friend) => {
             if (!filter) return false;
             else if (filter.length < 2)
-                return user.name.toLowerCase().startsWith(filter.toLowerCase());
-            else return user.name.toLowerCase().includes(filter.toLowerCase());
+                return friend.name
+                    .toLowerCase()
+                    .startsWith(filter.toLowerCase());
+            else
+                return friend.name.toLowerCase().includes(filter.toLowerCase());
         }) || [];
 
     const renderLoading = () => {
@@ -241,9 +250,9 @@ export function ShareList({
     return (
         <BaseModal isOpen={isOpen} onRequestClose={close}>
             <Typography type="h3">Share List</Typography>
-            {isLoading && renderLoading()}
-            {(error || !users) && renderError()}
-            {!isLoading && !error && renderContent()}
+            {friendsLoading && renderLoading()}
+            {(friendsError || !friends) && renderError()}
+            {!friendsLoading && !friendsError && renderContent()}
         </BaseModal>
     );
 }

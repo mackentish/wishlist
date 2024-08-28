@@ -17,7 +17,7 @@ export function useLists(enabled = true) {
     const fetchLists = useQuery<List[]>({
         queryKey: ['lists'],
         queryFn: async () => {
-            const res = await fetch('/api/getLists');
+            const res = await fetch('/api/lists');
 
             if (!res.ok) {
                 throw new Error('Unable to fetch lists');
@@ -32,7 +32,7 @@ export function useLists(enabled = true) {
      */
     const createList = useMutation({
         mutationFn: async (newList: CreateListRequest) => {
-            const res = await fetch('/api/postList', {
+            const res = await fetch('/api/list', {
                 method: 'POST',
                 body: JSON.stringify(newList),
             });
@@ -172,7 +172,7 @@ export function useLists(enabled = true) {
      */
     const shareList = useMutation({
         mutationFn: async (data: ShareListRequest) => {
-            const res = await fetch('/api/shareList', {
+            const res = await fetch('/api/sharedLists', {
                 method: 'POST',
                 body: JSON.stringify(data),
             });
@@ -192,7 +192,7 @@ export function useLists(enabled = true) {
      */
     const deleteSharedList = useMutation({
         mutationFn: async (listId: number) => {
-            const res = await fetch(`/api/deleteSharedList`, {
+            const res = await fetch(`/api/sharedLists`, {
                 method: 'DELETE',
                 body: JSON.stringify({ listId }),
             });
