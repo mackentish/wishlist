@@ -2,7 +2,7 @@ import { useFriends, useLists } from '@/hooks';
 import { inputStyles } from '@/styles/globalTailwind';
 import { ShareUser } from '@/types';
 import { validateEmail } from '@/utils';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Checkbox, CircleX, Typography } from '..';
 import { BaseModal } from './BaseModal';
@@ -14,6 +14,7 @@ interface ShareListProps {
     sharedUsers: ShareUser[];
 }
 
+// TODO: find out why this component is infinitely rendering
 export function ShareList({
     isOpen,
     close,
@@ -35,6 +36,22 @@ export function ShareList({
     const [unsharedUsers, setUnsharedUsers] = useState<ShareUser[]>([]);
     const [isSharing, setIsSharing] = useState(false);
     const [inviteEmail, setInviteEmail] = useState<string>('');
+
+    const filteredUsers = useMemo(() => {
+        if (!friends || !filter) {
+            return [];
+        }
+
+        return friends.filter((friend) => {
+            if (filter.length < 2) {
+                return friend.name
+                    .toLowerCase()
+                    .startsWith(filter.toLowerCase());
+            } else {
+                return friend.name.toLowerCase().includes(filter.toLowerCase());
+            }
+        });
+    }, [friends, filter]);
 
     const updateSharedUsers = () => {
         setIsSharing(true);
@@ -100,17 +117,6 @@ export function ShareList({
 
         setInviteEmail('');
     };
-
-    const filteredUsers =
-        friends?.filter((friend) => {
-            if (!filter) return false;
-            else if (filter.length < 2)
-                return friend.name
-                    .toLowerCase()
-                    .startsWith(filter.toLowerCase());
-            else
-                return friend.name.toLowerCase().includes(filter.toLowerCase());
-        }) || [];
 
     const renderLoading = () => {
         return (

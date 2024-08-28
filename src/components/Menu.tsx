@@ -1,4 +1,4 @@
-import { useFriends, useTheme, useUser } from '@/hooks';
+import { useFriends, useTheme } from '@/hooks';
 import colorThemes from '@/styles/colorThemes';
 import { Pages } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';

@@ -30,7 +30,7 @@ export function AcceptedRequestTemplate({
                         <Link href={process.env.NEXT_PUBLIC_SITE_URL as string}>
                             wishlist
                         </Link>{' '}
-                        to share your wishlists with your new friend.
+                        to share your lists with your new friend.
                     </Text>
                 </Container>
             </Head>

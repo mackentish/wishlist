@@ -13,7 +13,6 @@ export function Friend({ friendId, name, email }: FriendProps) {
     const { removeFriend } = useFriends();
     const [isRemoving, setIsRemoving] = useState(false);
 
-    // TODO: test this
     const onRemove = () => {
         setIsRemoving(true);
         removeFriend.mutate(

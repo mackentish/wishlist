@@ -30,8 +30,8 @@ export function FriendInviteTemplate({
                         <Link href={process.env.NEXT_PUBLIC_SITE_URL as string}>
                             wishlist
                         </Link>{' '}
-                        to sign up so you can create and share wishlists with
-                        your friends.
+                        to sign up so you can create and share lists with your
+                        friends.
                     </Text>
                 </Container>
             </Head>
