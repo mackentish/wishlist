@@ -28,6 +28,7 @@ export function ShareList({
         },
     } = useFriends();
     const { shareList } = useLists();
+
     const [filter, setFilter] = useState('');
     const [selectedUsers, setSelectedUsers] =
         useState<ShareUser[]>(sharedUsers);
@@ -121,7 +122,10 @@ export function ShareList({
 
     const renderError = () => {
         return (
-            <Typography type="p" classOverride="text-sm">
+            <Typography
+                type="p"
+                classOverride="text-sm text-error dark:text-error"
+            >
                 Error loading users, try again later.
             </Typography>
         );
