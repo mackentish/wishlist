@@ -70,10 +70,31 @@ export function useFriends() {
         },
     });
 
+    const removeFriend = useMutation({
+        mutationFn: async ({ friendId }: { friendId: number }) => {
+            const res = await fetch('/api/friends', {
+                method: 'DELETE',
+                body: JSON.stringify({ friendId }),
+            });
+
+            if (!res.ok) {
+                throw new Error('Unable to remove friend');
+            }
+            return res.json();
+        },
+        onSuccess: async () => {
+            // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
+            await queryClient.invalidateQueries({
+                queryKey: ['friends'],
+            });
+        },
+    });
+
     return {
         fetchFriends,
         fetchFriendRequests,
         sendFriendRequest,
         updateFriendRequest,
+        removeFriend,
     };
 }

@@ -136,6 +136,17 @@ export async function updateFriendRequest(
     }
 }
 
+export async function deleteFriend(userId: number, friendId: number) {
+    return await prisma.friend.deleteMany({
+        where: {
+            OR: [
+                { userId, friendId },
+                { userId: friendId, friendId: userId },
+            ],
+        },
+    });
+}
+
 async function sendInviteEmail(email: string, senderName: string) {
     const { error, data } = await resend.emails.send({
         from: 'wishlist <donotreply@wishlist.mackentish.com>',

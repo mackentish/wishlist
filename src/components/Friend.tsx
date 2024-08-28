@@ -1,13 +1,37 @@
-import React from 'react';
+import { useFriends } from '@/hooks';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { CircleX, Typography } from '.';
 
 interface FriendProps {
+    friendId: number;
     name: string;
     email: string;
-    onRemove: () => void;
 }
 
-export function Friend({ name, email, onRemove }: FriendProps) {
+export function Friend({ friendId, name, email }: FriendProps) {
+    const { removeFriend } = useFriends();
+    const [isRemoving, setIsRemoving] = useState(false);
+
+    // TODO: test this
+    const onRemove = () => {
+        setIsRemoving(true);
+        removeFriend.mutate(
+            { friendId },
+            {
+                onSuccess: () => {
+                    toast.success('Friend removed');
+                },
+                onError: () => {
+                    toast.error('Error removing friend');
+                },
+                onSettled: () => {
+                    setIsRemoving(false);
+                },
+            }
+        );
+    };
+
     return (
         <div className="flex flex-row w-full items-center justify-between p-4 bg-gray300 dark:bg-gray700 rounded-xl">
             {/* Personal Info */}
@@ -21,9 +45,15 @@ export function Friend({ name, email, onRemove }: FriendProps) {
             </div>
 
             {/* Remove */}
-            <button onClick={onRemove}>
-                <CircleX />
-            </button>
+            {isRemoving ? (
+                <Typography type="p" classOverride="font-bold">
+                    Removing...
+                </Typography>
+            ) : (
+                <button onClick={onRemove}>
+                    <CircleX />
+                </button>
+            )}
         </div>
     );
 }

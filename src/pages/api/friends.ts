@@ -1,4 +1,4 @@
-import { getFriends, getSessionUser } from '@/repo';
+import { deleteFriend, getFriends, getSessionUser } from '@/repo';
 import { Friend } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -20,6 +20,13 @@ export default async function handler(
         if (req.method === 'GET') {
             const friends = await getFriends(existingUser.id);
             res.status(200).json(friends);
+            return;
+        }
+
+        // DELETE friend
+        if (req.method === 'DELETE') {
+            await deleteFriend(existingUser.id, req.body.friendId);
+            res.status(200).json({ message: 'Friend deleted' });
             return;
         }
 

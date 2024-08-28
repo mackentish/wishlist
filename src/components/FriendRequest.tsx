@@ -19,16 +19,17 @@ export function FriendRequest({ id, name, email }: FriendRequestProps) {
             { requestId: id, accept },
             {
                 onSuccess: () => {
-                    setIsUpdating(false);
                     toast.success(
                         `Friend request ${accept ? 'accepted' : 'declined'}`
                     );
                 },
                 onError: () => {
-                    setIsUpdating(false);
                     toast.error(
                         `Failed to ${accept ? 'accept' : 'decline'} friend request`
                     );
+                },
+                onSettled: () => {
+                    setIsUpdating(false);
                 },
             }
         );
