@@ -1,7 +1,7 @@
 import { ListInviteTemplate, ShareTemplate } from '@/email-templates';
 import { CreateListRequest, List, ShareUser } from '@/types';
 import { Resend } from 'resend';
-import { prisma } from './_base';
+import prisma from './_base';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 

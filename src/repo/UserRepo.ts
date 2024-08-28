@@ -2,7 +2,7 @@ import { GetUserResponse, ShareUser, User } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../pages/api/auth/[...nextauth]';
-import { prisma } from './_base';
+import prisma from './_base';
 
 export async function getSessionUser(
     req: NextApiRequest,

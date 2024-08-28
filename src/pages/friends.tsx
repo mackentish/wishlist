@@ -24,53 +24,84 @@ export default function Friends() {
     } = useFriends();
     const [isOpen, setIsOpen] = useState(false);
 
-    // TODO: loading and error states - the below are placeholders
-    if (friendsLoading || friendRequestsLoading) {
-        return <Typography type="h3">Loading...</Typography>;
-    }
+    // Error state
     if (friendsError || friendRequestsError) {
-        return <Typography type="h3">Error loading friends</Typography>;
+        return (
+            <Typography type="h4" classOverride="text-error dark:text-error">
+                Error loading friends. Try again later.
+            </Typography>
+        );
     }
 
     return (
         <FadeIn className="flex flex-col gap-8 w-full justify-center items-center">
             {/* Friend Requests */}
-            {!!friendRequests && friendRequests.length > 0 && (
-                <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
-                    <Typography type="h5">Friend Requests:</Typography>
+            <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
+                <Typography type="h5">Friend Requests:</Typography>
 
-                    {friendRequests.map((request, index) => (
-                        <FriendRequest
-                            key={`friend-request-${index}`}
-                            id={request.id}
-                            name={request.name}
-                            email={request.email}
-                        />
-                    ))}
-                </div>
-            )}
+                {/* Loading */}
+                {!!friendRequestsLoading && (
+                    <div className="flex h-14 w-full rounded-xl bg-gray300 dark:bg-gray700 animate-pulse" />
+                )}
 
-            <Button onClick={() => setIsOpen(true)}>Add Friends</Button>
+                {/* Loaded */}
+                {!friendRequestsLoading &&
+                    !!friendRequests &&
+                    friendRequests.length > 0 && (
+                        <>
+                            {friendRequests.map((request, index) => (
+                                <FriendRequest
+                                    key={`friend-request-${index}`}
+                                    id={request.id}
+                                    name={request.name}
+                                    email={request.email}
+                                />
+                            ))}
+                        </>
+                    )}
+
+                {/* No Friend Requests */}
+                {!friendRequestsLoading &&
+                    !!friendRequests &&
+                    friendRequests.length === 0 && (
+                        <Typography type="p" classOverride="italic self-center">
+                            0 new friend requests
+                        </Typography>
+                    )}
+            </div>
 
             {/* Current Friends */}
-            {!!friends && friends.length > 0 ? (
-                <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
-                    <Typography type="h5">Your Friends:</Typography>
+            <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
+                <Typography type="h5">Your Friends:</Typography>
 
-                    {friends.map((friend, index) => (
-                        <Friend
-                            key={`friend-request-${index}`}
-                            friendId={friend.id}
-                            name={friend.name}
-                            email={friend.email}
-                        />
-                    ))}
-                </div>
-            ) : (
-                <Typography type="p" classOverride="italic">
-                    You have no friends yet! Add some now!
-                </Typography>
-            )}
+                {/* Loading */}
+                {!!friendsLoading && (
+                    <div className="flex h-20 w-full rounded-xl bg-gray300 dark:bg-gray700 animate-pulse" />
+                )}
+
+                {/* Loaded */}
+                {!friendsLoading && !!friends && friends.length > 0 && (
+                    <>
+                        {friends.map((friend, index) => (
+                            <Friend
+                                key={`friend-request-${index}`}
+                                friendId={friend.id}
+                                name={friend.name}
+                                email={friend.email}
+                            />
+                        ))}
+                    </>
+                )}
+
+                {/* No Friends */}
+                {!friendsLoading && !!friends && friends.length === 0 && (
+                    <Typography type="p" classOverride="italic self-center">
+                        {"You haven't added any friends yet. Add some below!"}
+                    </Typography>
+                )}
+            </div>
+
+            <Button onClick={() => setIsOpen(true)}>Add Friends</Button>
 
             <AddFriends isOpen={isOpen} close={() => setIsOpen(false)} />
         </FadeIn>

@@ -4,7 +4,7 @@ import {
 } from '@/email-templates';
 import { Friend, FriendRequest } from '@/types';
 import { Resend } from 'resend';
-import { prisma } from './_base';
+import prisma from './_base';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
