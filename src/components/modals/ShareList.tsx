@@ -261,7 +261,7 @@ export function ShareList({
         <BaseModal isOpen={isOpen} onRequestClose={close}>
             <Typography type="h3">Share List</Typography>
             {friendsLoading && renderLoading()}
-            {(friendsError || !friends) && renderError()}
+            {friendsError && renderError()}
             {!friendsLoading && !friendsError && renderContent()}
         </BaseModal>
     );

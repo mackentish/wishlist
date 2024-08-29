@@ -2,16 +2,23 @@ import {
     ErrorView,
     FadeIn,
     List,
+    ShareList,
     SignIn,
     Spacer,
     Typography,
     primaryBtnClass,
 } from '@/components';
 import { useLists, useUser } from '@/hooks';
-import { Pages } from '@/types';
+import { Pages, ShareUser } from '@/types';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+
+interface ShareModalProps {
+    isOpen: boolean;
+    listId: number;
+    sharedUsers: ShareUser[];
+}
 
 export default function Home() {
     const { data: session } = useSession();
@@ -23,6 +30,12 @@ export default function Home() {
     const {
         fetchLists: { isLoading: listsLoading, error: listsError, data: lists },
     } = useLists(!!user);
+
+    const [shareModal, setShareModal] = useState<ShareModalProps>({
+        isOpen: false,
+        listId: 0,
+        sharedUsers: [],
+    });
 
     const userLists = useMemo(() => {
         if (!lists) return [];
@@ -80,6 +93,14 @@ export default function Home() {
                                             key={`${index}-${list.name}`}
                                             isOwner
                                             list={list}
+                                            shareList={() => {
+                                                setShareModal({
+                                                    isOpen: true,
+                                                    listId: list.id,
+                                                    sharedUsers:
+                                                        list.sharedUsers,
+                                                });
+                                            }}
                                         />
                                     ))}
                             </div>
@@ -122,6 +143,18 @@ export default function Home() {
                     </div>
                 </FadeIn>
             )}
+
+            <ShareList
+                isOpen={shareModal.isOpen}
+                close={() =>
+                    setShareModal((prevState) => ({
+                        ...prevState,
+                        isOpen: false,
+                    }))
+                }
+                listId={shareModal.listId}
+                sharedUsers={shareModal.sharedUsers}
+            />
         </FadeIn>
     );
 }

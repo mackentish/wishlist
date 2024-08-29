@@ -10,7 +10,6 @@ import {
     ItemForm,
     ListItem,
     Share,
-    ShareList,
     Spacer,
     Typography,
 } from '.';
@@ -19,9 +18,11 @@ import { List as ListType } from '../types';
 interface ListProps {
     list: ListType;
     isOwner: boolean;
+    /** Function to open the share modal. Only used for List owners */
+    shareList?: () => void;
 }
 
-export function List({ list, isOwner }: ListProps) {
+export function List({ list, isOwner, shareList = () => {} }: ListProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
@@ -137,10 +138,6 @@ export function List({ list, isOwner }: ListProps) {
         }
     };
 
-    const shareList = () => {
-        setIsModalOpen(true);
-    };
-
     const removeSharedList = () => {
         if (
             confirm(
@@ -206,7 +203,7 @@ export function List({ list, isOwner }: ListProps) {
                 {isOwner ? (
                     <button
                         onClick={(e) => {
-                            e.preventDefault();
+                            e.stopPropagation();
                             shareList();
                         }}
                         disabled={isModalOpen}
@@ -275,12 +272,6 @@ export function List({ list, isOwner }: ListProps) {
                         </div>
                     </div>
                 )}
-                <ShareList
-                    isOpen={isModalOpen}
-                    close={() => setIsModalOpen(false)}
-                    listId={list.id}
-                    sharedUsers={list.sharedUsers}
-                />
             </>
         );
     };
