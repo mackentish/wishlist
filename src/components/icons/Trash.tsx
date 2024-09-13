@@ -10,7 +10,7 @@ export function Trash({ className }: TrashProps) {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            className={`w-6 h-6 stroke-primary hover:stroke-primaryHover transition-colors duration-200 ${className}`}
+            className={`w-6 h-6 stroke-error hover:stroke-errorHover transition-colors duration-200 ${className}`}
         >
             <path
                 strokeLinecap="round"
