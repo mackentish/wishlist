@@ -4,7 +4,7 @@ import { ShareUser } from '@/types';
 import { validateEmail } from '@/utils';
 import React, { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, Checkbox, CircleX, Typography } from '..';
+import { Button, Checkbox, CircleX, Person, Typography } from '..';
 import { BaseModal } from './BaseModal';
 
 interface ShareListProps {
@@ -14,7 +14,6 @@ interface ShareListProps {
     sharedUsers: ShareUser[];
 }
 
-// TODO: find out why this component is infinitely rendering
 export function ShareList({
     isOpen,
     close,
@@ -35,7 +34,7 @@ export function ShareList({
         useState<ShareUser[]>(sharedUsers);
     const [unsharedUsers, setUnsharedUsers] = useState<ShareUser[]>([]);
     const [isSharing, setIsSharing] = useState(false);
-    const [inviteEmail, setInviteEmail] = useState<string>('');
+    const [friendEmail, setFriendEmail] = useState<string>('');
 
     const filteredUsers = useMemo(() => {
         if (!friends || !filter) {
@@ -99,23 +98,23 @@ export function ShareList({
         setUnsharedUsers(unsharedUsers.filter((u) => u.email !== email));
     };
 
-    const inviteUser = () => {
+    const addFriend = () => {
         // validate email
-        if (!validateEmail(inviteEmail)) {
+        if (!validateEmail(friendEmail)) {
             toast.error('Invalid email address.');
             return;
         }
         // check that the user email is not already selected
-        if (selectedUsers.some((u) => u.email === inviteEmail)) {
+        if (selectedUsers.some((u) => u.email === friendEmail)) {
             toast.error('User already selected!');
         } else {
             setSelectedUsers([
                 ...selectedUsers,
-                { name: inviteEmail, email: inviteEmail },
+                { name: friendEmail, email: friendEmail },
             ]);
         }
 
-        setInviteEmail('');
+        setFriendEmail('');
     };
 
     const renderLoading = () => {
@@ -140,16 +139,17 @@ export function ShareList({
     const renderContent = () => {
         return (
             <div className="flex flex-col gap-4 w-full">
-                <Typography type="p" classOverride="text-sm">
-                    Share this list with others by searching for them below:
+                <Typography type="p" classOverride="text-sm self-center">
+                    Share this list with Friends or Share Groups:
                 </Typography>
                 <input
                     type="text"
-                    placeholder="Search users by name..."
+                    placeholder="Search friends by name..."
                     className="p-4 border border-black dark:border-white rounded-xl bg-transparent"
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
                 />
+
                 <div className="flex flex-col gap-4 w-full h-96 overflow-auto">
                     {filteredUsers.map((user, index) => (
                         <UserRow
@@ -174,31 +174,31 @@ export function ShareList({
                     {filteredUsers.length === 0 && (
                         <div className="flex flex-col text-center gap-2 w-full">
                             <Typography type="p" classOverride="text-sm">
-                                No users found. Invite someone by email:
+                                No friends found. Add them by email:
                             </Typography>
                             <div className="grid grid-rows-1 grid-cols-12 gap-2">
                                 <input
-                                    placeholder="Invite by email"
-                                    className={`${inputStyles.default} col-span-8`}
-                                    value={inviteEmail}
+                                    placeholder="Enter email..."
+                                    className={`${inputStyles.default} col-span-9`}
+                                    value={friendEmail}
                                     onChange={(e) =>
-                                        setInviteEmail(e.target.value)
+                                        setFriendEmail(e.target.value)
                                     }
                                 />
                                 <Button
-                                    onClick={inviteUser}
-                                    styles="col-span-4 self-center h-full items-center"
+                                    onClick={addFriend}
+                                    styles="col-span-3 self-center h-full items-center"
                                 >
-                                    Invite
+                                    Add
                                 </Button>
                             </div>
                         </div>
                     )}
 
-                    {/* Share With */}
+                    {/* Shared With */}
                     <div className="flex flex-col gap-2 mt-4 w-full">
                         <Typography type="p" classOverride="font-bold">
-                            Share With:
+                            Shared With:
                         </Typography>
                         {selectedUsers.map((user, index) => (
                             <div
@@ -233,7 +233,7 @@ export function ShareList({
                                 type="p"
                                 classOverride="text-sm self-center"
                             >
-                                Not shared with any users.
+                                Not shared with anyone.
                             </Typography>
                         )}
                     </div>
@@ -279,17 +279,21 @@ function UserRow({ user, isChecked, toggleUser }: UserRowProps) {
             onClick={() => {
                 toggleUser(user);
             }}
-            className="flex flex-row gap-4 items-center w-full p-4 border rounded-xl border-black dark:border-white"
+            className="flex flex-row justify-between items-center w-full p-4 border rounded-xl border-black dark:border-white"
         >
-            <Checkbox checked={isChecked} />
-            <div className="flex flex-col items-start">
-                <Typography type="p" classOverride="text-sm">
-                    {user.name}
-                </Typography>
-                <Typography type="p" classOverride="text-xs">
-                    {user.email}
-                </Typography>
+            <div className="flex flex-row gap-4 items-center">
+                <Checkbox checked={isChecked} />
+                <div className="flex flex-col items-start">
+                    <Typography type="p" classOverride="text-sm">
+                        {user.name}
+                    </Typography>
+                    <Typography type="p" classOverride="text-xs">
+                        {user.email}
+                    </Typography>
+                </div>
             </div>
+
+            <Person />
         </button>
     );
 }

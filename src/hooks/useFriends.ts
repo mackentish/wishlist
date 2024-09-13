@@ -90,6 +90,10 @@ export function useFriends() {
                 queryKey: ['friends'],
                 exact: true,
             });
+            await queryClient.invalidateQueries({
+                queryKey: ['lists'],
+                exact: true,
+            });
         },
     });
 

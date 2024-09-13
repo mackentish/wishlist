@@ -94,7 +94,7 @@ export async function sendFriendRequest(userId: number, email: string) {
  * @param accept Whether to accept or reject the friend request
  */
 export async function updateFriendRequest(
-    userId: number,
+    user: { id: number; email: string; name: string },
     requestId: number,
     accept: boolean
 ) {
@@ -107,41 +107,62 @@ export async function updateFriendRequest(
         throw new Error('Friend request not found');
     }
 
-    await prisma.friendRequest.update({
-        where: { id: requestId },
-        data: { status: accept ? 'ACCEPTED' : 'REJECTED' },
-    });
-
     // update friends table if accepted - setting the user as the person who sent the request
     if (accept) {
         // check if friend already exists
         const existingFriend = await prisma.friend.findFirst({
             where: {
-                userId: userId,
+                userId: user.id,
                 friendId: request.senderId,
             },
         });
 
         if (!existingFriend) {
             await Promise.all([
+                // add friend
                 prisma.friend.create({
                     data: {
-                        friendId: userId,
+                        friendId: user.id,
                         userId: request.senderId,
                     },
                 }),
+                // send email to notify sender of acceptance
                 sendAcceptedEmail(request.sender.email, request.sender.name),
+                // delete friend request
+                prisma.friendRequest.delete({ where: { id: requestId } }),
+                // update any shared lists with new user
+                await prisma.sharedList.updateMany({
+                    where: { sharedEmail: user.email },
+                    data: { sharedUserId: user.id, sharedEmail: null },
+                }),
             ]);
         }
+    } else {
+        // reject friend request - don't delete it so it can be viewed later
+        await prisma.friendRequest.update({
+            where: { id: requestId },
+            data: { status: 'REJECTED' },
+        });
     }
 }
 
 export async function deleteFriend(userId: number, friendId: number) {
-    return await prisma.friend.deleteMany({
+    // delete friend relationship
+    await prisma.friend.deleteMany({
         where: {
             OR: [
                 { userId, friendId },
                 { userId: friendId, friendId: userId },
+            ],
+        },
+    });
+
+    // delete friend request if it exists
+    await prisma.friendRequest.deleteMany({
+        where: {
+            OR: [
+                { senderId: userId, receiverId: friendId },
+                { senderId: friendId, receiverId: userId },
             ],
         },
     });

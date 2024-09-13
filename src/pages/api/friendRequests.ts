@@ -55,7 +55,7 @@ export default async function handler(
             }
 
             // update friend request
-            await updateFriendRequest(existingUser.id, requestId, accept);
+            await updateFriendRequest(existingUser, requestId, accept);
             res.status(200).json({ message: 'Friend request updated' });
             return;
         }

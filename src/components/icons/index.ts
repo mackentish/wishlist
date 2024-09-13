@@ -1,7 +1,6 @@
 export * from './OpenTab';
 export * from './Sparkle';
 export * from './Plus';
-export * from './People';
 export * from './ChevronDown';
 export * from './ChevronUp';
 export * from './Trash';
@@ -15,3 +14,4 @@ export * from './Home';
 export * from './Friends';
 export * from './Moon';
 export * from './Sun';
+export * from './Person';

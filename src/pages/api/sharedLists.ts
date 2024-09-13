@@ -30,16 +30,12 @@ export default async function handler(
                 (u) => u !== existingUser.email
             );
 
-            const success = await shareList(
+            await shareList(
                 data.listId,
                 data.sharedUserEmails,
                 data.unsharedUserEmails,
                 existingUser.id
             );
-            if (!success) {
-                res.status(400).json({ error: 'Could not share list' });
-                return;
-            }
 
             res.status(200).json({ message: 'List shared' });
             return;
