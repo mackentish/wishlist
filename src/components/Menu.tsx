@@ -142,9 +142,11 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
                     <ColorTheme />
 
                     {/* Sign Out */}
-                    <Button btnType="danger" onClick={() => signOut()}>
-                        Sign out
-                    </Button>
+                    <div className="flex flex-col h-full justify-end">
+                        <Button btnType="danger" onClick={() => signOut()}>
+                            Sign out
+                        </Button>
+                    </div>
                 </motion.div>
             ) : (
                 <motion.button
