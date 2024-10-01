@@ -93,3 +93,44 @@ export async function getShareableUsers(email: string): Promise<ShareUser[]> {
         },
     });
 }
+
+// TODO: delete this after running in PROD
+// add all existing users to the friends table as friends
+export async function seedFriendsTable() {
+    // get all users
+    const users = await prisma.user.findMany({
+        select: {
+            id: true,
+        },
+    });
+
+    // create a friend record for each unique user pair
+    for (let i = 0; i < users.length; i++) {
+        for (let j = 0; j < users.length; j++) {
+            // skip if this is the same user
+            if (i === j) {
+                continue;
+            }
+
+            // check for existing friendship
+            const existingFriendship = await prisma.friend.findFirst({
+                where: {
+                    OR: [
+                        { userId: users[i].id, friendId: users[j].id },
+                        { userId: users[j].id, friendId: users[i].id },
+                    ],
+                },
+            });
+
+            // only add friendship if it doesn't already exist
+            if (!existingFriendship) {
+                await prisma.friend.create({
+                    data: {
+                        userId: users[i].id,
+                        friendId: users[j].id,
+                    },
+                });
+            }
+        }
+    }
+}

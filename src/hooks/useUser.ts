@@ -5,7 +5,7 @@ export function useUser(enabled = true): UseQueryResult<GetUserResponse> {
     return useQuery({
         queryKey: ['user'],
         queryFn: async () => {
-            const res = await fetch('/api/getUser');
+            const res = await fetch('/api/users');
             if (!res.ok) {
                 throw new Error('Unable to fetch user');
             }

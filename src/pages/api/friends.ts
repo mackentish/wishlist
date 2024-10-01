@@ -25,7 +25,8 @@ export default async function handler(
 
         // DELETE friend
         if (req.method === 'DELETE') {
-            await deleteFriend(existingUser.id, req.body.friendId);
+            const { friendId } = JSON.parse(req.body);
+            await deleteFriend(existingUser.id, friendId);
             res.status(200).json({ message: 'Friend deleted' });
             return;
         }
