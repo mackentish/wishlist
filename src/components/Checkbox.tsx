@@ -16,8 +16,8 @@ export function Checkbox({ checked, onClick }: CheckboxProps) {
                     e.stopPropagation();
                 }
             }}
-            className={`p-1 border border-black dark:border-gray300 rounded-full ${
-                checked ? 'bg-primary' : 'bg-gray300 dark:bg-gray700'
+            className={`p-1 border border-black-900 dark:border-gray-300 rounded-full ${
+                checked ? 'bg-primary-500' : 'bg-gray-300 dark:bg-gray-700'
             }`}
             role="checkbox"
             aria-checked={checked}
@@ -25,8 +25,8 @@ export function Checkbox({ checked, onClick }: CheckboxProps) {
             <Check
                 style={
                     checked
-                        ? 'stroke-white'
-                        : 'stroke-gray300 dark:stroke-gray700'
+                        ? 'stroke-white-100'
+                        : 'stroke-gray-300 dark:stroke-gray-700'
                 }
             />
         </button>

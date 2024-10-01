@@ -10,17 +10,19 @@ import {
     ItemForm,
     ListItem,
     Share,
-    ShareList,
     Spacer,
+    Typography,
 } from '.';
 import { List as ListType } from '../types';
 
 interface ListProps {
     list: ListType;
     isOwner: boolean;
+    /** Function to open the share modal. Only used for List owners */
+    shareList?: () => void;
 }
 
-export function List({ list, isOwner }: ListProps) {
+export function List({ list, isOwner, shareList = () => {} }: ListProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
@@ -136,10 +138,6 @@ export function List({ list, isOwner }: ListProps) {
         }
     };
 
-    const shareList = () => {
-        setIsModalOpen(true);
-    };
-
     const removeSharedList = () => {
         if (
             confirm(
@@ -149,12 +147,12 @@ export function List({ list, isOwner }: ListProps) {
             setIsRemoving(true);
             deleteSharedList.mutate(list.id, {
                 onSuccess: () => {
-                    toast('Shared list removed 🗑️');
+                    toast('Shared list removed');
                     setIsRemoving(false);
                 },
                 onError: () => {
                     toast.error(
-                        '🚨 Something went wrong removing your shared list'
+                        'Something went wrong removing your shared list'
                     );
                     setIsRemoving(false);
                 },
@@ -174,35 +172,38 @@ export function List({ list, isOwner }: ListProps) {
                         {loading === 'update' ? (
                             <div className="animate-pulse h-4 bg-neutral-300 dark:bg-neutral-600 rounded-full w-1/2 mb-2" />
                         ) : (
-                            <p className="font-bold text-md text-black dark:text-white">
+                            <Typography type="p" classOverride="font-bold">
                                 {list.name}
-                            </p>
+                            </Typography>
                         )}
                         {!isOwner && list.user && (
-                            <p className="text-xs text-black dark:text-white">
+                            <Typography type="p" classOverride="text-xs">
                                 {`(${list.user.name})`}
-                            </p>
+                            </Typography>
                         )}
                     </div>
                     {loading === 'update' ? (
                         <div className="animate-pulse h-3 bg-neutral-300 dark:bg-neutral-600 rounded-full w-1/2" />
                     ) : (
-                        <p className="text-sm text-black dark:text-white">
+                        <Typography type="p" classOverride="text-sm">
                             {list.description}
-                        </p>
+                        </Typography>
                     )}
                     {list.items.length === 0 && !isOwner && (
-                        <p className="mt-4 self-center text-sm italic text-black dark:text-white">
+                        <Typography
+                            type="p"
+                            classOverride="mt-4 self-center text-sm italic"
+                        >
                             {
                                 "This list doesn't have any items yet! You'll see them here when they are added."
                             }
-                        </p>
+                        </Typography>
                     )}
                 </div>
                 {isOwner ? (
                     <button
                         onClick={(e) => {
-                            e.preventDefault();
+                            e.stopPropagation();
                             shareList();
                         }}
                         disabled={isModalOpen}
@@ -249,11 +250,14 @@ export function List({ list, isOwner }: ListProps) {
                 {!isAdding && !isEditing && (
                     <div className="flex flex-col gap-4 w-full">
                         {list.items.length === 0 && (
-                            <p className="text-sm italic self-center text-black dark:text-white">
+                            <Typography
+                                type="p"
+                                classOverride="text-sm italic self-center"
+                            >
                                 {
                                     'No items yet! Click the "Add Item" button below to get started!'
                                 }
-                            </p>
+                            </Typography>
                         )}
                         <div className="flex flex-row gap-4 w-full">
                             <Button onClick={() => setIsAdding(true)}>
@@ -268,12 +272,6 @@ export function List({ list, isOwner }: ListProps) {
                         </div>
                     </div>
                 )}
-                <ShareList
-                    isOpen={isModalOpen}
-                    close={() => setIsModalOpen(false)}
-                    listId={list.id}
-                    sharedUsers={list.sharedUsers}
-                />
             </>
         );
     };
@@ -281,7 +279,7 @@ export function List({ list, isOwner }: ListProps) {
     return (
         <AnimateChangeInHeight>
             <motion.div
-                className="flex flex-col gap-5 w-full p-4 rounded-xl bg-gray100 dark:bg-gray900"
+                className="flex flex-col gap-5 w-full p-6 rounded-xl bg-gray-100 dark:bg-gray-900"
                 initial="hidden"
                 animate={isOpen ? 'visible' : 'hidden'}
                 variants={containerVariants}
@@ -340,7 +338,7 @@ export function List({ list, isOwner }: ListProps) {
                                     key="loading-add-item"
                                     variants={itemVariants}
                                 >
-                                    <div className="animate-pulse h-14 bg-gray300 dark:bg-gray700 rounded-xl w-full" />
+                                    <div className="animate-pulse h-14 bg-gray-300 dark:bg-gray-700 rounded-xl w-full" />
                                 </MotionWrapper>
                             )}
                             {isOwner && (
@@ -360,16 +358,14 @@ export function List({ list, isOwner }: ListProps) {
 }
 
 function MotionWrapper({
-    key,
     variants,
     children,
 }: {
-    key: string;
     variants: Variants;
     children: React.ReactNode;
 }) {
     return (
-        <motion.div key={key} className="child" variants={variants}>
+        <motion.div className="child" variants={variants}>
             {children}
         </motion.div>
     );

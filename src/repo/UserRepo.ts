@@ -2,12 +2,12 @@ import { GetUserResponse, ShareUser, User } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../pages/api/auth/[...nextauth]';
-import { prisma } from './_base';
+import prisma from './_base';
 
 export async function getSessionUser(
     req: NextApiRequest,
     res: NextApiResponse
-): Promise<Omit<User, 'lists'> | null> {
+): Promise<Omit<User, 'lists' | 'receivedRequests' | 'friends'> | null> {
     const session = await getServerSession(req, res, authOptions);
     if (!session?.user?.email) {
         return null;
@@ -30,20 +30,28 @@ export async function findOrCreateUser(
     // find or create user
     const existingUser = await prisma.user.findUnique({
         where: { email },
-        include: { lists: { include: { items: true } } },
+        include: {
+            lists: { include: { items: true } },
+        },
     });
 
-    // check for name change
-    if (existingUser && existingUser.name !== name) {
+    if (existingUser) {
+        // check for name change
+        if (existingUser.name !== name) {
+            await prisma.user.update({
+                where: { email },
+                data: { name },
+            });
+            existingUser.name = name;
+        }
+
+        // update last login
         await prisma.user.update({
             where: { email },
-            data: { name },
+            data: { lastLogin: new Date() },
         });
-        existingUser.name = name;
-    }
 
-    // return existing user
-    if (existingUser) {
+        // return existing user
         return existingUser;
     }
     // create user
@@ -54,12 +62,19 @@ export async function findOrCreateUser(
                 name,
             },
         });
+
         // update any shared lists with new user
         await prisma.sharedList.updateMany({
             where: { sharedEmail: email },
             data: { sharedUserId: newUser.id, sharedEmail: null },
         });
-        // return it
+
+        // update any friend requests with new user email
+        await prisma.friendRequest.updateMany({
+            where: { email },
+            data: { receiverId: newUser.id },
+        });
+
         return newUser;
     }
 }

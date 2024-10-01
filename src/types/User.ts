@@ -7,6 +7,8 @@ export type User = {
     lists: List[];
 };
 
-export type ShareUser = Omit<User, 'id' | 'lists'>;
-
+export type ShareUser = {
+    name: string;
+    email: string;
+};
 export type GetUserResponse = Omit<User, 'lists'>;
