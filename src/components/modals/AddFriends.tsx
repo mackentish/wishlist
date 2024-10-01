@@ -1,7 +1,6 @@
 import { useFriends } from '@/hooks';
 import { validateEmail } from '@/utils';
 import React, { useState } from 'react';
-import { set } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { Button, Input, Typography } from '..';
 import { BaseModal } from './BaseModal';

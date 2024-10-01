@@ -136,10 +136,10 @@ export async function updateListById(
 }
 
 export async function shareList(
+    userId: number,
     listId: number,
     sharedUserEmails: string[],
-    unsharedUserEmails: string[],
-    userId: number
+    unsharedUserEmails: string[]
 ) {
     // verify list exists for user
     const list = await prisma.list.findUnique({
@@ -149,9 +149,6 @@ export async function shareList(
     if (!list) {
         throw new Error('List not found for user!');
     }
-
-    // TODO: update process to send friend request to each sharedUser that isn't a friend of userId
-    // TODO: update accept friend request to create sharedList entries for any lists shared with the user
 
     // get list of users who already have the list shared with them
     const existingSharedUsers = await prisma.sharedList.findMany({

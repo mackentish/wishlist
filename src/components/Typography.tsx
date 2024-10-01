@@ -50,8 +50,6 @@ export function Typography({
             </h6>
         );
     } else {
-        return (
-            <p className={[baseClass, classOverride].join(' ')}>{children}</p>
-        );
+        return <p className={`${baseClass} ${classOverride}`}>{children}</p>;
     }
 }

@@ -30,6 +30,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </div>
                 <ToastContainer
                     position="bottom-left"
+                    pauseOnFocusLoss={false}
                     theme={isDarkMode ? 'dark' : 'light'}
                     progressClassName={
                         typeof localStorage === 'undefined'

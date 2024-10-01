@@ -31,10 +31,10 @@ export default async function handler(
             );
 
             await shareList(
+                existingUser.id,
                 data.listId,
                 data.sharedUserEmails,
-                data.unsharedUserEmails,
-                existingUser.id
+                data.unsharedUserEmails
             );
 
             res.status(200).json({ message: 'List shared' });
