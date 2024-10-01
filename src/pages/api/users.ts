@@ -1,4 +1,4 @@
-import { findOrCreateUser, seedFriendsTable } from '@/repo';
+import { findOrCreateUser } from '@/repo';
 import { GetUserResponse } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
@@ -21,13 +21,6 @@ export default async function handler(
         );
         res.status(200).json(user);
 
-        return;
-    }
-
-    // TODO: delete this once ran in PROD
-    if (req.method === 'PUT') {
-        await seedFriendsTable();
-        res.status(200).json({ message: 'Friends table seeded' });
         return;
     }
 
