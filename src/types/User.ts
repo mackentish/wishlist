@@ -1,4 +1,4 @@
-import { Friend, FriendRequest, List } from '.';
+import { List } from '.';
 
 export type User = {
     id: number;

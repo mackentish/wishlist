@@ -35,17 +35,23 @@ export async function findOrCreateUser(
         },
     });
 
-    // check for name change
-    if (existingUser && existingUser.name !== name) {
+    if (existingUser) {
+        // check for name change
+        if (existingUser.name !== name) {
+            await prisma.user.update({
+                where: { email },
+                data: { name },
+            });
+            existingUser.name = name;
+        }
+
+        // update last login
         await prisma.user.update({
             where: { email },
-            data: { name },
+            data: { lastLogin: new Date() },
         });
-        existingUser.name = name;
-    }
 
-    // return existing user
-    if (existingUser) {
+        // return existing user
         return existingUser;
     }
     // create user
