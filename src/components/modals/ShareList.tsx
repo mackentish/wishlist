@@ -236,7 +236,7 @@ export function ShareList({
         return (
             <Typography
                 type="p"
-                classOverride="text-sm text-error dark:text-error"
+                classOverride="text-sm text-error-500 dark:text-error-500"
             >
                 Error loading users, try again later.
             </Typography>
@@ -252,7 +252,7 @@ export function ShareList({
                 <input
                     type="text"
                     placeholder="Search friends by name..."
-                    className="p-4 border border-black dark:border-white rounded-xl bg-transparent"
+                    className="p-4 border border-black-900 dark:border-white-100 rounded-xl bg-transparent"
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
                 />
@@ -333,7 +333,7 @@ export function ShareList({
                         {selectedGroups.map((group, index) => (
                             <div
                                 key={group.id + index}
-                                className="flex flex-row justify-between items-center w-full p-4 border rounded-xl border-black dark:border-white"
+                                className="flex flex-row justify-between items-center w-full p-4 border rounded-xl border-black-900 dark:border-white-100"
                             >
                                 <div className="flex flex-row gap-2 items-center">
                                     <Friends />
@@ -358,7 +358,7 @@ export function ShareList({
                         {selectedUsers.map((user, index) => (
                             <div
                                 key={user.name + index}
-                                className="flex flex-row justify-between items-center w-full p-4 border rounded-xl border-black dark:border-white"
+                                className="flex flex-row justify-between items-center w-full p-4 border rounded-xl border-black-900 dark:border-white-100"
                             >
                                 <div className="flex flex-row gap-2 items-center">
                                     <Person />

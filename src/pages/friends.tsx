@@ -27,7 +27,10 @@ export default function Friends() {
     // Error state
     if (friendsError || friendRequestsError) {
         return (
-            <Typography type="h4" classOverride="text-error dark:text-error">
+            <Typography
+                type="h4"
+                classOverride="text-error-500 dark:text-error-500"
+            >
                 Error loading friends. Try again later.
             </Typography>
         );
@@ -36,12 +39,12 @@ export default function Friends() {
     return (
         <FadeIn className="flex flex-col gap-8 w-full justify-center items-center">
             {/* Friend Requests */}
-            <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
+            <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray-100 dark:bg-gray-900">
                 <Typography type="h5">Friend Requests:</Typography>
 
                 {/* Loading */}
                 {!!friendRequestsLoading && (
-                    <div className="flex h-14 w-full rounded-xl bg-gray300 dark:bg-gray700 animate-pulse" />
+                    <div className="flex h-14 w-full rounded-xl bg-gray-300 dark:bg-gray-700 animate-pulse" />
                 )}
 
                 {/* Loaded */}
@@ -71,12 +74,12 @@ export default function Friends() {
             </div>
 
             {/* Current Friends */}
-            <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
+            <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray-100 dark:bg-gray-900">
                 <Typography type="h5">Your Friends:</Typography>
 
                 {/* Loading */}
                 {!!friendsLoading && (
-                    <div className="flex h-20 w-full rounded-xl bg-gray300 dark:bg-gray700 animate-pulse" />
+                    <div className="flex h-20 w-full rounded-xl bg-gray-300 dark:bg-gray-700 animate-pulse" />
                 )}
 
                 {/* Loaded */}

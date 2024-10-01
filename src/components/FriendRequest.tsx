@@ -38,7 +38,7 @@ export function FriendRequest({ id, name, email }: FriendRequestProps) {
     return (
         <div
             className={[
-                'flex flex-row w-full items-center justify-between p-4 bg-gray300 dark:bg-gray700 rounded-xl',
+                'flex flex-row w-full items-center justify-between p-4 bg-gray-300 dark:bg-gray-700 rounded-xl',
                 isUpdating ? 'animate-pulse' : '',
             ].join(' ')}
         >
@@ -60,7 +60,7 @@ export function FriendRequest({ id, name, email }: FriendRequestProps) {
             ) : (
                 <div className="flex flex-row gap-4">
                     <button onClick={() => handleFriendRequest(false)}>
-                        <CircleX classOverride="fill-error hover:fill-errorHover transition-colors duration-200" />
+                        <CircleX classOverride="fill-error-500 hover:fill-error-600 transition-colors duration-200" />
                     </button>
 
                     <button onClick={() => handleFriendRequest(true)}>

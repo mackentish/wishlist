@@ -32,7 +32,7 @@ export function CircularSpinner({ size = 30 }: { size?: number }) {
             <motion.div
                 variants={spinnerVariants}
                 animate="animate"
-                className="border-4 border-solid border-gray-300 border-t-primary rounded-full"
+                className="border-4 border-solid border-gray-300 border-t-primary-500 rounded-full"
                 style={{
                     width: size,
                     height: size,

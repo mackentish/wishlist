@@ -15,7 +15,7 @@ export function UserRow({ user, isChecked, toggleUser }: UserRowProps) {
             onClick={() => {
                 toggleUser(user);
             }}
-            className="flex flex-row justify-between items-center w-full p-4 border rounded-xl border-black dark:border-white"
+            className="flex flex-row justify-between items-center w-full p-4 border rounded-xl border-black-900 dark:border-white-100"
         >
             <div className="flex flex-row gap-4 items-center">
                 <Checkbox checked={isChecked} />

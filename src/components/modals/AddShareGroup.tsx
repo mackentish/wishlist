@@ -140,7 +140,7 @@ export function AddShareGroup({
         return (
             <Typography
                 type="p"
-                classOverride="text-sm text-error dark:text-error"
+                classOverride="text-sm text-error-500 dark:text-error-500"
             >
                 Error loading users, try again later.
             </Typography>
@@ -209,7 +209,7 @@ export function AddShareGroup({
                     <input
                         type="text"
                         placeholder="Search friends by name..."
-                        className="w-full p-4 border border-black dark:border-white rounded-xl bg-transparent"
+                        className="w-full p-4 border border-black-900 dark:border-white-100 rounded-xl bg-transparent"
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                     />
@@ -254,7 +254,7 @@ export function AddShareGroup({
                         {members.map((member, index) => (
                             <div
                                 key={member.name + index}
-                                className="flex flex-row justify-between items-center w-full p-4 border rounded-xl border-black dark:border-white"
+                                className="flex flex-row justify-between items-center w-full p-4 border rounded-xl border-black-900 dark:border-white-100"
                             >
                                 <div className="flex flex-row gap-0.5 items-baseline">
                                     <Typography

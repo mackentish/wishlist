@@ -14,7 +14,7 @@ const ItemWrapper = ({
     children: React.ReactNode;
 }) => {
     const style =
-        'flex flex-row items-center justify-between p-4 pl-4 bg-gray300 dark:bg-gray700 rounded-xl';
+        'flex flex-row items-center justify-between p-4 pl-4 bg-gray-300 dark:bg-gray-700 rounded-xl';
     if (!!link) {
         return (
             <a href={link} target="_blank" className={style}>
@@ -45,9 +45,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
 
     const markAsBought = () => {
         if (!!item.boughtBy && item.boughtBy.email !== user.email) {
-            toast.error(
-                `This item is already bought by ${item.boughtBy.name}`
-            );
+            toast.error(`This item is already bought by ${item.boughtBy.name}`);
             return;
         }
 
@@ -138,7 +136,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
     return (
         <>
             {isEditing ? (
-                <div className="p-4 bg-white dark:bg-black rounded-xl">
+                <div className="p-4 bg-white-100 dark:bg-black-900 rounded-xl">
                     <ItemForm
                         onDone={submitEditing}
                         onCancel={() => setIsEditing(false)}
@@ -196,7 +194,7 @@ export function ListItem({ item, isOwner, isListEditing }: ListItemProps) {
                                 <Trash
                                     className={
                                         isDeleting
-                                            ? 'animate-pulse stroke-gray700 dark:stroke-gray300'
+                                            ? 'animate-pulse stroke-gray-700 dark:stroke-gray-300'
                                             : ''
                                     }
                                 />

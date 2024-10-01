@@ -13,7 +13,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     return (
         <main
             data-theme={theme}
-            className="flex flex-row bg-white dark:bg-black"
+            className="flex flex-row bg-white-100 dark:bg-black-900"
         >
             {session?.user && (
                 <Menu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />

@@ -4,7 +4,7 @@ interface CheckProps {
     style?: string;
 }
 
-export function Check({ style = 'stroke-white' }: CheckProps) {
+export function Check({ style = 'stroke-white-100' }: CheckProps) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"

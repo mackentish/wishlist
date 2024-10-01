@@ -31,7 +31,7 @@ export default function ShareGroups() {
                 {Array.from({ length: 3 }).map((_, i) => (
                     <div
                         key={i}
-                        className="animate-pulse bg-gray300 dark:bg-gray700 rounded-xl h-16 w-full"
+                        className="animate-pulse bg-gray-300 dark:bg-gray-700 rounded-xl h-16 w-full"
                     />
                 ))}
             </>
@@ -50,7 +50,7 @@ export default function ShareGroups() {
 
     return (
         <FadeIn className="flex flex-col gap-8 w-full justify-center items-center">
-            <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray100 dark:bg-gray900">
+            <div className="flex flex-col w-full gap-4 p-5 rounded-xl bg-gray-100 dark:bg-gray-900">
                 <Typography type="h5">Your Share Groups:</Typography>
 
                 {/* Loading */}
@@ -60,7 +60,7 @@ export default function ShareGroups() {
                 {groupsError && (
                     <Typography
                         type="p"
-                        classOverride="self-center text-error dark:text-error"
+                        classOverride="self-center text-error-500 dark:text-error-500"
                     >
                         Error loading share groups
                     </Typography>
@@ -134,7 +134,7 @@ function ShareGroup({
     };
 
     return (
-        <div className="flex flex-row w-full justify-between p-4 rounded-xl bg-gray300 dark:bg-gray700">
+        <div className="flex flex-row w-full justify-between p-4 rounded-xl bg-gray-300 dark:bg-gray-700">
             {/* Group Info */}
             <div className="flex flex-col gap-1">
                 <div className="flex flex-row items-center gap-4">

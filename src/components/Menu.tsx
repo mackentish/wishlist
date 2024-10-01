@@ -35,7 +35,7 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
                 icon: (
                     <Share
                         tooltip={false}
-                        classOverride="fill-black dark:fill-white"
+                        classOverride="fill-black-900 dark:fill-white-100"
                     />
                 ),
             },
@@ -67,7 +67,7 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
                     exit={{ x: '-100%', opacity: 0 }}
                     transition={{ duration: 0.3 }}
                     className={[
-                        'flex flex-col gap-7 h-[100vh] px-6 py-8 bg-gray100 dark:bg-gray900',
+                        'flex flex-col gap-7 h-[100vh] px-6 py-8 bg-gray-100 dark:bg-gray-900',
                         staticSidebar
                             ? 'min-w-fit w-96'
                             : 'absolute z-50 top-0 left-0',
@@ -106,7 +106,7 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
                     <div className="relative flex flex-col">
                         {/* Animated Selector */}
                         <motion.div
-                            className="absolute z-[-1] w-full bg-gray300 dark:bg-gray700 rounded-xl"
+                            className="absolute z-[-1] w-full bg-gray-300 dark:bg-gray-700 rounded-xl"
                             style={{ height: `${100 / pages.length}%` }}
                             animate={{
                                 y: `${pages.findIndex((p) => p.route === currentPath) * 100}%`,
@@ -120,7 +120,7 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
                                 <motion.div
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 1 }}
-                                    className="relative flex flex-row gap-4 p-4 text-black dark:text-white h-full w-full"
+                                    className="relative flex flex-row gap-4 p-4 text-black-900 dark:text-white-100 h-full w-full"
                                 >
                                     {/* Page Info */}
                                     {icon}
@@ -130,7 +130,7 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
                                     {name === 'Friends' &&
                                         !!friendRequests &&
                                         friendRequests.length > 0 && (
-                                            <div className="absolute right-4 flex items-center justify-center w-6 h-6 font-bold bg-primary text-white rounded-full">
+                                            <div className="absolute right-4 flex items-center justify-center w-6 h-6 font-bold bg-primary-500 text-white-100 rounded-full">
                                                 {friendRequests.length}
                                             </div>
                                         )}
@@ -161,13 +161,13 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
                         {Array.from({ length: 3 }).map((_, index) => (
                             <div
                                 key={index}
-                                className="w-full h-1 rounded-full bg-primary"
+                                className="w-full h-1 rounded-full bg-primary-500"
                             />
                         ))}
 
                         {/* Friend Request Indicator */}
                         {!!friendRequests && friendRequests.length > 0 && (
-                            <div className="absolute right-[-6px] top-[-6px] w-4 h-4 border border-black dark:border-white bg-primary rounded-full" />
+                            <div className="absolute right-[-6px] top-[-6px] w-4 h-4 border border-black-900 dark:border-white-100 bg-primary-500 rounded-full" />
                         )}
                     </div>
                 </motion.button>
@@ -211,7 +211,7 @@ function ColorTheme() {
 
                 <motion.div
                     className={[
-                        'absolute h-full border-2 border-black dark:border-white',
+                        'absolute h-full border-2 border-black-900 dark:border-white-100',
                     ].join(' ')}
                     style={{ width: `${100 / colors.length}%` }}
                     animate={{

@@ -22,8 +22,8 @@ export function Input({
             type={type}
             placeholder={placeholder}
             className={[
-                'w-full px-4 py-5 border rounded-xl bg-gray100 dark:bg-gray900 focus:outline-none disabled:cursor-not-allowed',
-                error ? 'border-error' : 'border-primary',
+                'w-full px-4 py-5 border rounded-xl bg-gray-100 dark:bg-gray-900 focus:outline-none disabled:cursor-not-allowed',
+                error ? 'border-error-500' : 'border-primary-500',
             ].join(' ')}
             value={value}
             onChange={onChange}

@@ -61,7 +61,7 @@ export default function Home() {
     }
 
     const pulseStyle =
-        'animate-pulse bg-gray300 dark:bg-gray700 rounded-xl h-16 w-full';
+        'animate-pulse bg-gray-300 dark:bg-gray-700 rounded-xl h-16 w-full';
 
     return (
         <FadeIn className="flex flex-col gap-8 items-center w-full">

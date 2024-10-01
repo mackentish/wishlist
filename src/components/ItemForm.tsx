@@ -89,7 +89,7 @@ export function ItemForm({
                 />
                 <Typography
                     type="p"
-                    classOverride={`text-xs ${(itemNote?.length || 0) >= 100 ? 'text-error' : ''}`}
+                    classOverride={`text-xs ${(itemNote?.length || 0) >= 100 ? 'text-error-500' : ''}`}
                 >
                     {itemNote?.length || 0}/100
                 </Typography>

@@ -23,7 +23,7 @@ export function Share({
                         ? classOverride
                         : disabled
                           ? 'fill-slate-600'
-                          : 'fill-primary hover:fill-primaryHover transition-colors duration-200',
+                          : 'fill-primary-500 hover:fill-primary-600 transition-colors duration-200',
                 ].join(' ')}
                 data-tooltip-id={tooltip ? 'share' : undefined}
                 data-tooltip-content={tooltip ? 'Share this list' : undefined}

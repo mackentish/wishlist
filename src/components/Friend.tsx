@@ -32,7 +32,7 @@ export function Friend({ friendId, name, email }: FriendProps) {
     };
 
     return (
-        <div className="flex flex-row w-full items-center justify-between p-4 bg-gray300 dark:bg-gray700 rounded-xl">
+        <div className="flex flex-row w-full items-center justify-between p-4 bg-gray-300 dark:bg-gray-700 rounded-xl">
             {/* Personal Info */}
             <div className="flex flex-col gap-1">
                 <Typography type="p" classOverride="font-bold">

@@ -8,9 +8,9 @@ interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
 
 const sharedStyles =
     'flex flex-row gap-2 justify-center font-bold py-2 px-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed w-full transition-colors duration-200';
-export const primaryBtnClass = `text-white bg-primary hover:bg-primaryHover disabled:bg-primary ${sharedStyles}`;
-export const secondaryBtnClass = `text-primary border-2 border-primary hover:border-primaryHover disabled:border-primary hover:text-primaryHover disabled:text-primary ${sharedStyles}`;
-export const dangerBtnClass = `text-error border-2 border-error/40 hover:text-errorHover disabled:text-error hover:border-errorHover/40 disabled:border-error/40 ${sharedStyles}`;
+export const primaryBtnClass = `text-white-100 bg-primary-500 hover:bg-primary-600 disabled:bg-primary-500 ${sharedStyles}`;
+export const secondaryBtnClass = `text-primary-500 border-2 border-primary-500 hover:border-primary-600 disabled:border-primary-500 hover:text-primary-600 disabled:text-primary-500 ${sharedStyles}`;
+export const dangerBtnClass = `text-error-500 border-2 border-error-500/40 hover:text-error-600 disabled:text-error-500 hover:border-error-600/40 disabled:border-error-500/40 ${sharedStyles}`;
 
 export function Button({
     btnType = 'primary',

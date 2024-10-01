@@ -11,7 +11,7 @@ export function Typography({
     type,
     classOverride = '',
 }: TypographyProps) {
-    const baseClass = 'text-black dark:text-white';
+    const baseClass = 'text-black-900 dark:text-white-100';
 
     if (type === 'h1') {
         return (

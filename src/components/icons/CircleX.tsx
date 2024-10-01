@@ -22,7 +22,7 @@ export function CircleX({
                         ? classOverride
                         : disabled
                           ? 'fill-slate-600'
-                          : 'fill-primary hover:fill-primaryHover transition-colors duration-200'
+                          : 'fill-primary-500 hover:fill-primary-600 transition-colors duration-200'
                 }
             />
         </svg>

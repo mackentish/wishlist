@@ -279,7 +279,7 @@ export function List({ list, isOwner, shareList = () => {} }: ListProps) {
     return (
         <AnimateChangeInHeight>
             <motion.div
-                className="flex flex-col gap-5 w-full p-6 rounded-xl bg-gray100 dark:bg-gray900"
+                className="flex flex-col gap-5 w-full p-6 rounded-xl bg-gray-100 dark:bg-gray-900"
                 initial="hidden"
                 animate={isOpen ? 'visible' : 'hidden'}
                 variants={containerVariants}
@@ -338,7 +338,7 @@ export function List({ list, isOwner, shareList = () => {} }: ListProps) {
                                     key="loading-add-item"
                                     variants={itemVariants}
                                 >
-                                    <div className="animate-pulse h-14 bg-gray300 dark:bg-gray700 rounded-xl w-full" />
+                                    <div className="animate-pulse h-14 bg-gray-300 dark:bg-gray-700 rounded-xl w-full" />
                                 </MotionWrapper>
                             )}
                             {isOwner && (
