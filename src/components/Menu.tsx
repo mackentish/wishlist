@@ -12,16 +12,16 @@ import { Button, Friends, Home, Moon, Share, Sun, Typography, X } from '.';
 interface MenuProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
+    staticSidebar: boolean;
 }
 
-export function Menu({ isOpen, setIsOpen }: MenuProps) {
+export function Menu({ isOpen, setIsOpen, staticSidebar }: MenuProps) {
     const { data: session } = useSession();
     const router = useRouter();
     const currentPath = router.pathname;
     const {
         fetchFriendRequests: { data: friendRequests },
     } = useFriends();
-    const [staticSidebar, setStaticSidebar] = useState(false); // set to false because we can't access window object in SSR
 
     const pages = useMemo(
         () => [
@@ -41,25 +41,6 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
         []
     );
 
-    useEffect(() => {
-        // Check if window is available and set initial sidebar state
-        if (typeof window !== 'undefined') {
-            setStaticSidebar(window.innerWidth > 1100);
-        }
-
-        // Set listener for window resize
-        const handleResize = () => {
-            setStaticSidebar(window.innerWidth > 1100);
-        };
-
-        window.addEventListener('resize', handleResize);
-
-        // Cleanup
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
-
     return (
         <AnimatePresence>
             {isOpen || staticSidebar ? (
@@ -73,7 +54,7 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
                         'flex flex-col gap-7 h-[100vh] px-6 py-8 bg-gray-100 dark:bg-gray-900',
                         staticSidebar
                             ? 'min-w-fit w-96'
-                            : 'absolute z-50 top-0 left-0',
+                            : 'fixed z-50 top-0 left-0',
                     ].join(' ')}
                 >
                     {/* User */}
@@ -157,7 +138,7 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="absolute z-50 top-4 left-4"
+                    className="fixed z-50 top-4 left-4"
                     onClick={() => setIsOpen(true)}
                 >
                     <div className="relative flex flex-col gap-[6px] w-8 cursor-pointer">
