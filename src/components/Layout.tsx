@@ -13,14 +13,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
     return (
         <main
             data-theme={theme}
-            className="flex flex-row bg-white-100 dark:bg-black-900"
+            className="flex flex-row w-screen h-screen overflow-y-auto p-4 bg-white-100 dark:bg-black-900"
         >
             {session?.user && (
                 <Menu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
             )}
             <div
                 onClick={() => setIsMenuOpen(false)}
-                className="flex flex-col w-screen h-screen overflow-y-auto p-4"
+                className="flex flex-col w-full h-full"
             >
                 <div className="flex flex-row justify-center items-center w-full">
                     <div className="flex flex-col items-center w-full max-w-3xl py-10 md:py-20">
