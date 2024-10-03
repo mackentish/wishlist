@@ -6,22 +6,22 @@ import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Friends, Home, Moon, Share, Sun, Typography, X } from '.';
 
 interface MenuProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
-    staticSidebar: boolean;
 }
 
-export function Menu({ isOpen, setIsOpen, staticSidebar }: MenuProps) {
+export function Menu({ isOpen, setIsOpen }: MenuProps) {
     const { data: session } = useSession();
     const router = useRouter();
     const currentPath = router.pathname;
     const {
         fetchFriendRequests: { data: friendRequests },
     } = useFriends();
+    const [staticSidebar, setStaticSidebar] = useState(false); // set to false because we can't access window object in SSR
 
     const pages = useMemo(
         () => [
@@ -40,6 +40,25 @@ export function Menu({ isOpen, setIsOpen, staticSidebar }: MenuProps) {
         ],
         []
     );
+
+    useEffect(() => {
+        // Check if window is available and set initial sidebar state
+        if (typeof window !== 'undefined') {
+            setStaticSidebar(window.innerWidth > 1100);
+        }
+
+        // Set listener for window resize
+        const handleResize = () => {
+            setStaticSidebar(window.innerWidth > 1100);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        // Cleanup
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     return (
         <AnimatePresence>
