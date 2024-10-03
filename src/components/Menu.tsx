@@ -6,24 +6,22 @@ import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Button, Friends, Home, Moon, Share, Sun, Typography, X } from '.';
 
 interface MenuProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
+    staticSidebar: boolean;
 }
 
-export function Menu({ isOpen, setIsOpen }: MenuProps) {
+export function Menu({ isOpen, setIsOpen, staticSidebar }: MenuProps) {
     const { data: session } = useSession();
     const router = useRouter();
     const currentPath = router.pathname;
     const {
         fetchFriendRequests: { data: friendRequests },
     } = useFriends();
-    const [staticSidebar, setStaticSidebar] = useState(
-        window.innerWidth > 1100
-    );
 
     const pages = useMemo(
         () => [
@@ -42,20 +40,6 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
         ],
         []
     );
-
-    useEffect(() => {
-        // set listener for window resize
-        window.addEventListener('resize', () => {
-            setStaticSidebar(window.innerWidth > 1100);
-        });
-
-        // cleanup
-        return () => {
-            window.removeEventListener('resize', () => {
-                setStaticSidebar(window.innerWidth > 1100);
-            });
-        };
-    }, []);
 
     return (
         <AnimatePresence>
