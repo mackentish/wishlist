@@ -25,9 +25,10 @@ export async function deleteListById(
     return true;
 }
 
+/**
+ * find all lists associated with user
+ */
 export async function getListsForUser(userId: number): Promise<List[]> {
-    // find all lists associated with user
-
     // first, get lists owned by user
     const userLists = await prisma.list.findMany({
         where: { userId: userId },
@@ -51,7 +52,7 @@ export async function getListsForUser(userId: number): Promise<List[]> {
     const sharedLists = await prisma.sharedList.findMany({
         where: {
             sharedUserId: userId,
-            list: { user: { id: { in: friendIds } } },
+            list: { userId: { in: friendIds } },
         },
         select: {
             list: {
@@ -159,7 +160,9 @@ export async function shareList(
         select: { sharedUserId: true, sharedEmail: true },
     });
 
-    // find existing friends, existing users who aren't friends, and net new users
+    // BEGIN separate emails into different types of users (friends, non-friends, new users) ------------
+
+    // find existing friends
     const existingFriends = await prisma.friend.findMany({
         where: {
             OR: [
@@ -186,66 +189,74 @@ export async function shareList(
             return f.friend;
         })
         // **only ones who don't already have the list shared with them**
-        .filter((f) => {
-            // account for users who were invited by email as well as existing users
-            return !existingSharedUsers.some(
-                (u) => u.sharedUserId === f.id || u.sharedEmail === f.email
-            );
-        });
+        .filter(
+            (f) =>
+                // account for users who were invited by email as well as existing users
+                !existingSharedUsers.some(
+                    (u) => u.sharedUserId === f.id || u.sharedEmail === f.email
+                )
+        );
 
-    let existingUsers = await prisma.user.findMany({
-        where: {
-            email: { in: sharedUserEmails },
-            id: {
-                notIn: mappedExistingFriends.map((f) => f.id),
+    // find existing users who just aren't a friend yet
+    const existingNonFriends = (
+        await prisma.user.findMany({
+            where: {
+                email: { in: sharedUserEmails },
+                id: {
+                    notIn: mappedExistingFriends.map((f) => f.id),
+                },
             },
-        },
-        select: { id: true, email: true, name: true },
-    });
-    // filter out any users that already have the list shared with them
-    existingUsers = existingUsers.filter(
-        (u) =>
-            !existingSharedUsers.some(
-                (eu) => eu.sharedUserId === u.id || eu.sharedEmail === u.email
-            )
+            select: { id: true, email: true, name: true },
+        })
+    )
+        // filter out any users that already have the list shared with them
+        .filter(
+            (u) =>
+                // account for users who were invited by email as well as existing users
+                !existingSharedUsers.some(
+                    (eu) =>
+                        eu.sharedUserId === u.id || eu.sharedEmail === u.email
+                )
+        );
+
+    // find net new users who don't have an account
+    const newUserEmails = sharedUserEmails.filter(
+        (email) =>
+            ![...mappedExistingFriends, ...existingNonFriends]
+                .map((u) => u.email)
+                .includes(email)
     );
 
-    const newUserEmails = sharedUserEmails.filter(
-        (email) => !existingUsers.map((u) => u.email).includes(email)
-    );
+    // END separate emails ------------------------------------------------------------------------------
 
     // send friend requests to existing users who aren't friends
-    for (const user of existingUsers) {
+    for (const user of existingNonFriends) {
         if (user.id !== userId) {
             // NOTE: this sends them an email
             await sendFriendRequest(userId, user.email);
         }
     }
 
-    // send friend requests to new users
+    // send friend requests to net new users
     for (const email of newUserEmails) {
         await sendFriendRequest(userId, email);
     }
 
-    // unshare any users
+    // unshare any users, including any users that were invited by email
     await prisma.sharedList.deleteMany({
         where: {
             listId: list.id,
-            sharedUser: { email: { in: unsharedUserEmails } },
-        },
-    });
-    // including any users that were invited by email
-    await prisma.sharedList.deleteMany({
-        where: {
-            listId: list.id,
-            sharedEmail: { in: unsharedUserEmails },
+            OR: [
+                { sharedUser: { email: { in: unsharedUserEmails } } },
+                { sharedEmail: { in: unsharedUserEmails } },
+            ],
         },
     });
 
     // create new shared list entries
     const newSharedUserIds = [
         ...mappedExistingFriends.map((f) => f.id),
-        ...existingUsers.map((u) => u.id),
+        ...existingNonFriends.map((u) => u.id),
     ];
     await prisma.sharedList.createMany({
         data: newSharedUserIds.map((id) => ({
@@ -261,7 +272,7 @@ export async function shareList(
         })),
     });
 
-    // send share email to existing friends ONLY
+    // send share email to existing friends ONLY (net new users and non-friends will get a friend request email)
     if (mappedExistingFriends.length > 0) {
         await sendShareEmails(mappedExistingFriends, list.name, list.user.name);
     }

@@ -251,7 +251,7 @@ export function ShareList({
                 </Typography>
                 <input
                     type="text"
-                    placeholder="Search friends by name..."
+                    placeholder="Search friends/groups by name..."
                     className="p-4 border border-black-900 dark:border-white-100 rounded-xl bg-transparent"
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
