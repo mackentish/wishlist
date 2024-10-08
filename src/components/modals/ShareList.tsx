@@ -272,13 +272,22 @@ export function ShareList({
                 <Typography type="p" classOverride="text-sm self-center">
                     Share this list with Friends or Share Groups:
                 </Typography>
-                <input
-                    type="text"
-                    placeholder="Search friends/groups by name..."
-                    className="p-4 border border-black-900 dark:border-white-100 rounded-xl bg-transparent"
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                />
+
+                <div className="flex flex-row items-center gap-1 p-4 border border-black-900 dark:border-white-100 rounded-xl">
+                    <input
+                        type="text"
+                        placeholder="Search friends/groups by name..."
+                        className="w-full bg-transparent outline-none"
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                    />
+
+                    {filter && (
+                        <button onClick={() => setFilter('')}>
+                            <CircleX />
+                        </button>
+                    )}
+                </div>
 
                 <div className="flex flex-col gap-4 w-full h-96 overflow-auto">
                     {filteredGroups.map((group, index) => (
