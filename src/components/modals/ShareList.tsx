@@ -93,8 +93,30 @@ export function ShareList({
                     group.members.every((m) => sharedEmails.includes(m.email))
                 )
             );
+
+            // set selectedUsers to users that are not in any group
+            setSelectedUsers(
+                sharedUsers.filter(
+                    (u) =>
+                        !shareGroups?.some((g) =>
+                            g.members.map((m) => m.email).includes(u.email)
+                        )
+                )
+            );
+        } else {
+            setSelectedGroups([]);
+            setSelectedUsers(sharedUsers);
         }
     }, [shareGroups, sharedUsers]);
+
+    function resetState() {
+        setFilter('');
+        setSelectedUsers(sharedUsers);
+        setUnsharedUsers([]);
+        setSelectedGroups([]);
+        setUnsharedGroups([]);
+        setIsSharing(false);
+    }
 
     const updateSharedUsers = () => {
         setIsSharing(true);
@@ -120,6 +142,7 @@ export function ShareList({
                 onSuccess: () => {
                     setIsSharing(false);
                     toast.success('List share settings updated successfully');
+                    resetState();
                     close();
                 },
                 onError: () => {
@@ -249,13 +272,22 @@ export function ShareList({
                 <Typography type="p" classOverride="text-sm self-center">
                     Share this list with Friends or Share Groups:
                 </Typography>
-                <input
-                    type="text"
-                    placeholder="Search friends/groups by name..."
-                    className="p-4 border border-black-900 dark:border-white-100 rounded-xl bg-transparent"
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                />
+
+                <div className="flex flex-row items-center gap-1 p-4 border border-black-900 dark:border-white-100 rounded-xl">
+                    <input
+                        type="text"
+                        placeholder="Search friends/groups by name..."
+                        className="w-full bg-transparent outline-none"
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                    />
+
+                    {filter && (
+                        <button onClick={() => setFilter('')}>
+                            <CircleX />
+                        </button>
+                    )}
+                </div>
 
                 <div className="flex flex-col gap-4 w-full h-96 overflow-auto">
                     {filteredGroups.map((group, index) => (
@@ -403,7 +435,13 @@ export function ShareList({
                     <Button onClick={updateSharedUsers} disabled={isSharing}>
                         {isSharing ? 'Updating...' : 'Update'}
                     </Button>
-                    <Button btnType="secondary" onClick={close}>
+                    <Button
+                        btnType="secondary"
+                        onClick={() => {
+                            resetState();
+                            close();
+                        }}
+                    >
                         Cancel
                     </Button>
                 </div>
@@ -412,7 +450,13 @@ export function ShareList({
     };
 
     return (
-        <BaseModal isOpen={isOpen} onRequestClose={close}>
+        <BaseModal
+            isOpen={isOpen}
+            onRequestClose={() => {
+                resetState();
+                close();
+            }}
+        >
             <Typography type="h3">Share List</Typography>
             {(friendsLoading || shareGroupsLoading) && renderLoading()}
             {(friendsError || shareGroupsError) && renderError()}

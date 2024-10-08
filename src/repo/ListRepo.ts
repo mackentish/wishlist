@@ -181,50 +181,49 @@ export async function shareList(
             user: { select: { id: true, email: true, name: true } },
         },
     });
-    const mappedExistingFriends = existingFriends
-        .map((f) => {
-            if (f.friend.id === userId) {
-                return f.user;
-            }
-            return f.friend;
-        })
-        // **only ones who don't already have the list shared with them**
-        .filter(
-            (f) =>
-                // account for users who were invited by email as well as existing users
-                !existingSharedUsers.some(
-                    (u) => u.sharedUserId === f.id || u.sharedEmail === f.email
-                )
-        );
+    let mappedExistingFriends = existingFriends.map((f) => {
+        if (f.friend.id === userId) {
+            return f.user;
+        }
+        return f.friend;
+    });
 
     // find existing users who just aren't a friend yet
-    const existingNonFriends = (
-        await prisma.user.findMany({
-            where: {
-                email: { in: sharedUserEmails },
-                id: {
-                    notIn: mappedExistingFriends.map((f) => f.id),
-                },
+    let existingNonFriends = await prisma.user.findMany({
+        where: {
+            email: { in: sharedUserEmails },
+            id: {
+                notIn: mappedExistingFriends.map((f) => f.id),
             },
-            select: { id: true, email: true, name: true },
-        })
-    )
-        // filter out any users that already have the list shared with them
-        .filter(
-            (u) =>
-                // account for users who were invited by email as well as existing users
-                !existingSharedUsers.some(
-                    (eu) =>
-                        eu.sharedUserId === u.id || eu.sharedEmail === u.email
-                )
-        );
+        },
+        select: { id: true, email: true, name: true },
+    });
 
     // find net new users who don't have an account
+    // using friends and non-friends to filter out existing users
     const newUserEmails = sharedUserEmails.filter(
         (email) =>
             ![...mappedExistingFriends, ...existingNonFriends]
                 .map((u) => u.email)
                 .includes(email)
+    );
+
+    // filter out any users that already have the list shared with them
+    mappedExistingFriends = mappedExistingFriends.filter(
+        (f) =>
+            // account for users who were invited by email as well as existing users
+            !existingSharedUsers.some(
+                (u) => u.sharedUserId === f.id || u.sharedEmail === f.email
+            )
+    );
+
+    // filter out any users that already have the list shared with them
+    existingNonFriends = existingNonFriends.filter(
+        (u) =>
+            // account for users who were invited by email as well as existing users
+            !existingSharedUsers.some(
+                (eu) => eu.sharedUserId === u.id || eu.sharedEmail === u.email
+            )
     );
 
     // END separate emails ------------------------------------------------------------------------------
@@ -274,6 +273,7 @@ export async function shareList(
 
     // send share email to existing friends ONLY (net new users and non-friends will get a friend request email)
     if (mappedExistingFriends.length > 0) {
+        // NOTE: mappedExistingFriends has already been  filtered to only include users who don't already have the list shared with them
         await sendShareEmails(mappedExistingFriends, list.name, list.user.name);
     }
 }
