@@ -93,14 +93,21 @@ export function ShareList({
                     group.members.every((m) => sharedEmails.includes(m.email))
                 )
             );
+
+            // set selectedUsers to users that are not in any group
+            setSelectedUsers(
+                sharedUsers.filter(
+                    (u) =>
+                        !shareGroups?.some((g) =>
+                            g.members.map((m) => m.email).includes(u.email)
+                        )
+                )
+            );
+        } else {
+            setSelectedGroups([]);
+            setSelectedUsers(sharedUsers);
         }
     }, [shareGroups, sharedUsers]);
-
-    // This is because this comes from a state update on the page/index.tsx file
-    // so we need to update the selectedUsers when the state updates
-    useEffect(() => {
-        setSelectedUsers(sharedUsers);
-    }, [sharedUsers]);
 
     function resetState() {
         setFilter('');
