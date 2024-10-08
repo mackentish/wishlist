@@ -96,6 +96,21 @@ export function ShareList({
         }
     }, [shareGroups, sharedUsers]);
 
+    // This is because this comes from a state update on the page/index.tsx file
+    // so we need to update the selectedUsers when the state updates
+    useEffect(() => {
+        setSelectedUsers(sharedUsers);
+    }, [sharedUsers]);
+
+    function resetState() {
+        setFilter('');
+        setSelectedUsers(sharedUsers);
+        setUnsharedUsers([]);
+        setSelectedGroups([]);
+        setUnsharedGroups([]);
+        setIsSharing(false);
+    }
+
     const updateSharedUsers = () => {
         setIsSharing(true);
         shareList.mutate(
@@ -120,6 +135,7 @@ export function ShareList({
                 onSuccess: () => {
                     setIsSharing(false);
                     toast.success('List share settings updated successfully');
+                    resetState();
                     close();
                 },
                 onError: () => {
@@ -403,7 +419,13 @@ export function ShareList({
                     <Button onClick={updateSharedUsers} disabled={isSharing}>
                         {isSharing ? 'Updating...' : 'Update'}
                     </Button>
-                    <Button btnType="secondary" onClick={close}>
+                    <Button
+                        btnType="secondary"
+                        onClick={() => {
+                            resetState();
+                            close();
+                        }}
+                    >
                         Cancel
                     </Button>
                 </div>
@@ -412,7 +434,13 @@ export function ShareList({
     };
 
     return (
-        <BaseModal isOpen={isOpen} onRequestClose={close}>
+        <BaseModal
+            isOpen={isOpen}
+            onRequestClose={() => {
+                resetState();
+                close();
+            }}
+        >
             <Typography type="h3">Share List</Typography>
             {(friendsLoading || shareGroupsLoading) && renderLoading()}
             {(friendsError || shareGroupsError) && renderError()}
