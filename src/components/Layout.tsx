@@ -45,7 +45,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             )}
             <div
                 onClick={() => setIsMenuOpen(false)}
-                className={`flex flex-col p-4 w-screen min-h-screen ${staticSidebar ? 'overflow-y-auto' : ''}`}
+                className={`flex flex-col p-4 ${staticSidebar ? 'w-screen h-screen overflow-y-auto' : 'w-full h-full'}`}
             >
                 <div className="flex flex-row justify-center items-center w-full">
                     <div className="flex flex-col items-center w-full max-w-3xl py-10 md:py-20">
