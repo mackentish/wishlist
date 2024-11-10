@@ -36,7 +36,7 @@ model List {
 
 model ListItem {
   id          Int           @id  @default(autoincrement())  @unique
-  name        String        @db.VarChar(45)
+  name        String        @db.VarChar(100)
   note        String?       @db.VarChar(100)
   link        String?       @db.Text
   boughtById  Int?          
