@@ -81,7 +81,7 @@ export function ItemForm({
                     {...register('note', {
                         required: false,
                         onChange: (e) => {
-                            if (e.target.value.length <= 100) {
+                            if (e.target.value.length <= 200) {
                                 setItemNote(e.target.value);
                             }
                         },
@@ -89,9 +89,9 @@ export function ItemForm({
                 />
                 <Typography
                     type="p"
-                    classOverride={`text-xs ${(itemNote?.length || 0) >= 100 ? 'text-error-500' : ''}`}
+                    classOverride={`text-xs ${(itemNote?.length || 0) >= 200 ? 'text-error-500' : ''}`}
                 >
-                    {itemNote?.length || 0}/100
+                    {itemNote?.length || 0}/200
                 </Typography>
             </div>
 

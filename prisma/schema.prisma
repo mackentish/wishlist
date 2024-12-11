@@ -37,7 +37,7 @@ model List {
 model ListItem {
   id          Int           @id  @default(autoincrement())  @unique
   name        String        @db.VarChar(100)
-  note        String?       @db.VarChar(100)
+  note        String?       @db.VarChar(200)
   link        String?       @db.Text
   boughtById  Int?          
   boughtBy    User?         @relation(fields: [boughtById], references: [id])
