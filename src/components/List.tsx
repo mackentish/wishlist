@@ -292,11 +292,7 @@ export function List({ list, isOwner, shareList = () => {} }: ListProps) {
                                     key={item.id.toString()}
                                     variants={itemVariants}
                                 >
-                                    <ListItem
-                                        item={item}
-                                        isOwner={isOwner}
-                                        isListEditing={isEditing}
-                                    />
+                                    <ListItem item={item} isOwner={isOwner} />
                                 </MotionWrapper>
                             ))}
                             {loading === 'add' && (
