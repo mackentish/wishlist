@@ -7,13 +7,12 @@ import {
     AnimateChangeInHeight,
     Button,
     CircleX,
-    ItemForm,
     ListItem,
     Share,
-    Spacer,
     Typography,
 } from '.';
 import { List as ListType } from '../types';
+import { ItemForm } from './modals/ItemForm';
 
 interface ListProps {
     list: ListType;
@@ -67,34 +66,6 @@ export function List({ list, isOwner, shareList = () => {} }: ListProps) {
     };
 
     // Functions:
-    const addItem = (data: {
-        name: string;
-        link: string | null;
-        note: string | null;
-    }) => {
-        setLoading('add');
-        addListItem.mutate(
-            {
-                listId: list.id,
-                name: data.name,
-                link: data.link,
-                note: data.note,
-            },
-            {
-                onSuccess: () => {
-                    setLoading(undefined);
-                    setIsAdding(false);
-                },
-                onError: () => {
-                    setLoading(undefined);
-                    setItemFormError(
-                        'Something went wrong creating your new list item!'
-                    );
-                },
-            }
-        );
-    };
-
     const onSaveChanges = () => {
         setLoading('update');
         updateList.mutate(
@@ -228,17 +199,6 @@ export function List({ list, isOwner, shareList = () => {} }: ListProps) {
     const OwnerList = () => {
         return (
             <>
-                {isAdding && (
-                    <div className="flex flex-col">
-                        <Spacer />
-                        <ItemForm
-                            onDone={addItem}
-                            onCancel={() => setIsAdding(false)}
-                            errorMessage={itemFormError}
-                            isLoading={loading === 'add'}
-                        />
-                    </div>
-                )}
                 {isEditing && (
                     <Button
                         btnType="secondary"
@@ -247,7 +207,7 @@ export function List({ list, isOwner, shareList = () => {} }: ListProps) {
                         Done
                     </Button>
                 )}
-                {!isAdding && !isEditing && (
+                {!isEditing && (
                     <div className="flex flex-col gap-4 w-full">
                         {list.items.length === 0 && (
                             <Typography
@@ -272,6 +232,12 @@ export function List({ list, isOwner, shareList = () => {} }: ListProps) {
                         </div>
                     </div>
                 )}
+
+                <ItemForm
+                    isOpen={isAdding}
+                    close={() => setIsAdding(false)}
+                    listId={list.id}
+                />
             </>
         );
     };

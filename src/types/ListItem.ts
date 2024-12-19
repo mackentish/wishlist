@@ -1,8 +1,11 @@
+import { Prisma } from '@prisma/client';
+
 export type ListItem = {
     id: number;
     name: string;
-    link: string | null;
     note: string | null;
+    link: string | null;
+    price: Prisma.Decimal | null;
     boughtBy: { name: string; email: string } | null;
     listId: number;
 };

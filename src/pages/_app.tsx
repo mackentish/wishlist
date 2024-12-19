@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import Modal from 'react-modal';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -14,6 +15,11 @@ const queryClient = new QueryClient({
         },
     },
 });
+
+// Ensure Modal App Element is set globally
+if (typeof window !== 'undefined') {
+    Modal.setAppElement('#__next'); // Set the root element as the app element
+}
 
 export default function MyApp({
     Component,

@@ -25,7 +25,7 @@ export default async function handler(
         return;
     }
 
-    // delete list item
+    // update list item
     const itemId = Number.parseInt(req.query.itemId as string);
     const success = await updateItemById(itemId, data, existingUser.id);
     if (success) {

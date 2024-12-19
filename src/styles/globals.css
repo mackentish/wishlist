@@ -12,6 +12,12 @@ body {
     background-color: theme('colors.white', white);
 }
 
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 @media (prefers-color-scheme: dark) {
     body {
         background-color: theme('colors.black', black);

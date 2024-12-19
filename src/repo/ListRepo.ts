@@ -33,7 +33,7 @@ export async function getListsForUser(userId: number): Promise<List[]> {
     const userLists = await prisma.list.findMany({
         where: { userId: userId },
         include: {
-            items: { include: { boughtBy: true } },
+            items: { include: { boughtBy: true }, orderBy: { name: 'asc' } },
             user: { select: { name: true } },
             shared: {
                 // select who the list is shared with to display in the UI
@@ -57,7 +57,10 @@ export async function getListsForUser(userId: number): Promise<List[]> {
         select: {
             list: {
                 include: {
-                    items: { include: { boughtBy: true } },
+                    items: {
+                        include: { boughtBy: true },
+                        orderBy: { name: 'asc' },
+                    },
                     user: {
                         select: { name: true },
                     },
@@ -95,7 +98,10 @@ export async function getListsForUser(userId: number): Promise<List[]> {
     }));
 
     // combine lists and return
-    return [...newUserLists, ...newSharedLists];
+    return [
+        ...newUserLists.sort((a, b) => a.name.localeCompare(b.name)),
+        ...newSharedLists.sort((a, b) => a.name.localeCompare(b.name)),
+    ];
 }
 
 export async function createList(

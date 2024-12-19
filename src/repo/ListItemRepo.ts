@@ -38,6 +38,7 @@ export async function createItem(
             name: data.name,
             link: data.link,
             note: data.note,
+            price: data.price,
             list: { connect: { id: data.listId } },
         },
     });
@@ -73,6 +74,7 @@ export async function updateItemById(
             name: data.name,
             link: data.link,
             note: data.note,
+            price: data.price,
             boughtById: boughtByUser?.id ?? null,
         },
     });
