@@ -91,7 +91,7 @@ export function ItemForm({
                 close();
             }}
         >
-            <div className="flex flex-col gap-10 w-full items-center items-center min-w-72">
+            <div className="flex flex-col gap-10 w-full items-center min-w-72">
                 <Typography type="h3">{item ? 'Edit' : 'Add'} Item</Typography>
 
                 <div className="flex flex-col gap-3 items-center w-full">

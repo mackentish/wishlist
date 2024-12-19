@@ -8,6 +8,7 @@ import {
     Button,
     CircleX,
     ClearCart,
+    DeleteList,
     ListItem,
     Pencil,
     Plus,
@@ -90,14 +91,14 @@ interface OwnerListProps {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 function OwnerList({ list, shareList, isOpen, setIsOpen }: OwnerListProps) {
-    const { deleteList, updateList } = useLists();
+    const { updateList } = useLists();
     const [isEditing, setIsEditing] = useState(false); // Determines if the owner is currently editing the list
     const [listName, setListName] = useState(list.name);
     const [listDescription, setListDescription] = useState(
         list.description || ''
     );
     const [isSaving, setIsSaving] = useState(false); // Determines the loading state for updating the list info
-    const [isDeleting, setIsDeleting] = useState(false); // Determines the loading state for deleting the list
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isAdding, setIsAdding] = useState(false); // Determines if the user is adding an item to the list
 
     // Functions:
@@ -123,23 +124,6 @@ function OwnerList({ list, shareList, isOpen, setIsOpen }: OwnerListProps) {
                 },
             }
         );
-    };
-
-    const onDelete = () => {
-        if (confirm('Are you sure you want to delete this list?')) {
-            setIsDeleting(true);
-            deleteList.mutate(list.id, {
-                onSuccess: () => {
-                    setIsDeleting(false);
-                    setIsEditing(false);
-                    toast.success('List deleted!');
-                },
-                onError: () => {
-                    setIsDeleting(false);
-                    toast.error('Something went wrong deleting your list!');
-                },
-            });
-        }
     };
 
     return (
@@ -201,7 +185,7 @@ function OwnerList({ list, shareList, isOpen, setIsOpen }: OwnerListProps) {
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setIsOpen(true);
-                                onDelete();
+                                setShowDeleteModal(true);
                             }}
                         >
                             <Trash />
@@ -281,6 +265,15 @@ function OwnerList({ list, shareList, isOpen, setIsOpen }: OwnerListProps) {
                             isOpen={isAdding}
                             close={() => setIsAdding(false)}
                             listId={list.id}
+                        />
+
+                        <DeleteList
+                            isOpen={showDeleteModal}
+                            close={() => setShowDeleteModal(false)}
+                            listId={list.id}
+                            boughtItems={
+                                list.items.filter((i) => !!i.boughtBy).length
+                            }
                         />
                     </>
                 )}
