@@ -16,3 +16,4 @@ export * from './Moon';
 export * from './Sun';
 export * from './Person';
 export * from './PriceTag';
+export * from './ClearCart';
