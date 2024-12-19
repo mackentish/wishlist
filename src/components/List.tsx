@@ -8,7 +8,6 @@ import {
     Button,
     CircleX,
     ClearCart,
-    DeleteList,
     ListItem,
     Pencil,
     Plus,
@@ -17,7 +16,6 @@ import {
     Typography,
 } from '.';
 import { List as ListType } from '../types';
-import { ItemForm } from './modals/ItemForm';
 
 // Motion Variants:
 const containerVariants: Variants = {
@@ -50,9 +48,19 @@ interface ListProps {
     isOwner: boolean;
     /** Function to open the share modal. Only used for List owners */
     shareList?: () => void;
+    /** Function to open the add item modal. Only used for List owners */
+    addItem?: () => void;
+    /** Function to open the delete list modal. Only used for List owners */
+    deleteList?: () => void;
 }
 
-export function List({ list, isOwner, shareList = () => {} }: ListProps) {
+export function List({
+    list,
+    isOwner,
+    shareList = () => {},
+    addItem = () => {},
+    deleteList = () => {},
+}: ListProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -67,6 +75,8 @@ export function List({ list, isOwner, shareList = () => {} }: ListProps) {
                     <OwnerList
                         list={list}
                         shareList={shareList}
+                        addItem={addItem}
+                        deleteList={deleteList}
                         isOpen={isOpen}
                         setIsOpen={setIsOpen}
                     />
@@ -84,13 +94,24 @@ export function List({ list, isOwner, shareList = () => {} }: ListProps) {
 
 interface OwnerListProps {
     list: ListType;
-    /** Function to open the share modal from the parent */
+    /** Function to open the share modal from the parent so the list doesn't have to be opened */
     shareList: () => void;
+    /** Function to open the add item modal from the parent so the list doesn't have to be opened */
+    addItem: () => void;
+    /** Function to open the delete modal from the parent so the list doesn't have to be opened */
+    deleteList: () => void;
     /** Determines if the list is expanded or not */
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-function OwnerList({ list, shareList, isOpen, setIsOpen }: OwnerListProps) {
+function OwnerList({
+    list,
+    shareList,
+    addItem,
+    deleteList,
+    isOpen,
+    setIsOpen,
+}: OwnerListProps) {
     const { updateList } = useLists();
     const [isEditing, setIsEditing] = useState(false); // Determines if the owner is currently editing the list
     const [listName, setListName] = useState(list.name);
@@ -98,8 +119,6 @@ function OwnerList({ list, shareList, isOpen, setIsOpen }: OwnerListProps) {
         list.description || ''
     );
     const [isSaving, setIsSaving] = useState(false); // Determines the loading state for updating the list info
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [isAdding, setIsAdding] = useState(false); // Determines if the user is adding an item to the list
 
     // Functions:
     const onSaveChanges = () => {
@@ -184,8 +203,7 @@ function OwnerList({ list, shareList, isOpen, setIsOpen }: OwnerListProps) {
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                setIsOpen(true);
-                                setShowDeleteModal(true);
+                                deleteList();
                             }}
                         >
                             <Trash />
@@ -194,7 +212,6 @@ function OwnerList({ list, shareList, isOpen, setIsOpen }: OwnerListProps) {
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                setIsOpen(true);
                                 alert('TODO: clear bought items');
                             }}
                         >
@@ -223,8 +240,7 @@ function OwnerList({ list, shareList, isOpen, setIsOpen }: OwnerListProps) {
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                setIsOpen(true);
-                                setIsAdding(true);
+                                addItem();
                             }}
                         >
                             <Plus />
@@ -260,21 +276,6 @@ function OwnerList({ list, shareList, isOpen, setIsOpen }: OwnerListProps) {
                                 </Typography>
                             </MotionWrapper>
                         )}
-
-                        <ItemForm
-                            isOpen={isAdding}
-                            close={() => setIsAdding(false)}
-                            listId={list.id}
-                        />
-
-                        <DeleteList
-                            isOpen={showDeleteModal}
-                            close={() => setShowDeleteModal(false)}
-                            listId={list.id}
-                            boughtItems={
-                                list.items.filter((i) => !!i.boughtBy).length
-                            }
-                        />
                     </>
                 )}
             </AnimatePresence>

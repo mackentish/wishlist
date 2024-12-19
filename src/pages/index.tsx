@@ -1,6 +1,8 @@
 import {
+    DeleteList,
     ErrorView,
     FadeIn,
+    ItemForm,
     List,
     ShareList,
     SignIn,
@@ -19,6 +21,15 @@ interface ShareModalProps {
     listId: number;
     sharedUsers: ShareUser[];
 }
+interface AddItemModalProps {
+    isOpen: boolean;
+    listId: number;
+}
+interface DeleteListModalProps {
+    isOpen: boolean;
+    listId: number;
+    boughtItems: number;
+}
 
 export default function Home() {
     const { data: session } = useSession();
@@ -36,6 +47,16 @@ export default function Home() {
         listId: 0,
         sharedUsers: [],
     });
+    const [addItemModal, setAddItemModal] = useState<AddItemModalProps>({
+        isOpen: false,
+        listId: 0,
+    });
+    const [deleteListModal, setDeleteListModal] =
+        useState<DeleteListModalProps>({
+            isOpen: false,
+            listId: 0,
+            boughtItems: 0,
+        });
 
     const userLists = useMemo(() => {
         if (!lists) return [];
@@ -101,6 +122,22 @@ export default function Home() {
                                                         list.sharedUsers,
                                                 });
                                             }}
+                                            addItem={() => {
+                                                setAddItemModal({
+                                                    isOpen: true,
+                                                    listId: list.id,
+                                                });
+                                            }}
+                                            deleteList={() => {
+                                                setDeleteListModal({
+                                                    isOpen: true,
+                                                    listId: list.id,
+                                                    boughtItems:
+                                                        list.items.filter(
+                                                            (i) => i.boughtBy
+                                                        ).length,
+                                                });
+                                            }}
                                         />
                                     ))}
                             </div>
@@ -154,6 +191,30 @@ export default function Home() {
                 }
                 listId={shareModal.listId}
                 sharedUsers={shareModal.sharedUsers}
+            />
+
+            <ItemForm
+                isOpen={addItemModal.isOpen}
+                close={() =>
+                    setAddItemModal({
+                        isOpen: false,
+                        listId: 0,
+                    })
+                }
+                listId={addItemModal.listId}
+            />
+
+            <DeleteList
+                isOpen={deleteListModal.isOpen}
+                close={() =>
+                    setDeleteListModal({
+                        isOpen: false,
+                        listId: 0,
+                        boughtItems: 0,
+                    })
+                }
+                listId={deleteListModal.listId}
+                boughtItems={deleteListModal.boughtItems}
             />
         </FadeIn>
     );
