@@ -99,7 +99,7 @@ export function ItemForm({
                     <div className="flex flex-col gap-1 w-full">
                         <label
                             htmlFor="item-name"
-                            className="flex flex-row items-center gap-1"
+                            className="flex flex-row items-center gap-2"
                         >
                             <Typography type="p">Name</Typography>
                             <Typography type="p" classOverride="text-xs">
@@ -123,9 +123,12 @@ export function ItemForm({
                     <div className="flex flex-col gap-1 w-full">
                         <label
                             htmlFor="item-note"
-                            className="flex flex-row items-center gap-1"
+                            className="flex flex-row items-center gap-2"
                         >
                             <Typography type="p">Note</Typography>
+                            <Typography type="p" classOverride="text-xs">
+                                ({note?.length || 0}/200)
+                            </Typography>
                         </label>
                         <Input
                             type="text"
