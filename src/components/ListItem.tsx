@@ -53,7 +53,6 @@ const styles = {
     item: 'flex flex-row items-center gap-4',
     itemContent: 'flex flex-col',
     itemPrice: 'flex flex-row gap-1 items-center',
-    itemNote: 'text-xs',
 };
 
 interface OwnerListItemProps {
@@ -66,37 +65,29 @@ function OwnerListItem({ item, deleteItem }: OwnerListItemProps) {
 
     return (
         <>
-            <div className={styles.wrapper}>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-1 p-4 pl-4 bg-gray-300 dark:bg-gray-700 rounded-xl">
                 <div className={styles.item}>
                     <div className={styles.itemContent}>
-                        <Typography
-                            type="p"
-                            classOverride="text-sm font-semibold"
-                        >
+                        <Typography type="p" classOverride="font-semibold">
                             {item.name}
                         </Typography>
 
                         {item.price && (
                             <div className={styles.itemPrice}>
                                 <PriceTag />
-                                <Typography type="p" classOverride="text-xs">
+                                <Typography type="p" classOverride="text-sm">
                                     ${item.price.toString()}
                                 </Typography>
                             </div>
                         )}
 
                         {item.note && (
-                            <Typography
-                                type="p"
-                                classOverride={styles.itemNote}
-                            >
-                                {item.note}
-                            </Typography>
+                            <Typography type="p">{item.note}</Typography>
                         )}
                     </div>
                 </div>
 
-                <div className="flex flex-row gap-4 items-center h-full">
+                <div className="flex flex-row gap-4 items-center">
                     <button onClick={deleteItem}>
                         <Trash />
                     </button>
@@ -155,12 +146,12 @@ function SharedListItem({ item, user, purchaseItem }: SharedListItemProps) {
                     <div className="flex flex-col md:flex-row md:gap-4 md:items-center h-full">
                         <Typography
                             type="p"
-                            classOverride={`text-sm font-semibold ${item.boughtBy ? 'line-through' : ''}`}
+                            classOverride={`font-semibold ${item.boughtBy ? 'line-through' : ''}`}
                         >
                             {item.name}
                         </Typography>
                         {item.boughtBy && (
-                            <Typography type="p" classOverride="text-xs">
+                            <Typography type="p" classOverride="text-sm">
                                 (Purchased by {item.boughtBy.name})
                             </Typography>
                         )}
@@ -169,17 +160,13 @@ function SharedListItem({ item, user, purchaseItem }: SharedListItemProps) {
                     {item.price && (
                         <div className={styles.itemPrice}>
                             <PriceTag />
-                            <Typography type="p" classOverride="text-xs">
+                            <Typography type="p" classOverride="text-sm">
                                 ${item.price.toString()}
                             </Typography>
                         </div>
                     )}
 
-                    {item.note && (
-                        <Typography type="p" classOverride={styles.itemNote}>
-                            {item.note}
-                        </Typography>
-                    )}
+                    {item.note && <Typography type="p">{item.note}</Typography>}
                 </div>
             </div>
 

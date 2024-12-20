@@ -109,10 +109,10 @@ export default function Home() {
 
             {/* Fully Loaded */}
             {fullyLoaded && (
-                <FadeIn className="flex flex-col gap-8 items-center w-full">
+                <FadeIn className="flex flex-col gap-12 items-center w-full">
                     {/* My Lists */}
                     <div className="flex flex-col w-full gap-2">
-                        <Typography type="h5">Your Lists:</Typography>
+                        <Typography type="h3">Your Lists:</Typography>
                         {userLists.length > 0 ? (
                             <div className="flex flex-col gap-8">
                                 {lists!
@@ -172,7 +172,7 @@ export default function Home() {
 
                     {/* Shared Lists */}
                     <div className="flex flex-col w-full gap-2">
-                        <Typography type="h5">Shared Lists:</Typography>
+                        <Typography type="h3">Shared Lists:</Typography>
                         {sharedLists.length > 0 ? (
                             <div className="flex flex-col gap-8">
                                 {lists!

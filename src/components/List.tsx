@@ -211,10 +211,8 @@ function OwnerList({
                             </>
                         ) : (
                             <>
-                                <Typography type="p" classOverride="font-bold">
-                                    {list.name}
-                                </Typography>
-                                <Typography type="p" classOverride="text-sm">
+                                <Typography type="h6">{list.name}</Typography>
+                                <Typography type="p">
                                     {list.description}
                                 </Typography>
                             </>
@@ -355,20 +353,16 @@ function SharedList({ list, removeList, isOpen, setIsOpen }: SharedListProps) {
             >
                 <div className="flex flex-col items-start w-full">
                     <div className="flex flex-col-reverse w-full md:flex-row md:gap-2 md:items-baseline">
-                        <Typography type="p" classOverride="font-bold">
-                            {list.name}
-                        </Typography>
+                        <Typography type="h6">{list.name}</Typography>
 
                         {list.user && (
-                            <Typography type="p" classOverride="text-xs">
+                            <Typography type="p">
                                 {`(${list.user.name})`}
                             </Typography>
                         )}
                     </div>
 
-                    <Typography type="p" classOverride="text-sm">
-                        {list.description}
-                    </Typography>
+                    <Typography type="p">{list.description}</Typography>
 
                     {list.items.length === 0 && (
                         <Typography
