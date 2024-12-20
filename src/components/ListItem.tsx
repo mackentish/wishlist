@@ -49,7 +49,7 @@ export function ListItem({
 
 const styles = {
     wrapper:
-        'flex flex-row items-center justify-between p-4 pl-4 bg-gray-300 dark:bg-gray-700 rounded-xl',
+        'flex flex-row items-center justify-between gap-1 p-4 pl-4 bg-gray-300 dark:bg-gray-700 rounded-xl',
     item: 'flex flex-row items-center gap-4',
     itemContent: 'flex flex-col',
     itemPrice: 'flex flex-row gap-1 items-center',
@@ -151,8 +151,8 @@ function SharedListItem({ item, user, purchaseItem }: SharedListItemProps) {
                     checked={item.boughtBy ? true : false}
                     onClick={markAsBought}
                 />
-                <div className="flex flex-col">
-                    <div className="flex flex-row gap-4 items-center h-full">
+                <div className="flex flex-col gap-1">
+                    <div className="flex flex-col md:flex-row md:gap-4 md:items-center h-full">
                         <Typography
                             type="p"
                             classOverride={`text-sm font-semibold ${item.boughtBy ? 'line-through' : ''}`}
@@ -161,7 +161,7 @@ function SharedListItem({ item, user, purchaseItem }: SharedListItemProps) {
                         </Typography>
                         {item.boughtBy && (
                             <Typography type="p" classOverride="text-xs">
-                                (Bought by {item.boughtBy.name})
+                                (Purchased by {item.boughtBy.name})
                             </Typography>
                         )}
                     </div>
@@ -182,7 +182,10 @@ function SharedListItem({ item, user, purchaseItem }: SharedListItemProps) {
                     )}
                 </div>
             </div>
-            <OpenTab disabled={!item.link} />
+
+            <div className="min-w-fit">
+                <OpenTab disabled={!item.link} />
+            </div>
         </ItemWrapper>
     );
 }

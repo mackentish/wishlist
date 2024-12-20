@@ -200,7 +200,7 @@ function OwnerList({
                 </div>
             ) : (
                 <div
-                    className="flex flex-row justify-between items-center cursor-pointer"
+                    className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center cursor-pointer"
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     <div className="flex flex-col items-start w-full">
