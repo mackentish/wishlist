@@ -52,6 +52,8 @@ interface ListProps {
     addItem?: () => void;
     /** Function to open the delete list modal. Only used for List owners */
     deleteList?: () => void;
+    /** Function to open the remove purchased items modal. Only used for List owners */
+    removePurchased?: () => void;
 }
 
 export function List({
@@ -60,6 +62,7 @@ export function List({
     shareList = () => {},
     addItem = () => {},
     deleteList = () => {},
+    removePurchased = () => {},
 }: ListProps) {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -77,6 +80,7 @@ export function List({
                         shareList={shareList}
                         addItem={addItem}
                         deleteList={deleteList}
+                        removePurchased={removePurchased}
                         isOpen={isOpen}
                         setIsOpen={setIsOpen}
                     />
@@ -100,6 +104,8 @@ interface OwnerListProps {
     addItem: () => void;
     /** Function to open the delete modal from the parent so the list doesn't have to be opened */
     deleteList: () => void;
+    /** Function to open the remove purchased modal from the parent so the list doesn't have to be opened */
+    removePurchased: () => void;
     /** Determines if the list is expanded or not */
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -109,6 +115,7 @@ function OwnerList({
     shareList,
     addItem,
     deleteList,
+    removePurchased,
     isOpen,
     setIsOpen,
 }: OwnerListProps) {
@@ -212,7 +219,7 @@ function OwnerList({
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                alert('TODO: clear bought items');
+                                removePurchased();
                             }}
                         >
                             <ClearCart />

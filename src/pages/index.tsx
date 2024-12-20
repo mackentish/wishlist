@@ -4,6 +4,7 @@ import {
     FadeIn,
     ItemForm,
     List,
+    RemoveItems,
     ShareList,
     SignIn,
     Spacer,
@@ -29,6 +30,10 @@ interface DeleteListModalProps {
     isOpen: boolean;
     listId: number;
     boughtItems: number;
+}
+interface RemovePurchasedModalProps {
+    isOpen: boolean;
+    listId: number;
 }
 
 export default function Home() {
@@ -56,6 +61,11 @@ export default function Home() {
             isOpen: false,
             listId: 0,
             boughtItems: 0,
+        });
+    const [removePurchasedModal, setRemovePurchasedModal] =
+        useState<RemovePurchasedModalProps>({
+            isOpen: false,
+            listId: 0,
         });
 
     const userLists = useMemo(() => {
@@ -138,6 +148,12 @@ export default function Home() {
                                                         ).length,
                                                 });
                                             }}
+                                            removePurchased={() => {
+                                                setRemovePurchasedModal({
+                                                    isOpen: true,
+                                                    listId: list.id,
+                                                });
+                                            }}
                                         />
                                     ))}
                             </div>
@@ -215,6 +231,17 @@ export default function Home() {
                 }
                 listId={deleteListModal.listId}
                 boughtItems={deleteListModal.boughtItems}
+            />
+
+            <RemoveItems
+                isOpen={removePurchasedModal.isOpen}
+                close={() =>
+                    setRemovePurchasedModal({
+                        isOpen: false,
+                        listId: 0,
+                    })
+                }
+                listId={removePurchasedModal.listId}
             />
         </FadeIn>
     );

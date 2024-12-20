@@ -1,4 +1,4 @@
-import { ShareTemplate } from '@/email-templates';
+import { PurchasedItemsTemplate, ShareTemplate } from '@/email-templates';
 import { CreateListRequest, List, ShareUser } from '@/types';
 import { Resend } from 'resend';
 import { getFriends, sendFriendRequest } from './FriendRepo';
@@ -316,4 +316,51 @@ async function sendShareEmails(
     } else {
         console.log('Emails sent', data);
     }
+}
+
+/**
+ * Removes the purchased items from a list. Optionally sends an email to the user with the removed items
+ * @param listId The ID for the list to remove purchased items from
+ * @param sendEmail Optionally, we can send an email to the user with the removed items
+ * @param userEmail The email of the user to send the email to
+ */
+export async function deletePurchasedItems(
+    listId: number,
+    sendEmail: boolean,
+    userEmail: string
+): Promise<void> {
+    // send email if requested
+    if (sendEmail) {
+        // get list name
+        const list = await prisma.list.findUnique({ where: { id: listId } });
+        if (list) {
+            const items = await prisma.listItem.findMany({
+                where: { listId: list.id, boughtBy: { isNot: null } },
+                include: { boughtBy: true },
+            });
+            const itemsString = items.map(
+                (i) => `${i.name} - ${i.boughtBy?.name}`
+            );
+
+            // send email
+            const { error, data } = await resend.emails.send({
+                from: 'wishlist <donotreply@wishlist.mackentish.com>',
+                to: userEmail,
+                subject: "You've removed purchased items from your list",
+                react: PurchasedItemsTemplate({ items: itemsString }),
+            });
+            if (error) {
+                console.error('Error sending email', error);
+            } else {
+                console.log('Email sent', data);
+            }
+        } else {
+            throw new Error('List not found');
+        }
+    }
+
+    // delete all items that have been bought
+    await prisma.listItem.deleteMany({
+        where: { listId: listId, boughtBy: { isNot: null } },
+    });
 }

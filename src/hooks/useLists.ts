@@ -3,6 +3,7 @@ import {
     CreateListRequest,
     List,
     ListItem,
+    RemovePurchasedItemsRequest,
     ShareListRequest,
     ToggleBoughtRequest,
 } from '@/types';
@@ -241,6 +242,30 @@ export function useLists(enabled = true) {
         },
     });
 
+    /**
+     * Removes the purchased items from a list. Optionally sends an email to the user with the removed items
+     */
+    const deletePurchasedItems = useMutation({
+        mutationFn: async (request: RemovePurchasedItemsRequest) => {
+            const res = await fetch(`/api/purchasedItems`, {
+                method: 'DELETE',
+                body: JSON.stringify(request),
+            });
+
+            if (!res.ok) {
+                throw new Error('Unable to remove purchased items');
+            }
+            return res.json();
+        },
+        onSuccess: async () => {
+            // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
+            await queryClient.invalidateQueries({
+                queryKey: ['lists'],
+                exact: true,
+            });
+        },
+    });
+
     return {
         fetchLists,
         createList,
@@ -252,5 +277,6 @@ export function useLists(enabled = true) {
         updateList,
         shareList,
         deleteSharedList,
+        deletePurchasedItems,
     };
 }
