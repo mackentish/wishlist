@@ -8,6 +8,7 @@ import {
     Button,
     CircleX,
     ClearCart,
+    DeleteItem,
     ListItem,
     Pencil,
     Plus,
@@ -131,6 +132,15 @@ function OwnerList({
         list.description || ''
     );
     const [isSaving, setIsSaving] = useState(false); // Determines the loading state for updating the list info
+    const [deleteItemModal, setDeleteItemModal] = useState<{
+        isOpen: boolean;
+        itemId: number;
+        itemName: string;
+    }>({
+        isOpen: false,
+        itemId: 0,
+        itemName: '',
+    });
 
     // Functions:
     const onSaveChanges = () => {
@@ -269,7 +279,17 @@ function OwnerList({
                                 key={item.id.toString()}
                                 variants={itemVariants}
                             >
-                                <ListItem item={item} isOwner={true} />
+                                <ListItem
+                                    item={item}
+                                    isOwner={true}
+                                    deleteItem={() => {
+                                        setDeleteItemModal({
+                                            isOpen: true,
+                                            itemId: item.id,
+                                            itemName: item.name,
+                                        });
+                                    }}
+                                />
                             </MotionWrapper>
                         ))}
 
@@ -288,6 +308,19 @@ function OwnerList({
                                 </Typography>
                             </MotionWrapper>
                         )}
+
+                        <DeleteItem
+                            isOpen={deleteItemModal.isOpen}
+                            close={() =>
+                                setDeleteItemModal({
+                                    isOpen: false,
+                                    itemId: 0,
+                                    itemName: '',
+                                })
+                            }
+                            itemId={deleteItemModal.itemId}
+                            itemName={deleteItemModal.itemName}
+                        />
                     </>
                 )}
             </AnimatePresence>

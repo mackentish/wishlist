@@ -19,12 +19,15 @@ interface ListItemProps {
     isOwner: boolean;
     /** Used to open the purchase item modal for shared list items */
     purchaseItem?: () => void;
+    /** Used to open the delete item modal for owner list items */
+    deleteItem?: () => void;
 }
 
 export function ListItem({
     item,
     isOwner,
     purchaseItem = () => {},
+    deleteItem = () => {},
 }: ListItemProps) {
     const { data: user } = useUser();
 
@@ -32,7 +35,7 @@ export function ListItem({
     if (!user) return null;
 
     if (isOwner) {
-        return <OwnerListItem item={item} />;
+        return <OwnerListItem item={item} deleteItem={deleteItem} />;
     } else {
         return (
             <SharedListItem
@@ -55,34 +58,11 @@ const styles = {
 
 interface OwnerListItemProps {
     item: ListItemType;
+    deleteItem: () => void;
 }
 
-function OwnerListItem({ item }: OwnerListItemProps) {
-    const { deleteListItem } = useLists();
-
+function OwnerListItem({ item, deleteItem }: OwnerListItemProps) {
     const [isEditing, setIsEditing] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
-
-    const deleteItem = () => {
-        // TODO: make this a modal
-        const confirmed = confirm(
-            `Are you sure you want to delete "${item.name}"?`
-        );
-        if (confirmed) {
-            setIsDeleting(true);
-            deleteListItem.mutate(item.id, {
-                onSuccess: () => {
-                    setIsDeleting(false);
-                },
-                onError: () => {
-                    setIsDeleting(false);
-                    toast.error(
-                        'Something went wrong deleting the item. Refresh and try again.'
-                    );
-                },
-            });
-        }
-    };
 
     return (
         <>
@@ -118,13 +98,7 @@ function OwnerListItem({ item }: OwnerListItemProps) {
 
                 <div className="flex flex-row gap-4 items-center h-full">
                     <button onClick={deleteItem}>
-                        <Trash
-                            className={
-                                isDeleting
-                                    ? 'animate-pulse stroke-gray-700 dark:stroke-gray-300'
-                                    : ''
-                            }
-                        />
+                        <Trash />
                     </button>
 
                     {item.link ? (
