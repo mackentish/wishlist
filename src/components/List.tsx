@@ -54,6 +54,8 @@ interface ListProps {
     deleteList?: () => void;
     /** Function to open the remove purchased items modal. Only used for List owners */
     removePurchased?: () => void;
+    /** Function to open the remove shared list modal. Only used for shared Lists */
+    removeList?: () => void;
 }
 
 export function List({
@@ -63,6 +65,7 @@ export function List({
     addItem = () => {},
     deleteList = () => {},
     removePurchased = () => {},
+    removeList = () => {},
 }: ListProps) {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -89,6 +92,7 @@ export function List({
                         list={list}
                         isOpen={isOpen}
                         setIsOpen={setIsOpen}
+                        removeList={removeList}
                     />
                 )}
             </motion.div>
@@ -292,36 +296,13 @@ function OwnerList({
 
 interface SharedListProps {
     list: ListType;
+    /** Function to open the remove shared list modal from the parent so the list doesn't have to be opened */
+    removeList: () => void;
     /** Determines if the list is expanded or not */
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-function SharedList({ list, isOpen, setIsOpen }: SharedListProps) {
-    const [isRemoving, setIsRemoving] = useState(false); // Determines if the user is removing the shared list from their view
-    const { deleteSharedList } = useLists();
-
-    const removeSharedList = () => {
-        if (
-            confirm(
-                "Are you sure you want to remove this shared list? Once you do, you won't have access to it unless the owner re-shares it with you."
-            )
-        ) {
-            setIsRemoving(true);
-            deleteSharedList.mutate(list.id, {
-                onSuccess: () => {
-                    toast.success('Shared list removed');
-                    setIsRemoving(false);
-                },
-                onError: () => {
-                    toast.error(
-                        'Something went wrong removing your shared list'
-                    );
-                    setIsRemoving(false);
-                },
-            });
-        }
-    };
-
+function SharedList({ list, removeList, isOpen, setIsOpen }: SharedListProps) {
     return (
         <>
             <div
@@ -359,12 +340,11 @@ function SharedList({ list, isOpen, setIsOpen }: SharedListProps) {
 
                 <button
                     onClick={(e) => {
-                        e.preventDefault();
-                        removeSharedList();
+                        e.stopPropagation();
+                        removeList();
                     }}
-                    disabled={isRemoving}
                 >
-                    <CircleX disabled={isRemoving} />
+                    <CircleX />
                 </button>
             </div>
 
