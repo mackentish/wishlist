@@ -17,9 +17,15 @@ import { GetUserResponse, ListItem as ListItemType } from '../types';
 interface ListItemProps {
     item: ListItemType;
     isOwner: boolean;
+    /** Used to open the purchase item modal for shared list items */
+    purchaseItem?: () => void;
 }
 
-export function ListItem({ item, isOwner }: ListItemProps) {
+export function ListItem({
+    item,
+    isOwner,
+    purchaseItem = () => {},
+}: ListItemProps) {
     const { data: user } = useUser();
 
     // This should never happen but it validates that we have a user to use below
@@ -28,11 +34,16 @@ export function ListItem({ item, isOwner }: ListItemProps) {
     if (isOwner) {
         return <OwnerListItem item={item} />;
     } else {
-        return <SharedListItem item={item} user={user} />;
+        return (
+            <SharedListItem
+                item={item}
+                user={user}
+                purchaseItem={purchaseItem}
+            />
+        );
     }
 }
 
-// TODO: move styles to constants to reuse between OwnerListItem and SharedListItem
 const styles = {
     wrapper:
         'flex flex-row items-center justify-between p-4 pl-4 bg-gray-300 dark:bg-gray-700 rounded-xl',
@@ -147,42 +158,15 @@ function OwnerListItem({ item }: OwnerListItemProps) {
 interface SharedListItemProps {
     item: ListItemType;
     user: GetUserResponse;
+    purchaseItem: () => void;
 }
 
-function SharedListItem({ item, user }: SharedListItemProps) {
-    const [isBuying, setIsBuying] = useState(false);
-    const { toggleItemBought } = useLists();
-
+function SharedListItem({ item, user, purchaseItem }: SharedListItemProps) {
     const markAsBought = () => {
         if (!!item.boughtBy && item.boughtBy.email !== user.email) {
             toast.error(`This item is already bought by ${item.boughtBy.name}`);
-            return;
-        }
-
-        const confirmed = confirm(
-            `Are you sure you want to mark "${item.name}" as ${
-                !!item.boughtBy ? 'available for purchase' : 'purchased'
-            }?`
-        );
-        if (confirmed) {
-            setIsBuying(true);
-            toggleItemBought.mutate(
-                {
-                    itemId: item.id,
-                    boughtByEmail: !!item.boughtBy ? null : user.email,
-                },
-                {
-                    onSuccess: () => {
-                        setIsBuying(false);
-                    },
-                    onError: () => {
-                        setIsBuying(false);
-                        toast.error(
-                            'Something went wrong buying the item. Refresh and try again.'
-                        );
-                    },
-                }
-            );
+        } else {
+            purchaseItem();
         }
     };
 
@@ -193,7 +177,7 @@ function SharedListItem({ item, user }: SharedListItemProps) {
                     checked={item.boughtBy ? true : false}
                     onClick={markAsBought}
                 />
-                <div className={`flex flex-col ${isBuying && 'animate-pulse'}`}>
+                <div className="flex flex-col">
                     <div className="flex flex-row gap-4 items-center h-full">
                         <Typography
                             type="p"

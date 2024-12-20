@@ -153,7 +153,7 @@ export function useLists(enabled = true) {
         mutationFn: async (data: ToggleBoughtRequest) => {
             const res = await fetch(`/api/boughtItem/${data.itemId}`, {
                 method: 'PUT',
-                body: JSON.stringify(data),
+                body: JSON.stringify({ purchase: data.purchase }),
             });
 
             if (!res.ok) {
@@ -162,6 +162,7 @@ export function useLists(enabled = true) {
             return res.json();
         },
         onSuccess: async () => {
+            fetchLists.refetch();
             // have to await for it to work properly? https://stackoverflow.com/questions/68577988/invalidate-queries-doesnt-work-react-query
             await queryClient.invalidateQueries({
                 queryKey: ['lists'],

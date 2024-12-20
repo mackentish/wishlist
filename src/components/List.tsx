@@ -11,11 +11,12 @@ import {
     ListItem,
     Pencil,
     Plus,
+    PurchaseItem,
     Share,
     Trash,
     Typography,
 } from '.';
-import { List as ListType } from '../types';
+import { ListItem as ListItemType, List as ListType } from '../types';
 
 // Motion Variants:
 const containerVariants: Variants = {
@@ -294,6 +295,10 @@ function OwnerList({
     );
 }
 
+interface PurchaseItemModalProps {
+    isOpen: boolean;
+    item?: ListItemType;
+}
 interface SharedListProps {
     list: ListType;
     /** Function to open the remove shared list modal from the parent so the list doesn't have to be opened */
@@ -303,6 +308,12 @@ interface SharedListProps {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 function SharedList({ list, removeList, isOpen, setIsOpen }: SharedListProps) {
+    const [purchaseItemModal, setPurchaseItemModal] =
+        useState<PurchaseItemModalProps>({
+            isOpen: false,
+            item: undefined,
+        });
+
     return (
         <>
             <div
@@ -356,9 +367,29 @@ function SharedList({ list, removeList, isOpen, setIsOpen }: SharedListProps) {
                                 key={item.id.toString()}
                                 variants={itemVariants}
                             >
-                                <ListItem item={item} isOwner={false} />
+                                <ListItem
+                                    item={item}
+                                    isOwner={false}
+                                    purchaseItem={() => {
+                                        setPurchaseItemModal({
+                                            isOpen: true,
+                                            item: item,
+                                        });
+                                    }}
+                                />
                             </MotionWrapper>
                         ))}
+
+                        <PurchaseItem
+                            isOpen={purchaseItemModal.isOpen}
+                            close={() =>
+                                setPurchaseItemModal({
+                                    isOpen: false,
+                                    item: undefined,
+                                })
+                            }
+                            item={purchaseItemModal.item!}
+                        />
                     </>
                 )}
             </AnimatePresence>

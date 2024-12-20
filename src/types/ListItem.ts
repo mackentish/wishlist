@@ -16,5 +16,5 @@ export type UpdateListItemRequest = Omit<ListItem, 'id'>;
 
 export type ToggleBoughtRequest = {
     itemId: number;
-    boughtByEmail: string | null;
+    purchase: boolean;
 };
