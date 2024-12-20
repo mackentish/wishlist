@@ -21,3 +21,11 @@ in `prisma/schema.prisma`:
 ```bash
 npx prisma migrate dev --name <migration-name>
 ```
+
+## Deploy Database Changes
+
+To deploy the changes to the database, update the `.env` file to point to PROD or whatever database you are deploying to and run the following command:
+
+```bash
+npx prisma migrate deploy
+```
