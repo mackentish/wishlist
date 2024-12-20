@@ -7,96 +7,144 @@ import {
     AnimateChangeInHeight,
     Button,
     CircleX,
-    ItemForm,
+    ClearCart,
+    DeleteItem,
     ListItem,
+    Pencil,
+    Plus,
+    PurchaseItem,
     Share,
-    Spacer,
+    Trash,
     Typography,
 } from '.';
-import { List as ListType } from '../types';
+import { ListItem as ListItemType, List as ListType } from '../types';
+
+// Motion Variants:
+const containerVariants: Variants = {
+    visible: {
+        transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.18,
+            when: 'beforeChildren',
+        },
+    },
+    hidden: {
+        transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.18,
+            when: 'afterChildren',
+        },
+    },
+};
+
+const itemVariants: Variants = {
+    visible: {
+        opacity: 1,
+        y: 0,
+    },
+    hidden: { opacity: 0, y: 20, transition: { duration: 0.2 } },
+};
 
 interface ListProps {
     list: ListType;
     isOwner: boolean;
     /** Function to open the share modal. Only used for List owners */
     shareList?: () => void;
+    /** Function to open the add item modal. Only used for List owners */
+    addItem?: () => void;
+    /** Function to open the delete list modal. Only used for List owners */
+    deleteList?: () => void;
+    /** Function to open the remove purchased items modal. Only used for List owners */
+    removePurchased?: () => void;
+    /** Function to open the remove shared list modal. Only used for shared Lists */
+    removeList?: () => void;
 }
 
-export function List({ list, isOwner, shareList = () => {} }: ListProps) {
+export function List({
+    list,
+    isOwner,
+    shareList = () => {},
+    addItem = () => {},
+    deleteList = () => {},
+    removePurchased = () => {},
+    removeList = () => {},
+}: ListProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [isAdding, setIsAdding] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
+
+    return (
+        <AnimateChangeInHeight>
+            <motion.div
+                className="flex flex-col gap-5 w-full p-6 rounded-xl bg-gray-100 dark:bg-gray-900"
+                initial="hidden"
+                animate={isOpen ? 'visible' : 'hidden'}
+                variants={containerVariants}
+            >
+                {isOwner ? (
+                    <OwnerList
+                        list={list}
+                        shareList={shareList}
+                        addItem={addItem}
+                        deleteList={deleteList}
+                        removePurchased={removePurchased}
+                        isOpen={isOpen}
+                        setIsOpen={setIsOpen}
+                    />
+                ) : (
+                    <SharedList
+                        list={list}
+                        isOpen={isOpen}
+                        setIsOpen={setIsOpen}
+                        removeList={removeList}
+                    />
+                )}
+            </motion.div>
+        </AnimateChangeInHeight>
+    );
+}
+
+interface OwnerListProps {
+    list: ListType;
+    /** Function to open the share modal from the parent so the list doesn't have to be opened */
+    shareList: () => void;
+    /** Function to open the add item modal from the parent so the list doesn't have to be opened */
+    addItem: () => void;
+    /** Function to open the delete modal from the parent so the list doesn't have to be opened */
+    deleteList: () => void;
+    /** Function to open the remove purchased modal from the parent so the list doesn't have to be opened */
+    removePurchased: () => void;
+    /** Determines if the list is expanded or not */
+    isOpen: boolean;
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+function OwnerList({
+    list,
+    shareList,
+    addItem,
+    deleteList,
+    removePurchased,
+    isOpen,
+    setIsOpen,
+}: OwnerListProps) {
+    const { updateList } = useLists();
+    const [isEditing, setIsEditing] = useState(false); // Determines if the owner is currently editing the list
     const [listName, setListName] = useState(list.name);
     const [listDescription, setListDescription] = useState(
         list.description || ''
     );
-    const [itemFormError, setItemFormError] = useState<string | undefined>(
-        undefined
-    );
-    const [isRemoving, setIsRemoving] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [loading, setLoading] = useState<
-        'add' | 'update' | 'delete' | undefined
-    >(undefined);
-    const { addListItem, deleteList, updateList, deleteSharedList } =
-        useLists();
-
-    // Motion Variants:
-    const containerVariants: Variants = {
-        visible: {
-            transition: {
-                staggerChildren: 0.08,
-                delayChildren: 0.18,
-                when: 'beforeChildren',
-            },
-        },
-        hidden: {
-            transition: {
-                staggerChildren: 0.08,
-                delayChildren: 0.18,
-                when: 'afterChildren',
-            },
-        },
-    };
-    const itemVariants: Variants = {
-        visible: {
-            opacity: 1,
-            y: 0,
-        },
-        hidden: { opacity: 0, y: 20, transition: { duration: 0.2 } },
-    };
+    const [isSaving, setIsSaving] = useState(false); // Determines the loading state for updating the list info
+    const [deleteItemModal, setDeleteItemModal] = useState<{
+        isOpen: boolean;
+        itemId: number;
+        itemName: string;
+    }>({
+        isOpen: false,
+        itemId: 0,
+        itemName: '',
+    });
 
     // Functions:
-    const addItem = (data: {
-        name: string;
-        link: string | null;
-        note: string | null;
-    }) => {
-        setLoading('add');
-        addListItem.mutate(
-            {
-                listId: list.id,
-                name: data.name,
-                link: data.link,
-                note: data.note,
-            },
-            {
-                onSuccess: () => {
-                    setLoading(undefined);
-                    setIsAdding(false);
-                },
-                onError: () => {
-                    setLoading(undefined);
-                    setItemFormError(
-                        'Something went wrong creating your new list item!'
-                    );
-                },
-            }
-        );
-    };
-
     const onSaveChanges = () => {
-        setLoading('update');
+        setIsSaving(true);
         updateList.mutate(
             {
                 ...list,
@@ -106,90 +154,223 @@ export function List({ list, isOwner, shareList = () => {} }: ListProps) {
             },
             {
                 onSuccess: () => {
+                    setIsSaving(false);
                     setIsEditing(false);
-                    setLoading(undefined);
+                    toast.success('List updated!');
                 },
                 onError: () => {
-                    setLoading(undefined);
+                    setIsSaving(false);
                     setIsEditing(false);
-                    setItemFormError(
-                        'Something went wrong updating your list!'
-                    );
+                    toast.error('Something went wrong updating your list!');
                 },
             }
         );
     };
 
-    const onDelete = () => {
-        if (confirm('Are you sure you want to delete this list?')) {
-            setLoading('delete');
-            deleteList.mutate(list.id, {
-                onSuccess: () => {
-                    setLoading(undefined);
-                    setIsEditing(false);
-                },
-                onError: () => {
-                    setLoading(undefined);
-                    setItemFormError(
-                        'Something went wrong deleting your list!'
-                    );
-                },
-            });
-        }
-    };
+    return (
+        <>
+            {isEditing ? (
+                <div className="flex flex-col gap-4 py-2">
+                    <div className="flex flex-col gap-2 w-full">
+                        <input
+                            className={inputStyles.editing}
+                            value={listName}
+                            onChange={(e) => setListName(e.target.value)}
+                            placeholder="List Name"
+                        />
+                        <input
+                            className={inputStyles.editing}
+                            value={listDescription}
+                            onChange={(e) => setListDescription(e.target.value)}
+                            placeholder="List Description?"
+                        />
+                    </div>
+                    <div className="flex flex-row gap-4 w-full">
+                        <Button onClick={onSaveChanges} disabled={isSaving}>
+                            {isSaving ? 'Saving...' : 'Save Changes'}
+                        </Button>
 
-    const removeSharedList = () => {
-        if (
-            confirm(
-                "Are you sure you want to remove this shared list? Once you do, you won't have access to it unless the owner re-shares it with you."
-            )
-        ) {
-            setIsRemoving(true);
-            deleteSharedList.mutate(list.id, {
-                onSuccess: () => {
-                    toast('Shared list removed');
-                    setIsRemoving(false);
-                },
-                onError: () => {
-                    toast.error(
-                        'Something went wrong removing your shared list'
-                    );
-                    setIsRemoving(false);
-                },
-            });
-        }
-    };
+                        <Button
+                            btnType="secondary"
+                            onClick={() => setIsEditing(false)}
+                        >
+                            Done
+                        </Button>
+                    </div>
+                </div>
+            ) : (
+                <div
+                    className="flex flex-row justify-between items-center cursor-pointer"
+                    onClick={() => setIsOpen(!isOpen)}
+                >
+                    <div className="flex flex-col items-start w-full">
+                        {isSaving ? (
+                            <>
+                                <div className="animate-pulse h-4 bg-neutral-300 dark:bg-neutral-600 rounded-full w-1/2 mb-2" />
+                                <div className="animate-pulse h-3 bg-neutral-300 dark:bg-neutral-600 rounded-full w-1/2" />
+                            </>
+                        ) : (
+                            <>
+                                <Typography type="p" classOverride="font-bold">
+                                    {list.name}
+                                </Typography>
+                                <Typography type="p" classOverride="text-sm">
+                                    {list.description}
+                                </Typography>
+                            </>
+                        )}
+                    </div>
 
-    // Refactored components for readability:
-    const DefaultList = () => {
-        return (
+                    <div className="flex flex-row gap-4 items-center">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                deleteList();
+                            }}
+                        >
+                            <Trash />
+                        </button>
+
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                removePurchased();
+                            }}
+                        >
+                            <ClearCart />
+                        </button>
+
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                shareList();
+                            }}
+                        >
+                            <Share />
+                        </button>
+
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsOpen(true);
+                                setIsEditing(true);
+                            }}
+                        >
+                            <Pencil />
+                        </button>
+
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                addItem();
+                            }}
+                        >
+                            <Plus />
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            <AnimatePresence>
+                {isOpen && (
+                    <>
+                        {list.items.map((item) => (
+                            <MotionWrapper
+                                key={item.id.toString()}
+                                variants={itemVariants}
+                            >
+                                <ListItem
+                                    item={item}
+                                    isOwner={true}
+                                    deleteItem={() => {
+                                        setDeleteItemModal({
+                                            isOpen: true,
+                                            itemId: item.id,
+                                            itemName: item.name,
+                                        });
+                                    }}
+                                />
+                            </MotionWrapper>
+                        ))}
+
+                        {list.items.length === 0 && (
+                            <MotionWrapper
+                                key="owner-buttons"
+                                variants={itemVariants}
+                            >
+                                <Typography
+                                    type="p"
+                                    classOverride="text-sm italic self-center"
+                                >
+                                    {
+                                        'No items yet! Click the "Add Item" button below to get started!'
+                                    }
+                                </Typography>
+                            </MotionWrapper>
+                        )}
+
+                        <DeleteItem
+                            isOpen={deleteItemModal.isOpen}
+                            close={() =>
+                                setDeleteItemModal({
+                                    isOpen: false,
+                                    itemId: 0,
+                                    itemName: '',
+                                })
+                            }
+                            itemId={deleteItemModal.itemId}
+                            itemName={deleteItemModal.itemName}
+                        />
+                    </>
+                )}
+            </AnimatePresence>
+        </>
+    );
+}
+
+interface PurchaseItemModalProps {
+    isOpen: boolean;
+    item?: ListItemType;
+}
+interface SharedListProps {
+    list: ListType;
+    /** Function to open the remove shared list modal from the parent so the list doesn't have to be opened */
+    removeList: () => void;
+    /** Determines if the list is expanded or not */
+    isOpen: boolean;
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+function SharedList({ list, removeList, isOpen, setIsOpen }: SharedListProps) {
+    const [purchaseItemModal, setPurchaseItemModal] =
+        useState<PurchaseItemModalProps>({
+            isOpen: false,
+            item: undefined,
+        });
+
+    return (
+        <>
             <div
                 className="flex flex-row justify-between items-center cursor-pointer"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <div className="flex flex-col items-start w-full">
                     <div className="flex flex-col-reverse w-full md:flex-row md:gap-2 md:items-baseline">
-                        {loading === 'update' ? (
-                            <div className="animate-pulse h-4 bg-neutral-300 dark:bg-neutral-600 rounded-full w-1/2 mb-2" />
-                        ) : (
-                            <Typography type="p" classOverride="font-bold">
-                                {list.name}
-                            </Typography>
-                        )}
-                        {!isOwner && list.user && (
+                        <Typography type="p" classOverride="font-bold">
+                            {list.name}
+                        </Typography>
+
+                        {list.user && (
                             <Typography type="p" classOverride="text-xs">
                                 {`(${list.user.name})`}
                             </Typography>
                         )}
                     </div>
-                    {loading === 'update' ? (
-                        <div className="animate-pulse h-3 bg-neutral-300 dark:bg-neutral-600 rounded-full w-1/2" />
-                    ) : (
-                        <Typography type="p" classOverride="text-sm">
-                            {list.description}
-                        </Typography>
-                    )}
-                    {list.items.length === 0 && !isOwner && (
+
+                    <Typography type="p" classOverride="text-sm">
+                        {list.description}
+                    </Typography>
+
+                    {list.items.length === 0 && (
                         <Typography
                             type="p"
                             classOverride="mt-4 self-center text-sm italic"
@@ -200,160 +381,52 @@ export function List({ list, isOwner, shareList = () => {} }: ListProps) {
                         </Typography>
                     )}
                 </div>
-                {isOwner ? (
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            shareList();
-                        }}
-                        disabled={isModalOpen}
-                    >
-                        <Share disabled={isModalOpen} />
-                    </button>
-                ) : (
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            removeSharedList();
-                        }}
-                        disabled={isRemoving}
-                    >
-                        <CircleX disabled={isRemoving} />
-                    </button>
-                )}
+
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        removeList();
+                    }}
+                >
+                    <CircleX />
+                </button>
             </div>
-        );
-    };
 
-    const OwnerList = () => {
-        return (
-            <>
-                {isAdding && (
-                    <div className="flex flex-col">
-                        <Spacer />
-                        <ItemForm
-                            onDone={addItem}
-                            onCancel={() => setIsAdding(false)}
-                            errorMessage={itemFormError}
-                            isLoading={loading === 'add'}
+            <AnimatePresence>
+                {isOpen && (
+                    <>
+                        {list.items.map((item) => (
+                            <MotionWrapper
+                                key={item.id.toString()}
+                                variants={itemVariants}
+                            >
+                                <ListItem
+                                    item={item}
+                                    isOwner={false}
+                                    purchaseItem={() => {
+                                        setPurchaseItemModal({
+                                            isOpen: true,
+                                            item: item,
+                                        });
+                                    }}
+                                />
+                            </MotionWrapper>
+                        ))}
+
+                        <PurchaseItem
+                            isOpen={purchaseItemModal.isOpen}
+                            close={() =>
+                                setPurchaseItemModal({
+                                    isOpen: false,
+                                    item: undefined,
+                                })
+                            }
+                            item={purchaseItemModal.item!}
                         />
-                    </div>
+                    </>
                 )}
-                {isEditing && (
-                    <Button
-                        btnType="secondary"
-                        onClick={() => setIsEditing(false)}
-                    >
-                        Done
-                    </Button>
-                )}
-                {!isAdding && !isEditing && (
-                    <div className="flex flex-col gap-4 w-full">
-                        {list.items.length === 0 && (
-                            <Typography
-                                type="p"
-                                classOverride="text-sm italic self-center"
-                            >
-                                {
-                                    'No items yet! Click the "Add Item" button below to get started!'
-                                }
-                            </Typography>
-                        )}
-                        <div className="flex flex-row gap-4 w-full">
-                            <Button onClick={() => setIsAdding(true)}>
-                                Add Item
-                            </Button>
-                            <Button
-                                onClick={() => setIsEditing(true)}
-                                btnType="secondary"
-                            >
-                                Edit List
-                            </Button>
-                        </div>
-                    </div>
-                )}
-            </>
-        );
-    };
-
-    return (
-        <AnimateChangeInHeight>
-            <motion.div
-                className="flex flex-col gap-5 w-full p-6 rounded-xl bg-gray-100 dark:bg-gray-900"
-                initial="hidden"
-                animate={isOpen ? 'visible' : 'hidden'}
-                variants={containerVariants}
-            >
-                {isEditing ? (
-                    <div className="flex flex-col gap-4 py-2">
-                        <div className="flex flex-col gap-2 w-full">
-                            <input
-                                className={inputStyles.editing}
-                                value={listName}
-                                onChange={(e) => setListName(e.target.value)}
-                                placeholder="List Name"
-                            />
-                            <input
-                                className={inputStyles.editing}
-                                value={listDescription}
-                                onChange={(e) =>
-                                    setListDescription(e.target.value)
-                                }
-                                placeholder="List Description?"
-                            />
-                        </div>
-                        <div className="flex flex-row gap-4 w-full">
-                            <Button onClick={onSaveChanges}>
-                                Save Changes
-                            </Button>
-                            <Button
-                                btnType="danger"
-                                disabled={loading === 'delete'}
-                                onClick={onDelete}
-                            >
-                                Delete List
-                            </Button>
-                        </div>
-                    </div>
-                ) : (
-                    <DefaultList />
-                )}
-                <AnimatePresence>
-                    {isOpen && (
-                        <>
-                            {list.items.map((item) => (
-                                <MotionWrapper
-                                    key={item.id.toString()}
-                                    variants={itemVariants}
-                                >
-                                    <ListItem
-                                        item={item}
-                                        isOwner={isOwner}
-                                        isListEditing={isEditing}
-                                    />
-                                </MotionWrapper>
-                            ))}
-                            {loading === 'add' && (
-                                <MotionWrapper
-                                    key="loading-add-item"
-                                    variants={itemVariants}
-                                >
-                                    <div className="animate-pulse h-14 bg-gray-300 dark:bg-gray-700 rounded-xl w-full" />
-                                </MotionWrapper>
-                            )}
-                            {isOwner && (
-                                <MotionWrapper
-                                    key="owner-buttons"
-                                    variants={itemVariants}
-                                >
-                                    <OwnerList />
-                                </MotionWrapper>
-                            )}
-                        </>
-                    )}
-                </AnimatePresence>
-            </motion.div>
-        </AnimateChangeInHeight>
+            </AnimatePresence>
+        </>
     );
 }
 

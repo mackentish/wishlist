@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "ListItem" ALTER COLUMN "note" SET DATA TYPE VARCHAR(200);

@@ -34,7 +34,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     return (
         <main
             data-theme={theme}
-            className="flex flex-row bg-white-100 dark:bg-black-900"
+            className="flex flex-row bg-white-100 dark:bg-black-900 min-h-screen min-w-screen"
         >
             {session?.user && (
                 <Menu

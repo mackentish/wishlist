@@ -20,3 +20,8 @@ export type ShareListRequest = {
     sharedUserEmails: string[];
     unsharedUserEmails: string[];
 };
+
+export type RemovePurchasedItemsRequest = {
+    listId: number;
+    sendEmail: boolean;
+};

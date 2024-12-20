@@ -20,8 +20,12 @@ export default async function handler(
 
     // mark item as bought if it is shared with the user
     const itemId = Number.parseInt(req.query.itemId as string);
-    const { boughtByEmail } = JSON.parse(req.body) as ToggleBoughtRequest;
-    const success = await toggleBought(itemId, existingUser.id, boughtByEmail);
+    const { purchase } = JSON.parse(req.body) as ToggleBoughtRequest;
+    const success = await toggleBought(
+        itemId,
+        existingUser.id,
+        purchase ? existingUser.email : null
+    );
     if (success) {
         res.status(200).json({ message: 'Item bought' });
     } else {
