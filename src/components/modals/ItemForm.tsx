@@ -32,6 +32,17 @@ export function ItemForm({
 
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
+    // close and reset form
+    function closeForm() {
+        setName('');
+        setNameError(false);
+        setNote(null);
+        setLink(null);
+        setPrice(null);
+        setIsSubmitting(false);
+        close();
+    }
+
     async function saveItem() {
         if (!name) {
             setNameError(true);
@@ -52,7 +63,7 @@ export function ItemForm({
                 })
                 .then(() => {
                     setIsSubmitting(false);
-                    close();
+                    closeForm();
                     toast.success('Item updated!');
                 })
                 .catch(() => {
@@ -72,7 +83,7 @@ export function ItemForm({
                 })
                 .then(() => {
                     setIsSubmitting(false);
-                    close();
+                    closeForm();
                     toast.success('Item added!');
                 })
                 .catch(() => {
@@ -88,7 +99,7 @@ export function ItemForm({
         <BaseModal
             isOpen={isOpen}
             onRequestClose={() => {
-                close();
+                closeForm();
             }}
         >
             <div className="flex flex-col gap-10 w-full items-center min-w-72">

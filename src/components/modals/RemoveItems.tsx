@@ -103,12 +103,20 @@ function SendEmail({ isOpen, close, onDone, listId }: SendEmailProps) {
                 </Typography>
 
                 <div className="flex flex-row gap-3">
-                    <Button btnType="secondary" onClick={() => onSelect(false)}>
+                    <Button
+                        btnType="secondary"
+                        onClick={() => onSelect(false)}
+                        disabled={isUpdating}
+                    >
                         No thanks
                     </Button>
 
-                    <Button btnType="primary" onClick={() => onSelect(true)}>
-                        Send Email
+                    <Button
+                        btnType="primary"
+                        onClick={() => onSelect(true)}
+                        disabled={isUpdating}
+                    >
+                        {isUpdating ? 'Removing items...' : 'Yes, Send Email'}
                     </Button>
                 </div>
             </div>
