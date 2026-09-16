@@ -1,6 +1,6 @@
 import type { Config } from 'tailwindcss';
-import { TwcConfig, createThemes } from 'tw-colors';
-import colorThemes from './src/styles/colorThemes';
+import { type TwcConfig, createThemes } from 'tw-colors';
+import colorThemes from './src/styles/colorThemes.ts';
 
 const config: Config = {
     content: [
