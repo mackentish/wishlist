@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
-
 html {
     font-family: 'Figtree', sans-serif;
 }
@@ -39,4 +37,9 @@ input[type='number']::-webkit-outer-spin-button {
 }
 .turquoiseToastProgress {
     background: #32a8a4 !important;
+}
+
+html.ReactModal__Html--open,
+body.ReactModal__Body--open {
+    overflow: hidden;
 }

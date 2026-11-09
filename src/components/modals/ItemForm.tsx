@@ -102,7 +102,7 @@ export function ItemForm({
                 closeForm();
             }}
         >
-            <div className="flex flex-col gap-10 w-full items-center min-w-72">
+            <div className="flex flex-col gap-6 sm:gap-10 w-full items-center">
                 <Typography type="h3">{item ? 'Edit' : 'Add'} Item</Typography>
 
                 <div className="flex flex-col gap-3 items-center w-full">
@@ -194,7 +194,7 @@ export function ItemForm({
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-4 mt-10 w-full">
+                <div className="flex flex-col gap-4 mt-4 sm:mt-10 w-full">
                     <Button
                         btnType="primary"
                         onClick={saveItem}

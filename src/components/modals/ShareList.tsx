@@ -289,7 +289,7 @@ export function ShareList({
                     )}
                 </div>
 
-                <div className="flex flex-col gap-4 w-full h-96 overflow-auto">
+                <div className="flex flex-col gap-4 w-full overflow-auto overscroll-contain sm:max-h-96">
                     {filteredGroups.map((group, index) => (
                         <ShareGroupRow
                             key={group.name + index}
