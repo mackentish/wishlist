@@ -149,7 +149,7 @@ export function AddShareGroup({
 
     function renderShareGroup() {
         return (
-            <div className="flex flex-col gap-12 w-full items-center items-center min-w-72">
+            <div className="flex flex-col gap-6 sm:gap-12 w-full items-center">
                 <Typography type="h3">Share Group</Typography>
 
                 <div className="flex flex-col gap-2 items-center w-full">
@@ -198,11 +198,11 @@ export function AddShareGroup({
 
     function renderEditMembers() {
         return (
-            <div className="flex flex-col gap-5 items-center items-center w-fit min-w-72">
+            <div className="flex flex-col gap-5 items-center w-full">
                 <Typography type="h3">Friends in Group</Typography>
 
                 <div className="flex flex-col gap-2 w-full items-center">
-                    <Typography type="p" classOverride="text-nowrap">
+                    <Typography type="p">
                         Edit which Friends are in your Share Group below:
                     </Typography>
 
@@ -215,7 +215,7 @@ export function AddShareGroup({
                     />
                 </div>
 
-                <div className="flex flex-col gap-4 w-full h-96 overflow-auto">
+                <div className="flex flex-col gap-4 w-full overflow-auto overscroll-contain sm:max-h-96">
                     {filteredUsers.map((user, index) => (
                         <UserRow
                             key={user.name + index}

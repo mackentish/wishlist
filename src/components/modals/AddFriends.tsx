@@ -44,7 +44,7 @@ export function AddFriends({ isOpen, close }: AddFriendsProps) {
                 setAddEmail('');
             }}
         >
-            <div className="flex flex-col gap-10 w-full items-center items-center min-w-72">
+            <div className="flex flex-col gap-6 sm:gap-10 w-full items-center">
                 <div className="flex flex-col gap-2 items-center w-full">
                     <Typography type="h3">Add Friends</Typography>
 
