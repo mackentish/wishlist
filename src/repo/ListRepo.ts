@@ -1,5 +1,6 @@
 import { PurchasedItemsTemplate, ShareTemplate } from '@/email-templates';
 import { CreateListRequest, List, ShareUser } from '@/types';
+import { emailsMatch, normalizeEmail } from '@/utils';
 import { Resend } from 'resend';
 import { getFriends, sendFriendRequest } from './FriendRepo';
 import prisma from './_base';
@@ -145,9 +146,13 @@ export async function updateListById(
 export async function shareList(
     userId: number,
     listId: number,
-    sharedUserEmails: string[],
+    requestedSharedUserEmails: string[],
     unsharedUserEmails: string[]
 ) {
+    const sharedUserEmails = [
+        ...new Set(requestedSharedUserEmails.map(normalizeEmail)),
+    ];
+
     // verify list exists for user
     const list = await prisma.list.findUnique({
         where: { id: listId, userId: userId },
@@ -161,7 +166,19 @@ export async function shareList(
     const existingSharedUsers = await prisma.sharedList.findMany({
         where: {
             listId: list.id,
-            sharedUser: { email: { in: sharedUserEmails } },
+            OR: [
+                {
+                    sharedUser: {
+                        email: { in: sharedUserEmails, mode: 'insensitive' },
+                    },
+                },
+                {
+                    sharedEmail: {
+                        in: sharedUserEmails,
+                        mode: 'insensitive',
+                    },
+                },
+            ],
         },
         select: { sharedUserId: true, sharedEmail: true },
     });
@@ -174,10 +191,14 @@ export async function shareList(
             OR: [
                 {
                     userId: userId,
-                    friend: { email: { in: sharedUserEmails } },
+                    friend: {
+                        email: { in: sharedUserEmails, mode: 'insensitive' },
+                    },
                 },
                 {
-                    user: { email: { in: sharedUserEmails } },
+                    user: {
+                        email: { in: sharedUserEmails, mode: 'insensitive' },
+                    },
                     friendId: userId,
                 },
             ],
@@ -197,7 +218,7 @@ export async function shareList(
     // find existing users who just aren't a friend yet
     let existingNonFriends = await prisma.user.findMany({
         where: {
-            email: { in: sharedUserEmails },
+            email: { in: sharedUserEmails, mode: 'insensitive' },
             id: {
                 notIn: mappedExistingFriends.map((f) => f.id),
             },
@@ -209,9 +230,12 @@ export async function shareList(
     // using friends and non-friends to filter out existing users
     const newUserEmails = sharedUserEmails.filter(
         (email) =>
-            ![...mappedExistingFriends, ...existingNonFriends]
-                .map((u) => u.email)
-                .includes(email)
+            ![...mappedExistingFriends, ...existingNonFriends].some((u) =>
+                emailsMatch(u.email, email)
+            ) &&
+            !existingSharedUsers.some((u) =>
+                emailsMatch(u.sharedEmail ?? '', email)
+            )
     );
 
     // filter out any users that already have the list shared with them
@@ -219,7 +243,9 @@ export async function shareList(
         (f) =>
             // account for users who were invited by email as well as existing users
             !existingSharedUsers.some(
-                (u) => u.sharedUserId === f.id || u.sharedEmail === f.email
+                (u) =>
+                    u.sharedUserId === f.id ||
+                    emailsMatch(u.sharedEmail ?? '', f.email)
             )
     );
 
@@ -228,7 +254,9 @@ export async function shareList(
         (u) =>
             // account for users who were invited by email as well as existing users
             !existingSharedUsers.some(
-                (eu) => eu.sharedUserId === u.id || eu.sharedEmail === u.email
+                (eu) =>
+                    eu.sharedUserId === u.id ||
+                    emailsMatch(eu.sharedEmail ?? '', u.email)
             )
     );
 
@@ -252,8 +280,17 @@ export async function shareList(
         where: {
             listId: list.id,
             OR: [
-                { sharedUser: { email: { in: unsharedUserEmails } } },
-                { sharedEmail: { in: unsharedUserEmails } },
+                {
+                    sharedUser: {
+                        email: { in: unsharedUserEmails, mode: 'insensitive' },
+                    },
+                },
+                {
+                    sharedEmail: {
+                        in: unsharedUserEmails,
+                        mode: 'insensitive',
+                    },
+                },
             ],
         },
     });

@@ -61,8 +61,10 @@ export async function updateItemById(
     // get boughtBy user by email if not null
     let boughtByUser = null;
     if (data.boughtBy?.email) {
-        boughtByUser = await prisma.user.findUnique({
-            where: { email: data.boughtBy.email },
+        boughtByUser = await prisma.user.findFirst({
+            where: {
+                email: { equals: data.boughtBy.email, mode: 'insensitive' },
+            },
             select: { id: true },
         });
     }
@@ -112,8 +114,8 @@ export async function toggleBought(
     // get boughtBy user by email if not null
     let boughtByUser = null;
     if (boughtByEmail) {
-        boughtByUser = await prisma.user.findUnique({
-            where: { email: boughtByEmail },
+        boughtByUser = await prisma.user.findFirst({
+            where: { email: { equals: boughtByEmail, mode: 'insensitive' } },
             select: { id: true },
         });
     }

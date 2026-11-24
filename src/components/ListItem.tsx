@@ -1,6 +1,7 @@
 'use client';
 
 import { useLists, useUser } from '@/hooks';
+import { emailsMatch } from '@/utils';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import {
@@ -128,7 +129,7 @@ interface SharedListItemProps {
 
 function SharedListItem({ item, user, purchaseItem }: SharedListItemProps) {
     const markAsBought = () => {
-        if (!!item.boughtBy && item.boughtBy.email !== user.email) {
+        if (!!item.boughtBy && !emailsMatch(item.boughtBy.email, user.email)) {
             toast.error(`This item is already bought by ${item.boughtBy.name}`);
         } else {
             purchaseItem();

@@ -3,6 +3,7 @@ import {
     FriendInviteTemplate,
 } from '@/email-templates';
 import { Friend, FriendRequest } from '@/types';
+import { normalizeEmail } from '@/utils';
 import { Resend } from 'resend';
 import prisma from './_base';
 
@@ -56,7 +57,7 @@ export async function sendFriendRequest(userId: number, email: string) {
     const existingRequest = await prisma.friendRequest.findFirst({
         where: {
             senderId: userId,
-            email,
+            email: { equals: email, mode: 'insensitive' },
         },
     });
     // if request already exists, return
@@ -71,7 +72,9 @@ export async function sendFriendRequest(userId: number, email: string) {
     }
 
     // find receiver by email
-    const receiver = await prisma.user.findFirst({ where: { email } });
+    const receiver = await prisma.user.findFirst({
+        where: { email: { equals: email, mode: 'insensitive' } },
+    });
     // if user not found, invite to join
     if (!receiver) {
         sendInviteEmail(email, sender.name);
@@ -80,7 +83,7 @@ export async function sendFriendRequest(userId: number, email: string) {
     // create the friend request (default status is PENDING)
     await prisma.friendRequest.create({
         data: {
-            email,
+            email: normalizeEmail(email),
             senderId: userId,
             receiverId: receiver ? receiver.id : null,
         },
@@ -127,12 +130,17 @@ export async function updateFriendRequest(
                     },
                 }),
                 // send email to notify sender of acceptance
-                sendAcceptedEmail(request.sender.email, request.sender.name),
+                sendAcceptedEmail(request.sender.email, user.name),
                 // delete friend request
                 prisma.friendRequest.delete({ where: { id: requestId } }),
                 // update any shared lists with new user
-                await prisma.sharedList.updateMany({
-                    where: { sharedEmail: user.email },
+                prisma.sharedList.updateMany({
+                    where: {
+                        sharedEmail: {
+                            equals: user.email,
+                            mode: 'insensitive',
+                        },
+                    },
                     data: { sharedUserId: user.id, sharedEmail: null },
                 }),
             ]);

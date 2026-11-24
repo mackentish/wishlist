@@ -1,7 +1,7 @@
 import { useFriends, useLists, useShareGroups } from '@/hooks';
 import { inputStyles } from '@/styles/globalTailwind';
 import { ShareGroup, ShareUser } from '@/types';
-import { validateEmail } from '@/utils';
+import { emailsMatch, includesEmail, validateEmail } from '@/utils';
 import React, { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
@@ -90,7 +90,9 @@ export function ShareList({
             const sharedEmails = sharedUsers.map((u) => u.email);
             setSelectedGroups(
                 shareGroups.filter((group) =>
-                    group.members.every((m) => sharedEmails.includes(m.email))
+                    group.members.every((m) =>
+                        includesEmail(sharedEmails, m.email)
+                    )
                 )
             );
 
@@ -99,7 +101,10 @@ export function ShareList({
                 sharedUsers.filter(
                     (u) =>
                         !shareGroups?.some((g) =>
-                            g.members.map((m) => m.email).includes(u.email)
+                            includesEmail(
+                                g.members.map((m) => m.email),
+                                u.email
+                            )
                         )
                 )
             );
@@ -156,20 +161,25 @@ export function ShareList({
     // SHARE USER LOGIC --------------------------------------------
     const unshareWithUser = (email: string) => {
         // Add user to unshare list if not already there
-        if (!unsharedUsers.some((u) => u.email === email)) {
+        if (!unsharedUsers.some((u) => emailsMatch(u.email, email))) {
             setUnsharedUsers([
                 ...unsharedUsers,
-                selectedUsers.find((u) => u.email === email)!,
+                selectedUsers.find((u) => emailsMatch(u.email, email))!,
             ]);
         }
         // Remove user from shared list if there
-        setSelectedUsers(selectedUsers.filter((u) => u.email !== email));
+        setSelectedUsers(
+            selectedUsers.filter((u) => !emailsMatch(u.email, email))
+        );
     };
 
     const shareWithUser = (email: string) => {
         // Check if user is already a member of a selected share group
         const userGroups = selectedGroups.filter((g) =>
-            g.members.map((m) => m.email).includes(email)
+            includesEmail(
+                g.members.map((m) => m.email),
+                email
+            )
         );
         if (userGroups.length > 0) {
             toast.info(
@@ -178,14 +188,16 @@ export function ShareList({
             return;
         }
         // Add user to shared list if not already there
-        if (!selectedUsers.some((u) => u.email === email)) {
+        if (!selectedUsers.some((u) => emailsMatch(u.email, email))) {
             setSelectedUsers([
                 ...selectedUsers,
-                friends!.find((f) => f.email === email)!,
+                friends!.find((f) => emailsMatch(f.email, email))!,
             ]);
         }
         // Remove user from unshare list if there
-        setUnsharedUsers(unsharedUsers.filter((u) => u.email !== email));
+        setUnsharedUsers(
+            unsharedUsers.filter((u) => !emailsMatch(u.email, email))
+        );
     };
 
     const addFriend = () => {
@@ -195,7 +207,7 @@ export function ShareList({
             return;
         }
         // check that the user email is not already selected
-        if (selectedUsers.some((u) => u.email === friendEmail)) {
+        if (selectedUsers.some((u) => emailsMatch(u.email, friendEmail))) {
             toast.error('User already selected!');
         } else {
             setSelectedUsers([
@@ -238,7 +250,11 @@ export function ShareList({
         const group = shareGroups!.find((g) => g.id === id);
         setSelectedUsers(
             selectedUsers.filter(
-                (u) => !group?.members.map((m) => m.email).includes(u.email)
+                (u) =>
+                    !includesEmail(
+                        group?.members.map((m) => m.email) ?? [],
+                        u.email
+                    )
             )
         );
         toast.info(
@@ -314,14 +330,16 @@ export function ShareList({
                         <UserRow
                             key={user.name + index}
                             user={user}
-                            isChecked={selectedUsers
-                                .map((u) => u.email)
-                                .includes(user.email)}
+                            isChecked={includesEmail(
+                                selectedUsers.map((u) => u.email),
+                                user.email
+                            )}
                             toggleUser={() => {
                                 if (
-                                    selectedUsers
-                                        .map((u) => u.email)
-                                        .includes(user.email)
+                                    includesEmail(
+                                        selectedUsers.map((u) => u.email),
+                                        user.email
+                                    )
                                 ) {
                                     unshareWithUser(user.email);
                                 } else {

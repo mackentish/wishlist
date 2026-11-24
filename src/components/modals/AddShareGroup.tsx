@@ -1,5 +1,6 @@
 import { useFriends, useShareGroups } from '@/hooks';
 import { ShareUser } from '@/types';
+import { emailsMatch, includesEmail } from '@/utils';
 import React, { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, CircleX, Input, Typography, UserRow } from '..';
@@ -67,7 +68,9 @@ export function AddShareGroup({
         }
         // set initial members after fetching friends
         if (friends && prevEmails.length > 0) {
-            setMembers(friends.filter((f) => prevEmails.includes(f.email)));
+            setMembers(
+                friends.filter((f) => includesEmail(prevEmails, f.email))
+            );
         }
     }, [prevName, prevDescription, friends, prevEmails]);
 
@@ -220,18 +223,24 @@ export function AddShareGroup({
                         <UserRow
                             key={user.name + index}
                             user={user}
-                            isChecked={members
-                                .map((m) => m.email)
-                                .includes(user.email)}
+                            isChecked={includesEmail(
+                                members.map((m) => m.email),
+                                user.email
+                            )}
                             toggleUser={() => {
                                 if (
-                                    members
-                                        .map((m) => m.email)
-                                        .includes(user.email)
+                                    includesEmail(
+                                        members.map((m) => m.email),
+                                        user.email
+                                    )
                                 ) {
                                     setMembers((prev) =>
                                         prev.filter(
-                                            (u) => u.email !== user.email
+                                            (u) =>
+                                                !emailsMatch(
+                                                    u.email,
+                                                    user.email
+                                                )
                                         )
                                     );
                                 } else {
@@ -276,7 +285,11 @@ export function AddShareGroup({
                                     onClick={() =>
                                         setMembers((prev) =>
                                             prev.filter(
-                                                (u) => u.email !== member.email
+                                                (u) =>
+                                                    !emailsMatch(
+                                                        u.email,
+                                                        member.email
+                                                    )
                                             )
                                         )
                                     }

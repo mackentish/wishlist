@@ -1,5 +1,6 @@
 import { deleteSharedList, getSessionUser, shareList } from '@/repo';
 import { ShareListRequest } from '@/types';
+import { emailsMatch } from '@/utils';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -27,7 +28,7 @@ export default async function handler(
                 return;
             }
             data.sharedUserEmails = data.sharedUserEmails.filter(
-                (u) => u !== existingUser.email
+                (u) => !emailsMatch(u, existingUser.email)
             );
 
             await shareList(

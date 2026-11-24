@@ -1,4 +1,5 @@
 import { GetUserResponse, ShareUser, User } from '@/types';
+import { normalizeEmail } from '@/utils';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../pages/api/auth/[...nextauth]';
@@ -14,8 +15,10 @@ export async function getSessionUser(
     }
 
     // find user
-    const existingUser = await prisma.user.findUnique({
-        where: { email: session.user.email },
+    const existingUser = await prisma.user.findFirst({
+        where: {
+            email: { equals: session.user.email, mode: 'insensitive' },
+        },
     });
     if (!existingUser) {
         return null;
@@ -28,8 +31,8 @@ export async function findOrCreateUser(
     name: string
 ): Promise<GetUserResponse> {
     // find or create user
-    const existingUser = await prisma.user.findUnique({
-        where: { email },
+    const existingUser = await prisma.user.findFirst({
+        where: { email: { equals: email, mode: 'insensitive' } },
         include: {
             lists: { include: { items: true } },
         },
@@ -39,7 +42,7 @@ export async function findOrCreateUser(
         // check for name change
         if (existingUser.name !== name) {
             await prisma.user.update({
-                where: { email },
+                where: { id: existingUser.id },
                 data: { name },
             });
             existingUser.name = name;
@@ -47,7 +50,7 @@ export async function findOrCreateUser(
 
         // update last login
         await prisma.user.update({
-            where: { email },
+            where: { id: existingUser.id },
             data: { lastLogin: new Date() },
         });
 
@@ -58,20 +61,20 @@ export async function findOrCreateUser(
     else {
         const newUser = await prisma.user.create({
             data: {
-                email,
+                email: normalizeEmail(email),
                 name,
             },
         });
 
         // update any shared lists with new user
         await prisma.sharedList.updateMany({
-            where: { sharedEmail: email },
+            where: { sharedEmail: { equals: email, mode: 'insensitive' } },
             data: { sharedUserId: newUser.id, sharedEmail: null },
         });
 
         // update any friend requests with new user email
         await prisma.friendRequest.updateMany({
-            where: { email },
+            where: { email: { equals: email, mode: 'insensitive' } },
             data: { receiverId: newUser.id },
         });
 
@@ -87,9 +90,7 @@ export async function getShareableUsers(email: string): Promise<ShareUser[]> {
             name: true,
         },
         where: {
-            email: {
-                not: email,
-            },
+            NOT: { email: { equals: email, mode: 'insensitive' } },
         },
     });
 }

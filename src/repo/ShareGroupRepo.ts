@@ -30,6 +30,7 @@ export async function createShareGroup(
         where: {
             email: {
                 in: memberEmails,
+                mode: 'insensitive',
             },
         },
         select: {
@@ -86,6 +87,7 @@ export async function editShareGroup(
         where: {
             email: {
                 in: memberEmails,
+                mode: 'insensitive',
             },
         },
         select: {
